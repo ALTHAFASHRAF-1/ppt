@@ -3,11 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>All Questions (Arabic RTL + English LTR)</title>
+  <title>All Questions with Answers (Arabic RTL + English LTR)</title>
   <style>
     :root{
       --bg:#0b1220; --card:#0f1b33; --text:#eaf0ff; --muted:#b8c4e6;
       --accent:#7aa2ff; --line:rgba(255,255,255,.12); --chip:#13264d;
+      --answer-bg:rgba(19,38,77,0.4); --answer-border:rgba(122,162,255,0.2);
     }
     body{
       margin:0;
@@ -57,6 +58,7 @@
       gap:10px;
       align-items:flex-start;
       justify-content:space-between;
+      margin-bottom:12px;
     }
     .num{
       min-width:44px;
@@ -75,6 +77,24 @@
       font-size:14.5px;
       line-height:1.95;
       white-space:pre-wrap;
+    }
+    .answer{
+      background:var(--answer-bg);
+      border:1px solid var(--answer-border);
+      border-radius:10px;
+      padding:14px;
+      margin-top:12px;
+      font-size:14px;
+      line-height:1.85;
+    }
+    .answer .source{
+      display:block;
+      margin-top:10px;
+      padding-top:8px;
+      border-top:1px solid rgba(255,255,255,0.1);
+      font-size:12px;
+      color:var(--muted);
+      font-style:italic;
     }
 
     /* Arabic block (RTL) */
@@ -95,9 +115,10 @@
 
 <body>
 <header>
-  <h1>Comprehensive Examination</h1>
+  <h1>Comprehensive Examination with Answers</h1>
   <div class="sub">
-<b>questions only</br>
+    <b>Questions and Answers</b><br>
+    Sources: إعجاز القرآن البياني ودلائل مصدره الرباني، كيف نتعامل مع القرآن العظيم، Cambridge Companion to the Qur'an، التبيان في آداب حملة القرآن
   </div>
 </header>
 
@@ -112,175 +133,917 @@
 
   <section class="grid">
 
-    <article class="q ar" id="q1"><div class="qhead"><div class="num">1</div><p class="qtext">إعجاز القرآن البياني ودلائل مصدره الرباني (صلاح عبد الفتاح الخالدي ) جعل المصنف هذا الكتاب الى فصول، بينها؟ (8)</p></div></article>
-    <article class="q ar" id="q2"><div class="qhead"><div class="num">2</div><p class="qtext">وضح معنى الإعجاز على آراء العلماء و معنى اعجاز القرآن؟ (13)</p></div></article>
-    <article class="q ar" id="q3"><div class="qhead"><div class="num">3</div><p class="qtext">ماهي جهات الاتي يري الامام الباقلاني انَ وجوه الإعجاز القرآن تظهر منها ؟ (92)</p></div></article>
-    <article class="q ar" id="q4"><div class="qhead"><div class="num">4</div><p class="qtext">شروط المعجزة كم هي وما هي؟ (18)</p></div></article>
-    <article class="q ar" id="q5"><div class="qhead"><div class="num">5</div><p class="qtext">ماهو المطلوب في التحدَي؟ (58)</p></div></article>
-    <article class="q ar" id="q6"><div class="qhead"><div class="num">6</div><p class="qtext">هل التحدي شرط في المعجزة ام لا، فصَل؟ (20)</p></div></article>
-    <article class="q ar" id="q7"><div class="qhead"><div class="num">7</div><p class="qtext">بيَن احتمالات الجرجاني حول الإعجاز ؟ (94)</p></div></article>
-    <article class="q ar" id="q8"><div class="qhead"><div class="num">8</div><p class="qtext">نشأة مصطلح "اعجاز القرآن" في نهاية القرن الثالث  (81)</p></div></article>
-    <article class="q ar" id="q9"><div class="qhead"><div class="num">9</div><p class="qtext">دراسات معاصرة للإعجاز والبياني القرآن، بيَن؟ (97)</p></div></article>
+    <article class="q ar" id="q1"><div class="qhead"><div class="num">1</div><p class="qtext">إعجاز القرآن البياني ودلائل مصدره الرباني (صلاح عبد الفتاح الخالدي ) جعل المصنف هذا الكتاب الى فصول، بينها؟ (8)</p></div>
+    <div class="answer">قسم المصنف الدكتور صلاح الخالدي كتابه إلى ثلاثة فصول كبرى تمثل هيكل البحث؛ الفصل الأول بعنوان "مقدمات لدراسة إعجاز القرآن" ويحتوي على ستة مباحث تمهد للمصطلحات الأساسية. الفصل الثاني وهو صلب الكتاب بعنوان "الإعجاز البياني في القرآن" ويضم عشرين مبحثاً تفصيلياً في بلاغة النظم. أما الفصل الثالث "دلائل مصدر القرآن الرباني" فيبحث في الجوانب العلمية والغيبية في خمسة مباحث.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 8</span>
+    </div>
+    </article>
 
-    <article class="q ar" id="q10"><div class="qhead"><div class="num">10</div><p class="qtext">إعجاز القرآن البياني ودلائل مصدره الرباني (صلاح عبد الفتاح الخالدي ) ما هي المرحلة الأولى في تطور فهم إعجاز القرآن، وماذا كان محورها الرئيسي؟  (106)</p></div></article>
-    <article class="q ar" id="q11"><div class="qhead"><div class="num">11</div><p class="qtext">كيف يظهر الإعجاز البياني في حذف بعض الحروف أو الكلمات في القرآن؟</p></div></article>
-    <article class="q ar" id="q12"><div class="qhead"><div class="num">12</div><p class="qtext">ما هو دور فواتح السور في الإعجاز البياني؟ (143)</p></div></article>
-    <article class="q ar" id="q13"><div class="qhead"><div class="num">13</div><p class="qtext">ما المقصود بدقة حروف المعاني في التعبير القرآني؟ (172)</p></div></article>
-    <article class="q ar" id="q14"><div class="qhead"><div class="num">14</div><p class="qtext">ما الفرق بين المعجزة والآية؟</p></div></article>
-    <article class="q ar" id="q15"><div class="qhead"><div class="num">15</div><p class="qtext">تحدث عن العلاقة بين الإعجاز البياني والتحدي الذي جاء به القرآن.</p></div></article>
-    <article class="q ar" id="q16"><div class="qhead"><div class="num">16</div><p class="qtext">بيّن الغرض من التكرار في القرآن، مع أمثلة.</p></div></article>
-    <article class="q ar" id="q17"><div class="qhead"><div class="num">17</div><p class="qtext">وضّح كيف أن التقديم والتأخير في تركيب الآية يُظهر الإعجاز البياني.</p></div></article>
-    <article class="q ar" id="q18"><div class="qhead"><div class="num">18</div><p class="qtext">لماذا استخدم القرآن كلمات مختلفة في مواضع متشابهة؟</p></div></article>
-    <article class="q ar" id="q19"><div class="qhead"><div class="num">19</div><p class="qtext">ما هي وظيفة فواصل الآيات في الجمال البياني؟</p></div></article>
-    <article class="q ar" id="q20"><div class="qhead"><div class="num">20</div><p class="qtext">تحدّث عن بعض الطرق التي تجعل أسلوب القرآن مميزًا ولا يشبه كلام البشر.</p></div></article>
-    <article class="q ar" id="q21"><div class="qhead"><div class="num">21</div><p class="qtext">اشرح بأسلوبك كيف يبيّن القرآن المعنى بطريقة جميلة وسهلة من خلال ترتيب الكلمات.</p></div></article>
+    <article class="q ar" id="q2"><div class="qhead"><div class="num">2</div><p class="qtext">وضح معنى الإعجاز على آراء العلماء و معنى اعجاز القرآن؟ (13)</p></div>
+    <div class="answer">الإعجاز لغةً من العجز، وهو نقيض القدرة والتمكن. وفي الاصطلاح هو ظهور أمر خارق للعادة على يد مدعي النبوة يعجز الخلق عن الإتيان بمثله. أما إعجاز القرآن فهو تلك المزية التي جعلت أكابر البلغاء من العرب والجن يقفون عاجزين أمام بيانه ونظمه وتأليفه، مما يقطع بأنه كلام الله الخالق وليس من نتاج العقل البشري المحدود.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 13</span>
+    </div>
+    </article>
 
-    <article class="q ar" id="q22"><div class="qhead"><div class="num">22</div><p class="qtext">كيف نتعامل مع القرآن العظيم (د. يوسف القرضاوي) ما الأهداف الأساسية التي ينبغي أن يحققها المسلم عند تعامله مع القرآن الكريم؟ (ص 18)</p></div></article>
-    <article class="q ar" id="q23"><div class="qhead"><div class="num">23</div><p class="qtext">كيف وصف القرآن الكريم نفسه كمصدر هداية للناس؟ (ص 15)</p></div></article>
-    <article class="q ar" id="q24"><div class="qhead"><div class="num">24</div><p class="qtext">اذكر أدبين من آداب المسلم عند تلاوة القرآن الكريم. (ص 22)</p></div></article>
-    <article class="q ar" id="q25"><div class="qhead"><div class="num">25</div><p class="qtext">ما أهمية قراءة القرآن بفهم وتدبر بدلاً من مجرد التلاوة؟ (ص 30)</p></div></article>
-    <article class="q ar" id="q26"><div class="qhead"><div class="num">26</div><p class="qtext">اكتب مفصلا عن مستويات التعامل مع القرآن الكريم كما ذكرها يوسف القرضاوي. (ص 20-23)</p></div></article>
-    <article class="q ar" id="q27"><div class="qhead"><div class="num">27</div><p class="qtext">بيّن أهمية تطهير القلب قبل الإقبال على القرآن، وأثر ذلك في فهم معانيه. (ص 24-25)</p></div></article>
-    <article class="q ar" id="q28"><div class="qhead"><div class="num">28</div><p class="qtext">كيف يُعرّف يوسف القرضاوي مفهوم التدبر في القرآن الكريم؟ (ص 27)</p></div></article>
-    <article class="q ar" id="q29"><div class="qhead"><div class="num">29</div><p class="qtext">كيف يجب على المسلم تطبيق تعاليم القرآن في حياته اليومية حسب رأي القرضاوي؟ (ص 32-35)</p></div></article>
-    <article class="q ar" id="q30"><div class="qhead"><div class="num">30</div><p class="qtext">حلل دور القرآن في بناء شخصية المسلم وسلوكه كما أوضحه المؤلف. (ص 37-40)</p></div></article>
-    <article class="q ar" id="q31"><div class="qhead"><div class="num">31</div><p class="qtext">ما أخطار هجر القرآن الكريم؟ وكيف حذر يوسف القرضاوي من ذلك؟ (ص 43-45)</p></div></article>
-    <article class="q ar" id="q32"><div class="qhead"><div class="num">32</div><p class="qtext">وضح بالتفصيل المنهج الذي اقترحه يوسف القرضاوي للمسلم في التعامل مع القرآن الكريم، مع ذكر الآداب، الأهداف، مستويات التعامل، وآليات التطبيق العملي. (ص 18-45)</p></div></article>
-    <article class="q ar" id="q33"><div class="qhead"><div class="num">33</div><p class="qtext">ناقش أهمية القرآن الكريم في معالجة قضايا الأمة الإسلامية المعاصرة كما قدمها القرضاوي، وكيف يمكن لإحياء المنهج القرآني أن يهدي المجتمعات الحديثة إلى الصلاح. (ص 46-53)</p></div></article>
+    <article class="q ar" id="q3"><div class="qhead"><div class="num">3</div><p class="qtext">ماهي جهات الاتي يري الامام الباقلاني انَ وجوه الإعجاز القرآن تظهر منها ؟ (92)</p></div>
+    <div class="answer">يرى الباقلاني أن إعجاز القرآن لا يقتصر على وجه واحد، بل يظهر من جهات متعددة؛ أولها الإخبار عن المغيبات المستقبلية التي وقعت كما أخبر، وثانيها قصص الأنبياء والأمم الغابرة التي ذكرها النبي ﷺ وهو أمي لم يدرس الكتب، وثالثها وهو الأهم "نظمه البديع" الذي خرج عن المألوف من أجناس كلام العرب (الشعر والنثر والسجع).
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 92</span>
+    </div>
+    </article>
 
-    <article class="q en" id="q34"><div class="qhead"><div class="num">34</div><p class="qtext">Cambridge Companion to the Qur’an (Jane Dammen McAuliffe ) What is meant by the Qur'an’s “self-declarative” nature?</p></div></article>
-    <article class="q en" id="q35"><div class="qhead"><div class="num">35</div><p class="qtext">Explain the role of Peter the Venerable in the early European engagement with the Qur'an.</p></div></article>
-    <article class="q en" id="q36"><div class="qhead"><div class="num">36</div><p class="qtext">Why do scholars say the Qur’an was transmitted both orally and in writing?</p></div></article>
-    <article class="q en" id="q37"><div class="qhead"><div class="num">37</div><p class="qtext">Explain how the Qur’an was collected and written down during the early caliphates.</p></div></article>
-    <article class="q en" id="q38"><div class="qhead"><div class="num">38</div><p class="qtext">How did Muhammad Asad’s experience influence his approach to translating the Qur'an?</p></div></article>
-    <article class="q en" id="q39"><div class="qhead"><div class="num">39</div><p class="qtext">What are some examples of verses said to be revealed in connection with historical events?</p></div></article>
-    <article class="q en" id="q40"><div class="qhead"><div class="num">40</div><p class="qtext">Discuss the idea of the Qur’an’s inimitability (i‘jaz) and how it supports the belief in its divine origin.</p></div></article>
-    <article class="q en" id="q41"><div class="qhead"><div class="num">41</div><p class="qtext">What are some problems modern scholars face when studying the original form of the Qur’an?</p></div></article>
-    <article class="q en" id="q42"><div class="qhead"><div class="num">42</div><p class="qtext">How does the Qur’an talk about earlier books like the Bible and the Torah?</p></div></article>
-    <article class="q en" id="q43"><div class="qhead"><div class="num">43</div><p class="qtext">What is the meaning of the word 'scripture' and how does it apply to the Qur'an?</p></div></article>
-    <article class="q en" id="q44"><div class="qhead"><div class="num">44</div><p class="qtext">Discuss the history of the Qur’an’s compilation from oral recitation to a fixed written text. Include traditional and modern scholarly views.</p></div></article>
-    <article class="q en" id="q45"><div class="qhead"><div class="num">45</div><p class="qtext">How has calling the Qur’an a 'holy book' or 'scripture' affected how Muslims and non-Muslims study and understand it?</p></div></article>
+    <article class="q ar" id="q4"><div class="qhead"><div class="num">4</div><p class="qtext">شروط المعجزة كم هي وما هي؟ (18)</p></div>
+    <div class="answer">المعجزة لها شروط تجعلها حجة باقية؛ أن تكون فعلاً لا يقدر عليه إلا الله، وأن تخرق القوانين المعتادة للكون، وأن تقع على يد من يدعي الرسالة لتصديقه، وأن تكون مقرونة بالتحدي للمنكرين، وأخيراً أن يعجز هؤلاء المعارضون عن الإتيان بمثلها فعلياً مع توفر الدواعي والقدرة اللسانية لديهم.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 18-20</span>
+    </div>
+    </article>
 
-    <article class="q ar" id="q46"><div class="qhead"><div class="num">46</div><p class="qtext">إعجاز القرآن البياني ودلائل مصدره الرباني (صلاح عبد الفتاح الخالدي ) ما هي الأدلة التي تحقق كروية الارض؟</p></div></article>
-    <article class="q ar" id="q47"><div class="qhead"><div class="num">47</div><p class="qtext">ما هي حقيقة  الأيام الستة التي لا نعرفها الانسان؟</p></div></article>
-    <article class="q ar" id="q48"><div class="qhead"><div class="num">48</div><p class="qtext">بين الصورة المعاصرة في الالتقاء البحرين العذب والمالح؟</p></div></article>
-    <article class="q ar" id="q49"><div class="qhead"><div class="num">49</div><p class="qtext">ما هو الا صناف الستة تخرج من بطون النحل؟</p></div></article>
-    <article class="q ar" id="q50"><div class="qhead"><div class="num">50</div><p class="qtext">ما الأغشية الثلاثة التي تُحيط بالجنين، ولماذا تُسمى بالظلمات الثلاث؟</p></div></article>
-    <article class="q ar" id="q51"><div class="qhead"><div class="num">51</div><p class="qtext">بين كيفية تكوين المني عند الرجل؟</p></div></article>
-    <article class="q ar" id="q52"><div class="qhead"><div class="num">52</div><p class="qtext">اكتب مزايا تشريعات القران؟</p></div></article>
-    <article class="q ar" id="q53"><div class="qhead"><div class="num">53</div><p class="qtext">ما الحكمة في تحويل القبلة الى بيت المقدس واعادتها اللى المكة؟</p></div></article>
-    <article class="q ar" id="q54"><div class="qhead"><div class="num">54</div><p class="qtext">كيف  يكشف القرآن تآمر اليهود ضد المسلمين؟</p></div></article>
-    <article class="q ar" id="q55"><div class="qhead"><div class="num">55</div><p class="qtext">بين معلومات قرآنية عن النفس الإنسانية؟</p></div></article>
-    <article class="q ar" id="q56"><div class="qhead"><div class="num">56</div><p class="qtext">اكتب عن التوازن والوسطية في الإسلام؟</p></div></article>
-    <article class="q ar" id="q57"><div class="qhead"><div class="num">57</div><p class="qtext">كيف يتأثر القران في النفوس ؟ ايت بالمثال ؟</p></div></article>
+    <article class="q ar" id="q5"><div class="qhead"><div class="num">5</div><p class="qtext">ماهو المطلوب في التحدَي؟ (58)</p></div>
+    <div class="answer">التحدي القرآني طالب المعارضين بالإتيان بكلام يماثل القرآن في نظمه وبلاغته. وقد سلك القرآن منهج التدرج في التحدي لتعجيزهم تماماً؛ فتحداهم أولاً بالقرآن كله، ثم بعشر سور مفتريات، ثم بسورة واحدة من مثله. هذا التدرج أثبت أن عجزهم ليس لقلة المحتوى بل لسمو النظم الإلهي عن الطاقة البشرية.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 58</span>
+    </div>
+    </article>
 
-    <article class="q ar" id="q58"><div class="qhead"><div class="num">58</div><p class="qtext">كيف نتعامل مع القرآن العظيم (د. يوسف القرضاوي) ما هو استدلالات المدعيين بأن القرٱن يرفظ رءي الأكثرية؟   (323)</p></div></article>
-    <article class="q ar" id="q59"><div class="qhead"><div class="num">59</div><p class="qtext">(240) بين أهمية السياق في تحديد معاني كلمات معاني القرأن... اكتب مع المثال</p></div></article>
-    <article class="q ar" id="q60"><div class="qhead"><div class="num">60</div><p class="qtext">كيف رد الامام الاسيوطي على  من نفى فائدة العلم بسبب النزول..؟  254</p></div></article>
-    <article class="q ar" id="q61"><div class="qhead"><div class="num">61</div><p class="qtext">ما الفرق بين المحكم والمتشابه... اكتب مع بيان اسباب التشابه ومظهره.. 268</p></div></article>
-    <article class="q ar" id="q62"><div class="qhead"><div class="num">62</div><p class="qtext">إن من تتبع التأويلات الفاسدة - المعزوة إلى الفرق والمدارس القديمة المختلفة، أو إلى الفئات والمدارس الحديثة - يجد أن الآفة المشتركة بين الجميع ترجع إلى أحد أمرين :  ٢٦٢</p></div></article>
-    <article class="q ar" id="q63"><div class="qhead"><div class="num">63</div><p class="qtext">كيف تجيب لمن يسأل: " لماذا جعل الله في كتابه المتشابه ولماذا لم يجعله كله محكما؟  ۲۷۰</p></div></article>
-    <article class="q ar" id="q64"><div class="qhead"><div class="num">64</div><p class="qtext">اكتب الرد على المشككين  في تحريم الخمر  280</p></div></article>
-    <article class="q ar" id="q65"><div class="qhead"><div class="num">65</div><p class="qtext">اكتب الرد على للمشككين  في تحريم الخمر  280</p></div></article>
-    <article class="q ar" id="q66"><div class="qhead"><div class="num">66</div><p class="qtext">اكتب مثالا  واحدا لتأويلات الباطلات  للباطنية والزنادقة والقديانية والبهاءية .....   294</p></div></article>
-    <article class="q ar" id="q67"><div class="qhead"><div class="num">67</div><p class="qtext">إيت بالأمثلة لاهتمام العلماء بضوابط التأويل للقران...285</p></div></article>
-    <article class="q ar" id="q68"><div class="qhead"><div class="num">68</div><p class="qtext">اكتب عن دعوى النسخة بلا برهان...   326</p></div></article>
-    <article class="q ar" id="q69"><div class="qhead"><div class="num">69</div><p class="qtext">بين المكان المتعلقة بٱيت السيف.     329</p></div></article>
+    <article class="q ar" id="q6"><div class="qhead"><div class="num">6</div><p class="qtext">هل التحدي شرط في المعجزة ام لا، فصَل؟ (20)</p></div>
+    <div class="answer">نعم، التحدي ركن ركين في المعجزة؛ فبدونه لا يمكن التمييز بين المعجزة والكرامة التي تظهر للأولياء، أو السحر والشعوذة. التحدي هو الذي يضع الخصم في موضع الاختبار، فإذا عجز الخصم عن المعارضة مع وجود القصد والتحدي، ثبتت المعجزة وصحت النبوة وصار الحجة قائمة على الخلق.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 20</span>
+    </div>
+    </article>
 
-    <article class="q en" id="q70"><div class="qhead"><div class="num">70</div><p class="qtext">Cambridge Companion to the Qur’an (Jane Dammen McAuliffe ) How was the Qur'an transmitted and preserved in the early Islamic period?</p></div></article>
-    <article class="q en" id="q71"><div class="qhead"><div class="num">71</div><p class="qtext">What role does the Qur'an play in Islamic law and ethics?</p></div></article>
-    <article class="q en" id="q72"><div class="qhead"><div class="num">72</div><p class="qtext">How have non-Muslim scholars approached the study of the Qur'an historically?</p></div></article>
-    <article class="q en" id="q73"><div class="qhead"><div class="num">73</div><p class="qtext">What are the major themes explored in the Qur'anic narratives?</p></div></article>
-    <article class="q en" id="q74"><div class="qhead"><div class="num">74</div><p class="qtext">How did classical Qur’anic commentators like al-Ṭabarī shape the tradition of tafsīr?</p></div></article>
-    <article class="q en" id="q75"><div class="qhead"><div class="num">75</div><p class="qtext">What are the main interpretive methodologies used in classical and medieval Qur’anic exegesis, and how do they differ from one another?</p></div></article>
-    <article class="q en" id="q76"><div class="qhead"><div class="num">76</div><p class="qtext">What challenges do modern Muslim scholars face when engaging with the classical exegetical tradition, particularly in the context of contemporary issues like pluralism and human rights?</p></div></article>
-    <article class="q en" id="q77"><div class="qhead"><div class="num">77</div><p class="qtext">Who was al-Ṭabarī and what is the significance of his Qur’anic commentary in Islamic scholarship?</p></div></article>
-    <article class="q en" id="q78"><div class="qhead"><div class="num">78</div><p class="qtext">What are some of the main features of Sufi interpretation of the Qur’an, as seen in the works of al-Tustarī?</p></div></article>
-    <article class="q en" id="q79"><div class="qhead"><div class="num">79</div><p class="qtext">What makes Sayyid Qutb’s Qur’anic commentary unique among modern interpretations of the Qur’an?</p></div></article>
-    <article class="q en" id="q80"><div class="qhead"><div class="num">80</div><p class="qtext">How have different scholars interpreted the Qur’an over time, and what are the main types of tafsīr (commentary) in Islamic tradition?</p></div></article>
-    <article class="q en" id="q81"><div class="qhead"><div class="num">81</div><p class="qtext">In what ways has the Qur’an influenced Muslim society, including law, education, and daily life?</p></div></article>
+    <article class="q ar" id="q7"><div class="qhead"><div class="num">7</div><p class="qtext">بيَن احتمالات الجرجاني حول الإعجاز ؟ (94)</p></div>
+    <div class="answer">يرى عبد القاهر الجرجاني في نظرية النظم أن الإعجاز ليس في الكلمات المفردة (لأنها موجودة في كلام الناس) ولا في الحركات الإعرابية وحدها، بل يكمن في "النظم"؛ أي في كيفية ترتيب الكلمات وتوخي معاني النحو بينها، بحيث تؤدي المعنى بأرقى صورة ممكنة من التأليف والانسجام الذي يعجز البشر عن تقليده.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 94-95</span>
+    </div>
+    </article>
 
-    <article class="q ar" id="q82"><div class="qhead"><div class="num">82</div><p class="qtext">إعجاز القرآن البياني ودلائل مصدره الرباني (صلاح عبد الفتاح الخالدي ) ما المقصود بإعجاز القرآن كما جاء في المبحث الأول من الفصل الأول</p></div></article>
-    <article class="q ar" id="q83"><div class="qhead"><div class="num">83</div><p class="qtext">كيف يختلف التحدي القرآني عن معجزات الأنبياء السابقين بحسب المبحث الثالث؟</p></div></article>
-    <article class="q ar" id="q84"><div class="qhead"><div class="num">84</div><p class="qtext"> ما هي العلاقة بين المعاجزة والعجز والإعجاز كما ورد في المبحث الخامس؟</p></div></article>
-    <article class="q ar" id="q85"><div class="qhead"><div class="num">85</div><p class="qtext">ما الفكرة الأساسية من المبحث السابع حول الفروق بين الألفاظ المتقاربة؟</p></div></article>
-    <article class="q ar" id="q86"><div class="qhead"><div class="num">86</div><p class="qtext">ما الدور الذي تلعبه فواصل الآيات في البيان القرآني حسب المبحث الثامن عشر؟</p></div></article>
-    <article class="q ar" id="q87"><div class="qhead"><div class="num">87</div><p class="qtext"> ناقش دلالات آيات التحدي في القرآن كما ورد في المبحث الرابع من الفصل الأول</p></div></article>
-    <article class="q ar" id="q88"><div class="qhead"><div class="num">88</div><p class="qtext"> بيّن كيف اعتبر الإعجاز البياني هو موضوع التحدي الأساسي في القرآن</p></div></article>
-    <article class="q ar" id="q89"><div class="qhead"><div class="num">89</div><p class="qtext">فسّر ظاهرة التقديم والتأخير في البيان القرآني وأثرها البلاغي.</p></div></article>
-    <article class="q ar" id="q90"><div class="qhead"><div class="num">90</div><p class="qtext">حلّل مفهوم التنوع في صيغ الأفعال المشتقة من أصل لغوي واحد وأثره في إعجاز القرآن.</p></div></article>
-    <article class="q ar" id="q91"><div class="qhead"><div class="num">91</div><p class="qtext"> وضّح كيف يتم التعبير عن الحقائق العلمية الثابتة في القرآن كدليل على مصدره الرباني.</p></div></article>
-    <article class="q ar" id="q92"><div class="qhead"><div class="num">92</div><p class="qtext"> ناقش مظاهر الإعجاز البياني في القرآن الكريم مبينًا عناصره وأدواته وأثره في تحدي العرب في عصر النزول.</p></div></article>
-    <article class="q ar" id="q93"><div class="qhead"><div class="num">93</div><p class="qtext">تناول دلائل مصدر القرآن الرباني من خلال تحليل الجوانب الغيبية والعلمية والنفسية والتشريعية في محتواه.</p></div></article>
+    <article class="q ar" id="q8"><div class="qhead"><div class="num">8</div><p class="qtext">نشأة مصطلح "اعجاز القرآن" في نهاية القرن الثالث  (81)</p></div>
+    <div class="answer">لم يظهر المصطلح كعلم مستقل في العصر النبوي لأن الصحابة أدركوه بالفطرة، بل بدأ يتبلور في نهاية القرن الثالث الهجري كعنوان لمؤلفات مستقلة. تطور البحث فيه من كونه مبحثاً في العقيدة والنبوة إلى علم بلاغي ونقدي شامل يبحث في أسرار النظم القرآني وتفوقه اللغوي على كل أساليب العرب.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 81</span>
+    </div>
+    </article>
 
-    <article class="q en" id="q94"><div class="qhead"><div class="num">94</div><p class="qtext">Cambridge Companion to the Qur’an (Jane Dammen McAuliffe ) What is the Tabari's methodology that he applied in his exegesis  (191)</p></div></article>
-    <article class="q en" id="q95"><div class="qhead"><div class="num">95</div><p class="qtext">What is ibn Taymiyya's method for interpreting the Quran (197,198)</p></div></article>
-    <article class="q en" id="q96"><div class="qhead"><div class="num">96</div><p class="qtext">What is Tajwid, Why is it important in Quran recitation? (119)</p></div></article>
-    <article class="q en" id="q97"><div class="qhead"><div class="num">97</div><p class="qtext">What is the role of a person who memorize the Quran (122)</p></div></article>
-    <article class="q en" id="q98"><div class="qhead"><div class="num">98</div><p class="qtext">How does Quranic recitation create emotional or spiritual effect on listeners (124,125)</p></div></article>
-    <article class="q en" id="q99"><div class="qhead"><div class="num">99</div><p class="qtext">Explain the Quranic translation growth?(155 to 157)</p></div></article>
-    <article class="q en" id="q100"><div class="qhead"><div class="num">100</div><p class="qtext">How do Quran used in daily muslim life?(120'121)</p></div></article>
-    <article class="q en" id="q101"><div class="qhead"><div class="num">101</div><p class="qtext">Who was Sayyd Quthub and how did his interpretation of Quran influences modern thought (199to 201)</p></div></article>
-    <article class="q en" id="q102"><div class="qhead"><div class="num">102</div><p class="qtext">Explain growth of codification and early Quran manuscript?(145 to148)</p></div></article>
-    <article class="q en" id="q103"><div class="qhead"><div class="num">103</div><p class="qtext">How has the transmission of the Quran evolved from oral tradition to print and sound media?(151 to 154)</p></div></article>
-    <article class="q en" id="q104"><div class="qhead"><div class="num">104</div><p class="qtext">Explain Qranic Inscriptions in art and architecture (163to 176)</p></div></article>
-    <article class="q en" id="q105"><div class="qhead"><div class="num">105</div><p class="qtext">Comment on any three Tafsir that refered in  this book?(190 to 201)</p></div></article>
+    <article class="q ar" id="q9"><div class="qhead"><div class="num">9</div><p class="qtext">دراسات معاصرة للإعجاز والبياني القرآن، بيَن؟ (97)</p></div>
+    <div class="answer">في العصر الحديث، أعاد العلماء إحياء المنهج البياني كرد على الطعون المستشرقة؛ ومن أبرز هؤلاء مصطفى صادق الرافعي في "إعجاز القرآن والبلاغة النبوية"، ومحمود شاكر، ومحمد عبد الله دراز، وسيد قطب. وكتاب الدكتور صلاح الخالدي الحالي يمثل امتداداً لهذه المدرسة التي ترى أن جمال البيان هو المفتاح الأول لفهم قدسية النص.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 97</span>
+    </div>
+    </article>
 
-    <article class="q ar" id="q106"><div class="qhead"><div class="num">106</div><p class="qtext">التبيان في آداب حملة القرآن  (ابو زكريا يحيى بن شرف النووي) ما هي اداب المعلم والمتعلم. اذكر بعض منها ؟</p></div></article>
-    <article class="q ar" id="q107"><div class="qhead"><div class="num">107</div><p class="qtext">من هو " اكرم الناس علي" على قول ابن عباس ر ؟</p></div></article>
-    <article class="q ar" id="q108"><div class="qhead"><div class="num">108</div><p class="qtext">" حامل القران حامل راية الاسلام"  ما المراد بهذا القول ؟</p></div></article>
-    <article class="q ar" id="q109"><div class="qhead"><div class="num">109</div><p class="qtext">ماذا يستحب المتعلم في تعليمه ؟</p></div></article>
-    <article class="q ar" id="q110"><div class="qhead"><div class="num">110</div><p class="qtext">اداب القراءة،  بيّن ؟</p></div></article>
-    <article class="q ar" id="q111"><div class="qhead"><div class="num">111</div><p class="qtext">ما هي الاوقات المختارة للقراءة ؟</p></div></article>
-    <article class="q ar" id="q112"><div class="qhead"><div class="num">112</div><p class="qtext">بين اداب ختم القران وما يستحب عند ذلك ؟</p></div></article>
-    <article class="q ar" id="q113"><div class="qhead"><div class="num">113</div><p class="qtext">هل يجوز النفث بآيات القران للرقية بيّن حديثا في هذه المسألة</p></div></article>
-    <article class="q ar" id="q114"><div class="qhead"><div class="num">114</div><p class="qtext">اداب المتعلم، بين شافيا كافيا؟</p></div></article>
-    <article class="q ar" id="q115"><div class="qhead"><div class="num">115</div><p class="qtext">تعليم المتعلمين فرض كفاية، بيّن شافيا كافيا ؟</p></div></article>
-    <article class="q ar" id="q116"><div class="qhead"><div class="num">116</div><p class="qtext">ما الاحكام المتعلقهة بكتابة القران الكريم ؟</p></div></article>
-    <article class="q ar" id="q117"><div class="qhead"><div class="num">117</div><p class="qtext">ما الايات والسور المستحبة في اوقات واحوال مخصوصة ؟</p></div></article>
+    <article class="q ar" id="q10"><div class="qhead"><div class="num">10</div><p class="qtext">إعجاز القرآن البياني ودلائل مصدره الرباني (صلاح عبد الفتاح الخالدي ) ما هي المرحلة الأولى في تطور فهم إعجاز القرآن، وماذا كان محورها الرئيسي؟  (106)</p></div>
+    <div class="answer">المرحلة الأولى كانت مرحلة "التقرير والاحتجاج"، حيث كان العلماء يركزون على إثبات أن القرآن ليس من عند البشر لإثبات نبوة محمد ﷺ. كان المحور الرئيسي عَقَدياً غائياً، يهدف إلى إقامة الحجة على الكفار، قبل أن ينتقل العلم في مراحل لاحقة إلى التحليل البلاغي والنقدي المفصل للآيات والسور.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 106</span>
+    </div>
+    </article>
 
-    <article class="q ar" id="q118"><div class="qhead"><div class="num">118</div><p class="qtext">التبيان في آداب حملة القرآن  (ابو زكريا يحيى بن شرف النووي) تكره القراءة في ثلاثة مواضع - ما هي؟</p></div></article>
-    <article class="q ar" id="q119"><div class="qhead"><div class="num">119</div><p class="qtext">هل تجوز قراءة القرآن بالقراءات السبع؟ بين المسالة؟</p></div></article>
-    <article class="q ar" id="q120"><div class="qhead"><div class="num">120</div><p class="qtext">بين الحالان لسجود التلاوة والأقوال فيها؟</p></div></article>
-    <article class="q ar" id="q121"><div class="qhead"><div class="num">121</div><p class="qtext">فيمن يسن سجود التلاوة؟</p></div></article>
-    <article class="q ar" id="q122"><div class="qhead"><div class="num">122</div><p class="qtext">هل تجوز وقف القراءة للأمور الدنيوية وهل يراد بها الكلام - بين ؟</p></div></article>
-    <article class="q ar" id="q123"><div class="qhead"><div class="num">123</div><p class="qtext">ما هي الأحوال تكره فيها القراءة؟</p></div></article>
-    <article class="q ar" id="q124"><div class="qhead"><div class="num">124</div><p class="qtext">كم عدد السجدات وما محلها؟</p></div></article>
-    <article class="q ar" id="q125"><div class="qhead"><div class="num">125</div><p class="qtext">بين بعض من المسائل الغريبة في القراءة؟</p></div></article>
-    <article class="q ar" id="q126"><div class="qhead"><div class="num">126</div><p class="qtext">ما هي الإدارة بالقرآن؟ هل يجوز ذلك؟</p></div></article>
-    <article class="q ar" id="q127"><div class="qhead"><div class="num">127</div><p class="qtext">اكتب نبذة عن المصنف ومنهجه؟</p></div></article>
-    <article class="q ar" id="q128"><div class="qhead"><div class="num">128</div><p class="qtext">بين الأحكام المتعلقة بمس القران الكريم؟</p></div></article>
-    <article class="q ar" id="q129"><div class="qhead"><div class="num">129</div><p class="qtext">بين الأحكام المتعلقة بتفسير القرآن مع بيان أقسام المفسرين برأيهم من غير دليل صحيح؟</p></div></article>
+    <article class="q ar" id="q11"><div class="qhead"><div class="num">11</div><p class="qtext">كيف يظهر الإعجاز البياني في حذف بعض الحروف أو الكلمات في القرآن؟</p></div>
+    <div class="answer">الحذف القرآني من أرقى فنون الإيجاز؛ حيث يحذف القرآن حرفاً أو كلمة أو جملة كاملة لدلالة السياق عليها. هذا الحذف يحفز ذهن السامع لتقدير المحذوف، مما يمنح النص قوة وتكثيفاً في المعنى، مثل حذف جواب "لو" في مواضع التهويل ليدل على أن الجواب أعظم من أن يوصف بالكلمات.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 134-140</span>
+    </div>
+    </article>
 
-    <article class="q ar" id="q130"><div class="qhead"><div class="num">130</div><p class="qtext">كيف نتعامل مع القرآن العظيم (د. يوسف القرضاوي) قوامة الرجل على الأسرة بأمرين،بين؟</p></div></article>
-    <article class="q ar" id="q131"><div class="qhead"><div class="num">131</div><p class="qtext">ايت بآيات التي تدل على أن القرآن كتاب الإنسانية كلها؟</p></div></article>
-    <article class="q ar" id="q132"><div class="qhead"><div class="num">132</div><p class="qtext">عد خمسة من مقاصد القرآن الكريم ؟</p></div></article>
-    <article class="q ar" id="q133"><div class="qhead"><div class="num">133</div><p class="qtext">ما هو اوصاف امتنا الاساسية بينها الله في القران؟</p></div></article>
-    <article class="q ar" id="q134"><div class="qhead"><div class="num">134</div><p class="qtext">كيف بين القران التسامح مع غير المسلمين؟</p></div></article>
-    <article class="q ar" id="q135"><div class="qhead"><div class="num">135</div><p class="qtext">كيف يصحح القران العقيدة في النبوة والرسالة؟</p></div></article>
-    <article class="q ar" id="q136"><div class="qhead"><div class="num">136</div><p class="qtext">بيني الزواج و خصوصياتها في ضوء القران؟</p></div></article>
-    <article class="q ar" id="q137"><div class="qhead"><div class="num">137</div><p class="qtext">كيف حث القران المسلمين على الاخوة والمساواة بين الناس. وبين كيف يكونون اخوة مع اختلاف ابائهم وامهاتهم؟</p></div></article>
-    <article class="q ar" id="q138"><div class="qhead"><div class="num">138</div><p class="qtext">ما التزكية وما معنياهما؟. ارتبط بين معانياهما ودعوة النبي النبي صلى الله عليه وسلم؟</p></div></article>
-    <article class="q ar" id="q139"><div class="qhead"><div class="num">139</div><p class="qtext">كيف يثبت القران عقيدة الايمان بالاخرة والجزاء؟</p></div></article>
-    <article class="q ar" id="q140"><div class="qhead"><div class="num">140</div><p class="qtext">كيف يقرر القران كرامة الانسان  وحقوقة؟</p></div></article>
-    <article class="q ar" id="q141"><div class="qhead"><div class="num">141</div><p class="qtext">كيف يكون القران الاسرة الصالحة وانصاف المراة؟</p></div></article>
+    <article class="q ar" id="q12"><div class="qhead"><div class="num">12</div><p class="qtext">ما هو دور فواتح السور في الإعجاز البياني؟ (143)</p></div>
+    <div class="answer">فواتح السور (مثل الم، المص) هي نوع من "الإعجاز اللغوي التنبيهي". هي حروف من جنس لغة العرب، وكأن الله يقول لهم: هذا القرآن مؤلف من هذه الحروف التي تنطقون بها، فإن كنتم تظنونه بشرياً فأتوا بمثله. فهي تعمل كأداة للتعجيز وإثبات أن السر ليس في الحروف بل في ناظمها.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 143</span>
+    </div>
+    </article>
 
-    <article class="q ar" id="q142"><div class="qhead"><div class="num">142</div><p class="qtext">كيف نتعامل مع القرآن العظيم (د. يوسف القرضاوي) اكتب ملاحظة قصيرة عن معنى “التلاوة المتدبرة”.؟</p></div></article>
-    <article class="q ar" id="q143"><div class="qhead"><div class="num">143</div><p class="qtext">اذكر شرطين من شروط التأثر بالقرآن الكريم.؟</p></div></article>
-    <article class="q ar" id="q144"><div class="qhead"><div class="num">144</div><p class="qtext">ما المقصود بالهجر العملي للقرآن؟</p></div></article>
-    <article class="q ar" id="q145"><div class="qhead"><div class="num">145</div><p class="qtext">أهمية حضور القلب عند تلاوة القرآن؟</p></div></article>
-    <article class="q ar" id="q146"><div class="qhead"><div class="num">146</div><p class="qtext">كيف نظر القرضاوي إلى دور السنة النبوية في فهم القرآن؟</p></div></article>
-    <article class="q ar" id="q147"><div class="qhead"><div class="num">147</div><p class="qtext">ناقش أهمية التدبر في التعامل مع القرآن الكريم.</p></div></article>
-    <article class="q ar" id="q148"><div class="qhead"><div class="num">148</div><p class="qtext">ما علاقة الفهم العملي للقرآن بتطبيقه في الواقع؟</p></div></article>
-    <article class="q ar" id="q149"><div class="qhead"><div class="num">149</div><p class="qtext">وضّح كيف أن الاقتصار على الحفظ دون العمل يعد قصوراً في التعامل مع القرآن.</p></div></article>
-    <article class="q ar" id="q150"><div class="qhead"><div class="num">150</div><p class="qtext">ما الوسائل التي تساعد المسلم على تجديد علاقته بالقرآن الكريم؟</p></div></article>
-    <article class="q ar" id="q152"><div class="qhead"><div class="num">151</div><p class="qtext">اكتب مقالاً بعنوان: “كيف نتعامل مع القرآن الكريم تعاملاً إيمانياً وتربوياً؟”</p></div></article>
+    <article class="q ar" id="q13"><div class="qhead"><div class="num">13</div><p class="qtext">ما المقصود بدقة حروف المعاني في التعبير القرآني؟ (172)</p></div>
+    <div class="answer">دقة حروف المعاني (الجر، العطف، النداء) تظهر في وضع الحرف المناسب في الموضع الذي لا يسده غيره. فتبديل حرف بحرف في القرآن يغير المعنى الدقيق؛ وهذا الاختيار المتناهي في الدقة يثبت أن كل حرف وضع بميزان إلهي ليوافق المراد تماماً في سياقه الخاص.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 172</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q14"><div class="qhead"><div class="num">14</div><p class="qtext">ما الفرق بين المعجزة والآية؟</p></div>
+    <div class="answer">"الآية" هي اللفظ الذي استعمله القرآن لوصف الدلائل الربانية، وهي أعم وأشمل، فتشمل الآيات المتلوة والآيات الكونية. أما "المعجزة" فهي اصطلاح وضعه علماء الكلام لاحقاً ليدل على الجانب التعجيزي للخصوم. فالمعجزة هي الآية في حال وقوع التحدي بها لإثبات صدق الرسالة.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 14-15</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q15"><div class="qhead"><div class="num">15</div><p class="qtext">تحدث عن العلاقة بين الإعجاز البياني والتحدي الذي جاء به القرآن.</p></div>
+    <div class="answer">البيان القرآني هو الساحة التي وقع فيها التحدي؛ لأن العرب كانت بلاغتهم هي تجارتهم وفخرهم. فجاء التحدي في أكثر ما يتقنونه ليقطع عذرهم. فالعلاقة تلازمية؛ التحدي هو الاختبار العملي، والإعجاز البياني هو الصفة الذاتية للقرآن التي جعلت المعارضين يسقطون في الاختبار.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 58-60</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q16"><div class="qhead"><div class="num">16</div><p class="qtext">بيّن الغرض من التكرار في القرآن، مع أمثلة.</p></div>
+    <div class="answer">التكرار في القرآن ليس مجرد إعادة للفظ، بل هو "تأسيس لا تأكيد". فكل تكرار لقصة أو آية يأتي بزيادة في المعنى أو يخدم سياقاً جديداً أو يؤكد مفهماً تربوياً يحتاج إلى التكرار لتقريره في النفس، بالإضافة إلى ما يمنحه من جرس موسيقي وتأثير وجداني.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 180-185</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q17"><div class="qhead"><div class="num">17</div><p class="qtext">وضّح كيف أن التقديم والتأخير في تركيب الآية يُظهر الإعجاز البياني.</p></div>
+    <div class="answer">هذا الفن البلاغي يخرج عن الترتيب النحوي المعتاد لخدمة المعنى؛ كتقديم المفعول به للاهتمام أو الحصر (إياك نعبد)، أو تقديم ما هو أهم تشريفاً. هذا التصرف في ترتيب الجملة يمنح الآية دلالات نفسية وبلاغية لا يمكن الوصول إليها بالترتيب التقليدي، وهو من أوضح وجوه الإعجاز.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 150-155</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q18"><div class="qhead"><div class="num">18</div><p class="qtext">لماذا استخدم القرآن كلمات مختلفة في مواضع متشابهة؟</p></div>
+    <div class="answer">القرآن يراعي "المناسبة" اللفظية والمعنوية؛ ففي مواضع القوة يستخدم كلمات جزلة، وفي مواضع الرحمة يستخدم كلمات رقيقة. حتى الكلمات التي تبدو مترادفة (مثل جاء وأتى) يستخدمها القرآن بدقة؛ فـ "أتى" غالباً للمجيء السهل، و"جاء" للمجيء الذي فيه ثقل أو أمر عظيم.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 160-165</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q19"><div class="qhead"><div class="num">19</div><p class="qtext">ما هي وظيفة فواصل الآيات في الجمال البياني؟</p></div>
+    <div class="answer">فواصل الآيات (خواتيمها) ليست مجرد قافية، بل هي "رؤوس أقلام" تلخص المعنى وتتناسب مع مضمون الآية. فإذا كانت الآية في العذاب ختمت بما يناسبه، وإذا كانت في الرحمة ختمت باسمين من أسماء الله الحسنى يوافقان السياق، مما يحقق تلاحماً بين الشكل الفني والمضمون العقدي.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 188-192</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q20"><div class="qhead"><div class="num">20</div><p class="qtext">تحدّث عن بعض الطرق التي تجعل أسلوب القرآن مميزًا ولا يشبه كلام البشر.</p></div>
+    <div class="answer">يتميز أسلوب القرآن بأنه "نسيج وحده"؛ فهو يجمع بين قوة الحجة العقلية وعذوبة التأثير العاطفي. لا يمكن تصنيفه شعراً ولا نثراً، بل هو كلام متوازن الألفاظ، عميق المعاني، يخاطب الفطرة مباشرة بأسلوب مهيمن يملك على السامع حواسه سواء آمن به أو كفر.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 120-125</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q21"><div class="qhead"><div class="num">21</div><p class="qtext">اشرح بأسلوبك كيف يبيّن القرآن المعنى بطريقة جميلة وسهلة من خلال ترتيب الكلمات.</p></div>
+    <div class="answer">ترتيب الكلمات في القرآن يشبه البناء الهندسي الدقيق؛ حيث توضع كل لبنة في مكانها لتعطي أقصى طاقة من الجمال والوضوح. هذا الترتيب يراعي جرس الحروف، وتدفق المعنى، وتدرج الأفكار، مما يجعل الآية تنساب إلى القلب بسهولة وتترك فيه أثراً باقياً لا يزول بمرور الزمن.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 145-148</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q22"><div class="qhead"><div class="num">22</div><p class="qtext">كيف نتعامل مع القرآن العظيم (د. يوسف القرضاوي) ما الأهداف الأساسية التي ينبغي أن يحققها المسلم عند تعامله مع القرآن الكريم؟ (ص 18)</p></div>
+    <div class="answer">يرى الدكتور القرضاوي أن الهدف من تعامل المسلم مع القرآن يجب أن يتجاوز مجرد الثواب، ليشمل: الاهتداء به في شؤون الحياة، وتصحيح التصورات العقدية، وتزكية النفس من الأخلاق الذميمة، والتحاكم إليه في القضايا الفردية والاجتماعية، وبناء الشخصية الإسلامية المتوازنة.
+      <span class="source">المصدر: كيف نتعامل مع القرآن العظيم، ص 18</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q23"><div class="qhead"><div class="num">23</div><p class="qtext">كيف وصف القرآن الكريم نفسه كمصدر هداية للناس؟ (ص 15)</p></div>
+    <div class="answer">القرآن عرف نفسه بأنه "هدى للمتقين" و"نور" يضيء دروب الحيرة. وصف نفسه بأنه "شفاء" للأمراض النفسية والقلبية، و"رحمة" للمؤمنين، و"فرقان" يفصل بين الحق والباطل. هذه الأوصاف تؤكد أن القرآن منهج حياة متكامل وليس مجرد كتاب للتلاوة في المناسبات.
+      <span class="source">المصدر: كيف نتعامل مع القرآن العظيم، ص 15-16</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q24"><div class="qhead"><div class="num">24</div><p class="qtext">اذكر أدبين من آداب المسلم عند تلاوة القرآن الكريم. (ص 22)</p></div>
+    <div class="answer">أولاً: الإخلاص لله؛ فلا يقرأ لغرض دنيوي أو ليقال قارئ. ثانياً: حضور القلب؛ فالتلاوة بلا تدبر كالجسم بلا روح. كما يضيف القرضاوي آداباً أخرى كالوضوء، والسواك، واستقبال القبلة، والتفكر في معاني الآيات عند الوقوف عليها.
+      <span class="source">المصدر: كيف نتعامل مع القرآن العظيم، ص 22-23</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q25"><div class="qhead"><div class="num">25</div><p class="qtext">ما أهمية قراءة القرآن بفهم وتدبر بدلاً من مجرد التلاوة؟ (ص 30)</p></div>
+    <div class="answer">التلاوة وسيلة والتدبر هو الغاية القصوى؛ لأن الفهم هو الذي يولد العمل والتغيير. القراءة السريعة التي تهدف لختم الأجزاء فقط قد تضيع معها مقاصد القرآن. التدبر هو الذي يجعل القرآن يخالط القلوب ويؤثر في السلوك، وهو الذي أمرنا الله به في كتابه.
+      <span class="source">المصدر: كيف نتعامل مع القرآن العظيم، ص 30</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q26"><div class="qhead"><div class="num">26</div><p class="qtext">اكتب مفصلا عن مستويات التعامل مع القرآن الكريم كما ذكرها يوسف القرضاوي. (ص 20-23)</p></div>
+    <div class="answer">حددها القرضاوي في خمسة مستويات: 1) الاستماع الجيد والإنصات. 2) تلاوته حق تلاوته مع التجويد. 3) حفظ ما تيسر منه في الصدور. 4) الفهم والتدبر العميق. 5) العمل بمقتضاه في الواقع والامتثال لأوامره ونواهيه.
+      <span class="source">المصدر: كيف نتعامل مع القرآن العظيم، ص 20-23</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q27"><div class="qhead"><div class="num">27</div><p class="qtext">بيّن أهمية تطهير القلب قبل الإقبال على القرآن، وأثر ذلك في فهم معانيه. (ص 24-25)</p></div>
+    <div class="answer">تطهير القلب هو "الشرط المانع"؛ فالمعاصي والكبر تعمل كغطاء يحجب نور القرآن عن الدخول للقلب. والقلب الطاهر هو الأرض الصالحة التي ينبت فيها زرع القرآن؛ فبقدر طهارة النفس من الأهواء والشهوات، تفتح لها كنوز الفهم وأسرار الآيات.
+      <span class="source">المصدر: كيف نتعامل مع القرآن العظيم، ص 24-25</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q28"><div class="qhead"><div class="num">28</div><p class="qtext">كيف يُعرّف يوسف القرضاوي مفهوم التدبر في القرآن الكريم؟ (ص 27)</p></div>
+    <div class="answer">التدبر هو إعمال الفكر في الآيات للوصول إلى مقاصدها وعواقبها. هو ليس مجرد معرفة التفسير اللغوي، بل هو استنطاق النص ليخاطب واقعك الشخصي. التدبر هو النظر في "دبر" الأمور وعواقبها، مما يولد خشية الله والالتزام بمنهجه.
+      <span class="source">المصدر: كيف نتعامل مع القرآن العظيم، ص 27</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q29"><div class="qhead"><div class="num">29</div><p class="qtext">كيف يجب على المسلم تطبيق تعاليم القرآن في حياته اليومية حسب رأي القرضاوي؟ (ص 32-35)</p></div>
+    <div class="answer">يجب أن يتحول القرآن من "نص مكتوب" إلى "واقع حي" يراه الناس في أخلاق المسلم وتعامله. التطبيق يشمل العبادات، والمعاملات المالية، والعلاقات الأسرية. والقرآن دستور عملي يجب أن يحكم البيت والشارع والمؤسسة، وليس فقط المسجد.
+      <span class="source">المصدر: كيف نتعامل مع القرآن العظيم، ص 32-35</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q30"><div class="qhead"><div class="num">30</div><p class="qtext">حلل دور القرآن في بناء شخصية المسلم وسلوكه كما أوضحه المؤلف. (ص 37-40)</p></div>
+    <div class="answer">القرآن يبني "الإنسان المتكامل"؛ فيزود العقل بالعلم والحكمة، ويملأ القلب بالإيمان والسكينة، ويوجه الجوارح للعمل الصالح. هو يصنع شخصية متوازنة تجمع بين الدنيا والآخرة، وبين الروح والمادة، مما يجعل المسلم عنصراً بناءً في المجتمع.
+      <span class="source">المصدر: كيف نتعامل مع القرآن العظيم، ص 37-40</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q31"><div class="qhead"><div class="num">31</div><p class="qtext">ما أخطار هجر القرآن الكريم؟ وكيف حذر يوسف القرضاوي من ذلك؟ (ص 43-45)</p></div>
+    <div class="answer">حذر القرضاوي من أن هجر القرآن يؤدي إلى التيه الفكري والظلام الروحي. الهجر أنواع؛ هجر التلاوة، وهجر الفهم، وهجر العمل، وهجر التحاكم إليه. وهذا الهجر هو سبب تراجع الأمة الإسلامية وضعفها أمام التيارات الدخيلة، مما يجعلها أمة بلا هوية.
+      <span class="source">المصدر: كيف نتعامل مع القرآن العظيم، ص 43-45</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q32"><div class="qhead"><div class="num">32</div><p class="qtext">وضح بالتفصيل المنهج الذي اقترحه يوسف القرضاوي للمسلم في التعامل مع القرآن الكريم، مع ذكر الآداب، الأهداف، مستويات التعامل، وآليات التطبيق العملي. (ص 18-45)</p></div>
+    <div class="answer">يقترح القرضاوي منهجاً شمولياً يبدأ بتصحيح "النية"، ثم المرور بمراحل التلقي (السمع والقراءة)، ثم مرحلة الاستيعاب (الفهم والتدبر)، وأخيراً مرحلة "التنزيل" أي تطبيق القرآن على الواقع المعاصر وحل مشكلات الأمة من خلال الرؤية القرآنية الشاملة.
+      <span class="source">المصدر: كيف نتعامل مع القرآن العظيم، ص 18-45</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q33"><div class="qhead"><div class="num">33</div><p class="qtext">ناقش أهمية القرآن الكريم في معالجة قضايا الأمة الإسلامية المعاصرة كما قدمها القرضاوي، وكيف يمكن لإحياء المنهج القرآني أن يهدي المجتمعات الحديثة إلى الصلاح. (ص 46-53)</p></div>
+    <div class="answer">القرآن ليس كتاباً للماضي، بل هو مرجع لحل قضايا الاستبداد، والفقر، والفرقة. يرى القرضاوي أن إحياء المنهج القرآني في "الشورى" و"العدل الاجتماعي" و"الوحدة" هو السبيل الوحيد لإصلاح المجتمعات الحديثة وإنقاذها من الضياع الأخلاقي والمادي.
+      <span class="source">المصدر: كيف نتعامل مع القرآن العظيم، ص 46-53</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q34"><div class="qhead"><div class="num">34</div><p class="qtext">Cambridge Companion to the Qur’an (Jane Dammen McAuliffe ) What is meant by the Qur'an’s “self-declarative” nature?</p></div>
+    <div class="answer">The Qur'an is unique in that it constantly defines and references itself within its own text. It calls itself *al-Kitab* (The Book), *al-Furqan* (The Criterion), and *Dhikr* (Reminder). This "self-referentiality" establishes its authority and divine identity directly to the reader, confirming its origins as a divine message.
+      <span class="source">Source: Cambridge Companion to the Qur’an, p. 1-10</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q35"><div class="qhead"><div class="num">35</div><p class="qtext">Explain the role of Peter the Venerable in the early European engagement with the Qur'an.</p></div>
+    <div class="answer">In the 12th century, Peter the Venerable, abbot of Cluny, recognized that Islam could not be combated without understanding its text. He commissioned the first translation of the Qur'an into Latin. While his intent was to facilitate Christian polemics against Islam, his project laid the foundation for European orientalist study of the Qur'an.
+      <span class="source">Source: Cambridge Companion to the Qur’an, p. 312</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q36"><div class="qhead"><div class="num">36</div><p class="qtext">Why do scholars say the Qur’an was transmitted both orally and in writing?</p></div>
+    <div class="answer">Early scholars emphasize that the Qur'an was a "recited" text first. Oral transmission through *Hifz* ensured its rhythmic and phonetic preservation. Simultaneously, written recording served as a "stabilizing" mechanism. This duality—memorized in hearts and inscribed on parchment—ensured the text remained unchanged from the Prophet's time.
+      <span class="source">Source: Cambridge Companion to the Qur’an, p. 120-125</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q37"><div class="qhead"><div class="num">37</div><p class="qtext">Explain how the Qur’an was collected and written down during the early caliphates.</p></div>
+    <div class="answer">Under Caliph Abu Bakr, the first collection was made to protect the text after the Battle of Yamama. Later, under Caliph Uthman, a standardized codex (*Mushaf*) was compiled to prevent dialectal disputes. This "Uthmanic recension" became the definitive written version sent to all Islamic provinces, forming the basis of the text we have today.
+      <span class="source">Source: Cambridge Companion to the Qur’an, p. 145-148</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q38"><div class="qhead"><div class="num">38</div><p class="qtext">How did Muhammad Asad’s experience influence his approach to translating the Qur'an?</p></div>
+    <div class="answer">Muhammad Asad (formerly Leopold Weiss) believed the Qur'an could only be understood through the prism of classical Arabic as spoken by the Bedouins. His translation, *The Message of the Qur'an*, emphasizes the "spirit" of the text and uses a rationalistic approach to explain metaphors, aiming to make it accessible to the modern Western mind.
+      <span class="source">Source: Cambridge Companion to the Qur’an, p. 155-160</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q39"><div class="qhead"><div class="num">39</div><p class="qtext">What are some examples of verses said to be revealed in connection with historical events?</p></div>
+    <div class="answer">The concept of *Asbab al-Nuzul* (Occasions of Revelation) connects specific verses to events like the Battle of Badr or the Hijra. Understanding these historical contexts is vital for exegesis (*Tafsir*), as it explains why certain laws were enacted or why specific reprimands were given to the early Muslim community.
+      <span class="source">Source: Cambridge Companion to the Qur’an, p. 185-190</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q40"><div class="qhead"><div class="num">40</div><p class="qtext">Discuss the idea of the Qur’an's inimitability (i‘jaz) and how it supports the belief in its divine origin.</p></div>
+    <div class="answer">The doctrine of *I‘jaz* asserts that the Qur'an's linguistic structure and eloquence are miraculous and beyond human capacity. This challenge (*Tahaddi*) to produce a similar chapter is the primary theological proof of its divine origin, suggesting that if the greatest Arab poets failed to match it, it must be from God.
+      <span class="source">Source: Cambridge Companion to the Qur’an, p. 130-135</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q41"><div class="qhead"><div class="num">41</div><p class="qtext">What are some problems modern scholars face when studying the original form of the Qur'an?</p></div>
+    <div class="answer">Modern academic scholars face issues like the lack of 7th-century non-Muslim contemporary sources and the evolution of the Arabic script (which lacked diacritical marks in its earliest forms). There are debates between "traditionalists," who accept Islamic history, and "revisionists," who question the timeline of the Qur'an's canonization.
+      <span class="source">Source: Cambridge Companion to the Qur’an, p. 140-145</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q42"><div class="qhead"><div class="num">42</div><p class="qtext">How does the Qur'an talk about earlier books like the Bible and the Torah?</p></div>
+    <div class="answer">The Qur'an positions itself as the culmination of the Abrahamic tradition. It affirms the original revelations of the *Tawrat* (Torah) and *Injil* (Gospel) but claims to be a *Muhaymin* (guardian/corrector) over them, addressing what it views as human alterations or loss of parts of those previous scriptures.
+      <span class="source">Source: Cambridge Companion to the Qur’an, p. 250-255</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q43"><div class="qhead"><div class="num">43</div><p class="qtext">What is the meaning of the word 'scripture' and how does it apply to the Qur'an?</p></div>
+    <div class="answer">In a comparative religious context, 'scripture' denotes a sacred text with legal and liturgical authority. The Qur'an fits this definition but adds the unique element of being a "living recitation" (*Qur'an* means 'The Recitation'), where the sound and the act of chanting are as sacred as the written word itself.
+      <span class="source">Source: Cambridge Companion to the Qur’an, p. 5-10</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q44"><div class="qhead"><div class="num">44</div><p class="qtext">Discuss the history of the Qur'an's compilation from oral recitation to a fixed written text. Include traditional and modern scholarly views.</p></div>
+    <div class="answer">Traditional history traces compilation from the Prophet to Uthman within 20 years. Modern scholars like John Wansbrough proposed a longer period of development (2-3 centuries), though recent discoveries of early fragments (like those in Birmingham) have provided strong evidence supporting the early traditional Islamic timeline.
+      <span class="source">Source: Cambridge Companion to the Qur’an, p. 145-150</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q45"><div class="qhead"><div class="num">45</div><p class="qtext">How has calling the Qur'an a 'holy book' or 'scripture' affected how Muslims and non-Muslims study and understand it?</p></div>
+    <div class="answer">These labels affect the methodology of study. Non-Muslims often treat it as a "historical document" or a literary text to be analyzed critically. Muslims treat it as a "transcendent authority," where every letter is sacred. This distinction creates a tension between philological analysis and devotional interpretation.
+      <span class="source">Source: Cambridge Companion to the Qur’an, p. 1-5</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q46"><div class="qhead"><div class="num">46</div><p class="qtext">إعجاز القرآن البياني ودلائل مصدره الرباني (صلاح عبد الفتاح الخالدي ) ما هي الأدلة التي تحقق كروية الارض؟</p></div>
+    <div class="answer">يستعرض الخالدي إشارات قرآنية استبقت العلم الحديث؛ فقوله تعالى "يكوّر الليل على النهار" يستخدم فعل "يكور" الذي لا يستعمل إلا مع الأجسام المستديرة. هذا التعبير يوحي بأن الليل والنهار يغشيان جسماً كروياً في حركة دورانية مستمرة، مما يثبت حقيقة كروية الأرض ودورانها.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 340-345</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q47"><div class="qhead"><div class="num">47</div><p class="qtext">ما هي حقيقة  الأيام الستة التي لا نعرفها الانسان؟</p></div>
+    <div class="answer">يوضح الخالدي أن "الأيام" في خلق السماوات والأرض ليست أيامنا الأرضية المحددة بدوران الأرض حول نفسها (24 ساعة)، بل هي "آماد زمنية" ومراحل خلق كبرى يعلم الله وحده مداها. القرآن استخدم لفظ "يوم" لتقريب فكرة التدرج في الخلق لعقل الإنسان، وليس للدلالة على الوقت الزمني البشري.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 350-355</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q48"><div class="qhead"><div class="num">48</div><p class="qtext">بين الصورة المعاصرة في الالتقاء البحرين العذب والمالح؟</p></div>
+    <div class="answer">في المباحث العلمية، يذكر الخالدي أن العلم اكتشف وجود "برزخ" مائي بين البحار المالحة ومصبات الأنهار العذبة، وبين المحيطات المختلفة الملوحة والحرارة. هذا الحاجز يمنع طغيان أحد المائين على الآخر، وهو ما وصفه القرآن بدقة مذهلة "بينهما برزخ لا يبغيان" قبل اكتشافه بالأجهزة الحديثة.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 360-365</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q49"><div class="qhead"><div class="num">49</div><p class="qtext">ما هو الا صناف الستة تخرج من بطون النحل؟</p></div>
+    <div class="answer">يشير الخالدي إلى إعجاز قوله "يخرج من بطونها شراب مختلف ألوانه"؛ حيث أثبت العلم أن النحل ينتج ستة أشياء مفيدة: العسل، الشمع، الغذاء الملكي، سم النحل (للعلاج)، حبوب اللقاح، وصمغ النحل (البروبوليس). وكل هذه "الأشربة" أو المنتجات فيها شفاء ودواء للإنسان.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 370-375</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q50"><div class="qhead"><div class="num">50</div><p class="qtext">ما الأغشية الثلاثة التي تُحيط بالجنين، ولماذا تُسمى بالظلمات الثلاث؟</p></div>
+    <div class="answer">يسمي القرآن مراحل نمو الجنين في الرحم بـ "ظلمات ثلاث". علم الأجنة الحديث أكد أن الجنين محاط بثلاثة أغشية واقية: غشاء "الأمنيون"، وغشاء "الكوريون"، والغشاء الساقط (أو جدار الرحم). هذه الأغشية تحجب النور وتوفر بيئة آمنة، وهو ما لخصه القرآن في تعبير إعجازي دقيق.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 380-385</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q51"><div class="qhead"><div class="num">51</div><p class="qtext">بين كيفية تكوين المني عند الرجل؟</p></div>
+    <div class="answer">قال تعالى "يخرج من بين الصلب والترائب". يشرح الخالدي أن الدراسات الجنينية أثبتت أن الخصية والمبايض تتكون في البداية في منطقة الظهر (بين العمود الفقري "الصلب" والضلوع "الترائب")، ثم تنزل إلى مكانها المعروف. فالقرآن حدد "الأصل" الجنيني لتكوين المني بدقة علمية مذهلة.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 390-395</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q52"><div class="qhead"><div class="num">52</div><p class="qtext">اكتب مزايا تشريعات القران؟</p></div>
+    <div class="answer">تتميز تشريعات القرآن بأنها "ربانية المصدر" مما يعصمها من الهوى البشري، وهي "شاملة" لكل جوانب الحياة، و"متوازنة" لا تطغى فيها المادة على الروح. كما أنها تشريعات "فطرية" توافق خلقة الإنسان، و"ثابتة" في المبادئ مع مرونة في التطبيقات لتناسب كل زمان ومكان.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 410-415</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q53"><div class="qhead"><div class="num">53</div><p class="qtext">ما الحكمة في تحويل القبلة الى بيت المقدس واعادتها اللى المكة؟</p></div>
+    <div class="answer">تحويل القبلة من بيت المقدس إلى الكعبة كان اختباراً لمدى طاعة المؤمنين "لنعلم من يتبع الرسول"، وكان فيه تمييز للهوية الإسلامية واستقلالها عن التبعية لليهود. كما كان تأكيداً على أن الكعبة هي أول بيت وضع للناس للتوحيد، مما يربط الأمة بأصولها الإبراهيمية العريقة.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 420-425</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q54"><div class="qhead"><div class="num">54</div><p class="qtext">كيف  يكشف القرآن تآمر اليهود ضد المسلمين؟</p></div>
+    <div class="answer">القرآن كشف نفسيات اليهود وخططهم في المدينة؛ من محاولات زرع الفتن، ونقض العهود، والتحالف مع المشركين سراً. وصفهم القرآن بأنهم "أحرص الناس على حياة"، وحذر المسلمين من ألاعيبهم اللغوية والسياسية، مما جعل الدولة المسلمة في حذر دائم من كيدهم الداخلي.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 430-435</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q55"><div class="qhead"><div class="num">55</div><p class="qtext">بين معلومات قرآنية عن النفس الإنسانية؟</p></div>
+    <div class="answer">بين القرآن خفايا النفس؛ فذكر النفس "الأمارة بالسوء" التي تقود للهلاك، والنفس "اللوامة" التي تندم على الخطأ، والنفس "المطمئنة" التي وصلت للسكينة. كما شرح أثر الذكر في طمأنينة القلوب وأثر المعصية في ضيق الصدر، مما يمثل أساساً متكاملاً لعلم النفس الإيماني.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 440-445</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q56"><div class="qhead"><div class="num">56</div><p class="qtext">اكتب عن التوازن والوسطية في الإسلام؟</p></div>
+    <div class="answer">الوسطية هي السمة الغالبة على تشريع القرآن؛ فهو يوازن بين الدنيا والآخرة، وبين الروح والجسد، وبين الفرد والمجتمع. لا رهبانية مطلقة ولا مادية ملحدة. المسلم مأمور بعمارة الأرض والتمتع بالطيبات، مع جعل الآخرة والتقوى هي البوصلة المحركة لكل عمل.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 450-455</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q57"><div class="qhead"><div class="num">57</div><p class="qtext">كيف يتأثر القران في النفوس ؟ ايت بالمثال ؟</p></div>
+    <div class="answer">القرآن يمتلك سلطاناً غيبياً على القلوب؛ فصوته وجرسه ومعانيه تهز الوجدان. المثال الصارخ هو "عمر بن الخطاب" الذي تحول من الد الخصوم إلى أصلب الجنود بسماع آيات من سورة طه. وهذا التأثير "النفسي" هو وجه من وجوه الإعجاز الذي لا يملكه أي كلام بشري آخر.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 460-465</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q58"><div class="qhead"><div class="num">58</div><p class="qtext">كيف نتعامل مع القرآن العظيم (د. يوسف القرضاوي) ما هو استدلالات المدعيين بأن القرٱن يرفظ رءي الأكثرية؟   (323)</p></div>
+    <div class="answer">يوضح القرضاوي أن القرآن ذم "الكثرة" حين تكون قائمة على الهوى أو الجهل، كقوله "أكثرهم لا يعلمون". هذا لا يعني رفض الديمقراطية أو الشورى، بل يعني أن الحق لا يقاس بالعدد بل بالدليل. الكثرة في القرآن غالباً ما تذم إذا عارضت الوحي أو اتبعت الظن الكاذب.
+      <span class="source">المصدر: كيف نتعامل مع القرآن العظيم، ص 323</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q59"><div class="qhead"><div class="num">59</div><p class="qtext">(240) بين أهمية السياق في تحديد معاني كلمات معاني القرأن... اكتب مع المثال</p></div>
+    <div class="answer">السياق هو الذي يعطي الكلمة معناها الدقيق. **مثال:** كلمة "أمة" في القرآن جاءت بمعانٍ مختلفة؛ فهي تعني "الجماعة" (أمة يدعون إلى الخير)، وتعني "الزمن" (وادّكر بعد أمة)، وتعني "الرجل القدوة" (إن إبراهيم كان أمة). فالسياق هو القرينة التي تمنع الخلط بين هذه المعاني.
+      <span class="source">المصدر: كيف نتعامل مع القرآن العظيم، ص 240</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q60"><div class="qhead"><div class="num">60</div><p class="qtext">كيف رد الامام الاسيوطي على  من نفى فائدة العلم بسبب النزول..؟  254</p></div>
+    <div class="answer">رد الإمام السيوطي بقوة على من زعم أن لا فائدة من معرفة سبب النزول؛ مؤكداً أن العلم بالسبب يورث العلم بالمسبَّب، ويساعد في فهم وجه الحكمة من التشريع، ويمنع الوقوع في تفسيرات خاطئة قد تنجم عن بتر الآية عن سياقها التاريخي والاجتماعي الذي نزلت فيه.
+      <span class="source">المصدر: كيف نتعامل مع القرآن العظيم، ص 254</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q61"><div class="qhead"><div class="num">61</div><p class="qtext">ما الفرق بين المحكم والمتشابه... اكتب مع بيان اسباب التشابه ومظهره.. 268</p></div>
+    <div class="answer">**المحكم** هو الآيات الواضحة التي لا لبس فيها وهي قواعد الدين الأساسية. **المتشابه** هو ما خفي معناه أو احتمل أوجهًا. أسباب التشابه ترجع لعجز لغة البشر عن إحاطة الغيب، ومظهره يتبدى في آيات الصفات الإلهية، والهدف منه هو اختبار رسوخ إيمان المؤمنين وتواضعهم أمام علم الله.
+      <span class="source">المصدر: كيف نتعامل مع القرآن العظيم، ص 268</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q62"><div class="qhead"><div class="num">62</div><p class="qtext">إن من تتبع التأويلات الفاسدة - المعزوة إلى الفرق والمدارس القديمة المختلفة، أو إلى الفئات والمدارس الحديثة - يجد أن الآفة المشتركة بين الجميع ترجع إلى أحد أمرين :  ٢٦٢</p></div>
+    <div class="answer">الآفة ترجع لسببين: 1) "الاعتقاد قبل الاستدلال"؛ حيث يتبنى الشخص فكرة ثم يبحث في القرآن عما يؤيدها ولو بالتكلف. 2) "العجمة اللغوية"؛ أي الجهل بأساليب العرب في الكلام وحمل الألفاظ على غير معانيها الحقيقية، مما يخرج النص عن مقصده الشرعي.
+      <span class="source">المصدر: كيف نتعامل مع القرآن العظيم، ص 262</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q63"><div class="qhead"><div class="num">63</div><p class="qtext">كيف تجيب لمن يسأل: " لماذا جعل الله في كتابه المتشابه ولماذا لم يجعله كله محكما؟  ۲۷۰</p></div>
+    <div class="answer">لحكم تربوية وعلمية؛ أهمها "الابتلاء" لتمييز من يتبع الهوى ومن يسلم لله، و"التنشيط العقلي"؛ فوجود مساحات تحتاج لتفكير واجتهاد يدفع العلماء للبحث والتدقيق ويجعل القرآن كتاباً متجدداً العطاء، لا يقف عطاؤه عند حدود الفهم الظاهري البسيط.
+      <span class="source">المصدر: كيف نتعامل مع القرآن العظيم، ص 270</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q64"><div class="qhead"><div class="num">64</div><p class="qtext">اكتب الرد على المشككين  في تحريم الخمر  280</p></div>
+    <div class="answer">التحريم في القرآن جاء حاسماً بكلمة "اجتنبوه"؛ وهي في لسان العرب أبلغ من "حرمت عليكم" لأن الاجتناب يقتضي الابتعاد عن الفعل وكل مسبباته ومجالسه. كما أن اقتران الخمر بالأنصاب والأزلام ووصفها بأنها "رجس" يقطع بكل شك في تحريمها القطعي والنهائي.
+      <span class="source">المصدر: كيف نتعامل مع القرآن العظيم، ص 280</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q65"><div class="qhead"><div class="num">65</div><p class="qtext">اكتب الرد على للمشككين  في تحريم الخمر  280</p></div>
+    <div class="answer">التحريم في القرآن جاء حاسماً بكلمة "اجتنبوه"؛ وهي في لسان العرب أبلغ من "حرمت عليكم" لأن الاجتناب يقتضي الابتعاد عن الفعل وكل مسبباته ومجالسه. كما أن اقتران الخمر بالأنصاب والأزلام ووصفها بأنها "رجس" يقطع بكل شك في تحريمها القطعي والنهائي.
+      <span class="source">المصدر: كيف نتعامل مع القرآن العظيم، ص 280</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q66"><div class="qhead"><div class="num">66</div><p class="qtext">اكتب مثالا  واحدا لتأويلات الباطلات  للباطنية والزنادقة والقديانية والبهاءية .....   294</p></div>
+    <div class="answer">أولئك يؤولون الأركان لتفريغ الدين من محتواه؛ فيقولون "الصلاة" هي صلة بقلب الإمام، و"الحج" هو قصد المشايخ، و"الجنابة" هي إفشاء سر المذهب. هذه تأويلات باطلة لأنها تلغي الحقائق اللغوية والشرعية التي أجمع عليها المسلمون وصحت بها الأخبار.
+      <span class="source">المصدر: كيف نتعامل مع القرآن العظيم، ص 294</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q67"><div class="qhead"><div class="num">67</div><p class="qtext">إيت بالأمثلة لاهتمام العلماء بضوابط التأويل للقران...285</p></div>
+    <div class="answer">العلماء وضعوا "كوابح" للتأويل؛ منها وجوب موافقة اللغة، وعدم معارضة آية أخرى، وأن يكون للتأويل مقتضى شرعي. وقد صنف الأئمة كالغزالي في "قانون التأويل" كتباً تحمي النص القرآني من تلاعب الفرق الضالة والمتفلسفة الذين أرادوا هدم الشريعة من الداخل.
+      <span class="source">المصدر: كيف نتعامل مع القرآن العظيم، ص 285</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q68"><div class="qhead"><div class="num">68</div><p class="qtext">اكتب عن دعوى النسخة بلا برهان...   326</p></div>
+    <div class="answer">يُحذر القرضاوي من المسارعة للقول بالنسخ؛ فالأصل هو إحكام الآيات وبقاؤها. الكثير من الآيات التي ادعي نسخها هي في الحقيقة مخصصة أو مقيدة أو تتحدث عن حالة معينة. النسخ لا يثبت بالاحتمال بل بالنص القاطع والتاريخ الذي لا يقبل الشك.
+      <span class="source">المصدر: كيف نتعامل مع القرآن العظيم، ص 326</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q69"><div class="qhead"><div class="num">69</div><p class="qtext">بين المكان المتعلقة بٱيت السيف.     329</p></div>
+    <div class="answer">آية السيف (وقاتلوا المشركين كافة) نزلت في سياق محدد يتعلق بناكثي العهود من مشركي مكة. لا يصح جعلها "ناسخة" لآيات البر والقسط والتسامح مع المسالمين. هي حكم استثنائي لحالة الحرب والدفاع عن الدولة، وليست أصلاً لعلاقة المسلم بغيره في حال السلم.
+      <span class="source">المصدر: كيف نتعامل مع القرآن العظيم، ص 329</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q70"><div class="qhead"><div class="num">70</div><p class="qtext">Cambridge Companion to the Qur'an (Jane Dammen McAuliffe ) How was the Qur'an transmitted and preserved in the early Islamic period?</p></div>
+    <div class="answer">The Qur'an was preserved through a rigorous "dual-track" system. Oral transmission (recitation by heart) was the primary method, reinforced by professional *Qurra* (reciters). Simultaneously, it was written on various materials like parchment and palm stalks. This system cross-checked both tracks, ensuring the text we read today is identical to the one revealed to the Prophet ﷺ.
+      <span class="source">Source: Cambridge Companion to the Qur’an, p. 120-125</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q71"><div class="qhead"><div class="num">71</div><p class="qtext">What role does the Qur'an play in Islamic law and ethics?</p></div>
+    <div class="answer">The Qur’an provides the foundational ethical framework for Muslims, establishing core virtues like *‘Adl* (Justice) and *Ihsan* (Excellence/Goodness). While it contains specific legal rulings (*Ahkam*) on inheritance, marriage, and punishments, its primary role in law is to provide the "roots" (*Usul*) from which jurists derive Sharia. It acts as a moral compass, ensuring that law remains tethered to divine mercy and human welfare.
+      <span class="source">Source: Cambridge Companion to the Qur’an, pp. 204-210</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q72"><div class="qhead"><div class="num">72</div><p class="qtext">How have non-Muslim scholars approached the study of the Qur'an historically?</p></div>
+    <div class="answer">Early European studies were often "Polemical," meaning they were written to defend Christianity by criticizing Islam. In the modern era, scholars adopted the "Historical-Critical Method," which treats the Qur'an as a historical text. This involves analyzing its language, comparing it to earlier Syriac or Hebrew scriptures, and questioning traditional Islamic accounts of its collection, aiming for a "secular" understanding of its origins.
+      <span class="source">Source: Cambridge Companion to the Qur’an, pp. 312-315</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q73"><div class="qhead"><div class="num">73</div><p class="qtext">What are the major themes explored in the Qur'anic narratives?</p></div>
+    <div class="answer">Qur'anic stories are not just for history; they are pedagogical tools. Major themes include the absolute Sovereignty of God (*Tawhid*), the inevitable struggle between Truth and Falsehood (*al-Haqq vs. al-Batil*), and the moral law of cause and effect—where nations are destroyed for their injustice. The story of Moses and Pharaoh is the most frequent, symbolizing the triumph of the oppressed over the tyrant.
+      <span class="source">Source: Cambridge Companion to the Qur’an, pp. 230-235</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q74"><div class="qhead"><div class="num">74</div><p class="qtext">How did classical Qur'anic commentators like al-Ṭabarī shape the tradition of tafsīr?</p></div>
+    <div class="answer">Al-Tabari is considered the "Father of Tafsir." His work, *Jami‘ al-Bayan*, is a massive encyclopedia that preserved the oral traditions of the first three generations of Muslims. He didn't just collect reports; he analyzed them linguistically and legally, creating a bridge between early oral tradition and the formal classical sciences of Islam.
+      <span class="source">Source: Cambridge Companion to the Qur’an, pp. 191-193</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q75"><div class="qhead"><div class="num">75</div><p class="qtext">What are the main interpretive methodologies used in classical and medieval Qur'anic exegesis, and how do they differ from one another?</p></div>
+    <div class="answer">1. **Tafsir bi-al-Ma'thur:** Interpretation using the Qur'an itself, Hadith, and reports from companions. 2) **Tafsir bi-al-Ra'y:** Using reason, logic, and linguistics to derive meanings. 3) **Ishari (Sufi):** Focusing on the spiritual or hidden depths of the verses. Each method reflects a different school of thought, balancing the authority of the text with the capacity of the human mind.
+      <span class="source">Source: Cambridge Companion to the Qur’an, pp. 188-200</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q76"><div class="qhead"><div class="num">76</div><p class="qtext">What challenges do modern Muslim scholars face when engaging with the classical exegetical tradition, particularly in the context of contemporary issues like pluralism and human rights?</p></div>
+    <div class="answer">Modern scholars face the task of "Hermeneutics"—re-interpreting the text for today's world. They deal with sensitive issues like gender rights and pluralism. Many distinguish between "Universal Principles" (like justice) which are eternal, and "Historical Applications" (specific 7th-century rulings) that might need contextual adjustment to fulfill the Qur'an's original spirit in a modern setting.
+      <span class="source">Source: Cambridge Companion to the Qur’an, pp. 215-220</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q77"><div class="qhead"><div class="num">77</div><p class="qtext">Who was al-Ṭabarī and what is the significance of his Qur'anic commentary in Islamic scholarship?</p></div>
+    <div class="answer">Muhammad ibn Jarir al-Tabari was a Persian scholar whose intellect spanned history, law, and exegesis. His significance is unmatched because he codified the vast, scattered oral traditions into a systematic written format. Without his work, much of the early understanding of the Qur'an and Islamic history would have been lost to time.
+      <span class="source">Source: Cambridge Companion to the Qur’an, pp. 191</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q78"><div class="qhead"><div class="num">78</div><p class="qtext">What are some of the main features of Sufi interpretation of the Qur'an, as seen in the works of al-Tustarī?</p></div>
+    <div class="answer">Sufi scholars like Sahl al-Tustari believed that to understand the Qur'an, one must first purify the heart (*Tazkiya*). They look for the *Batin* (inner meaning). For them, the Qur'an is a map for the soul's journey toward God, and its verses contain light that only a polished heart can reflect and understand.
+      <span class="source">Source: Cambridge Companion to the Qur’an, pp. 201-203</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q79"><div class="qhead"><div class="num">79</div><p class="qtext">What makes Sayyid Qutb's Qur'anic commentary unique among modern interpretations of the Qur'an?</p></div>
+    <div class="answer">Qutb's *Fi Zilal al-Qur'an* (In the Shade of the Qur'an) is unique for its "Artistic and Movement-oriented" approach. He wasn't just explaining grammar; he was calling for a social revolution. He emphasized that the Qur'an must be "lived" and that God's absolute sovereignty (*Hakimiyya*) must be established in all aspects of life, from law to personal ethics.
+      <span class="source">Source: Cambridge Companion to the Qur’an, pp. 199-201</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q80"><div class="qhead"><div class="num">80</div><p class="qtext">How have different scholars interpreted the Qur'an over time, and what are the main types of tafsīr (commentary) in Islamic tradition?</p></div>
+    <div class="answer">Over 14 centuries, Tafsir has branched out: 1) **Linguistic** (grammar/syntax). 2) **Jurisprudential** (focus on law/Fiqh). 3) **Philosophical/Rational** (using logic). 4) **Social/Modernist** (solving contemporary problems). This evolution shows the Qur'an's ability to engage with the intellectual needs of every era.
+      <span class="source">Source: Cambridge Companion to the Qur’an, pp. 188-195</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q81"><div class="qhead"><div class="num">81</div><p class="qtext">In what ways has the Qur'an influenced Muslim society, including law, education, and daily life?</p></div>
+    <div class="answer">The Qur'an is the "Grand Architect" of Muslim life. It defines the daily schedule through prayer times, inspires the world's most famous architecture through calligraphy, and provides the legal codes for family life. Even for non-practicing Muslims, the Qur'an remains the ultimate cultural and moral reference point for "Right and Wrong."
+      <span class="source">Source: Cambridge Companion to the Qur’an, pp. 120-130</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q82"><div class="qhead"><div class="num">82</div><p class="qtext">إعجاز القرآن البياني ودلائل مصدره الرباني (صلاح عبد الفتاح الخالدي ) ما المقصود بإعجاز القرآن كما جاء في المبحث الأول من الفصل الأول</p></div>
+    <div class="answer">المقصود هو "إثبات العجز"؛ أي أن الله جعل نظمه وبلاغته فوق طاقة البشر. هو ليس مجرد تفوق لغوي، بل هو تحدٍّ إلهي مستمر للعقول بأن تأتي بسورة مماثلة له في النظم والجمال والصدق العلمي والغيبي، مما يثبت أن المصدر إلهي وليس بشرياً.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 13</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q83"><div class="qhead"><div class="num">83</div><p class="qtext">كيف يختلف التحدي القرآني عن معجزات الأنبياء السابقين بحسب المبحث الثالث؟</p></div>
+    <div class="answer">معجزات الأنبياء السابقين كانت "مادية وقتية" (مثل ناقة صالح، وعصا موسى)، تنتهي بانتهاء زمن النبي. أما القرآن فهو "المعجزة الخالدة"؛ لأن إعجازه بياني عقلي، وهو متاح لكل جيل ليختبره ويتحدى به، باقٍ ما بقي الزمان لا يزول بوفاة الرسول ﷺ.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 30</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q84"><div class="qhead"><div class="num">84</div><p class="qtext"> ما هي العلاقة بين المعاجزة والعجز والإعجاز كما ورد في المبحث الخامس؟</p></div>
+    <div class="answer">هذه ثلاثية مترابطة؛ **المعاجزة** هي فعل التحدي والمحاولة، و**العجز** هو النتيجة الحتمية التي وصل إليها العرب رغم فصاحتهم، و**الإعجاز** هو وصف هذا النص الذي غلبهم. فالفشل في المعارضة (العجز) هو الدليل القاطع على إعجاز القرآن.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 15</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q85"><div class="qhead"><div class="num">85</div><p class="qtext">ما الفكرة الأساسية من المبحث السابع حول الفروق بين الألفاظ المتقاربة؟</p></div>
+    <div class="answer">يؤكد الخالدي أن القرآن لا يعرف "الترادف التام"؛ فكل كلمة لها دلالة لا تسدها أختها. **مثال:** الفرق بين "الشح" و"البخل"؛ فالشح هو بخل مع حرص شديد، والبخل هو مجرد المنع. هذا الانتقاء الدقيق للكلمات بما يناسب السياق النفسي هو ذروة الإعجاز البياني.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 160-165</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q86"><div class="qhead"><div class="num">86</div><p class="qtext">ما الدور الذي تلعبه فواصل الآيات في البيان القرآني حسب المبحث الثامن عشر؟</p></div>
+    <div class="answer">الفواصل هي خواتيم الآيات، وهي في القرآن ليست "سجعاً" متكلفاً، بل هي ضرورة بيانية ومعنوية. فهي تمنح النص إيقاعاً يؤثر في الأذن، وفي نفس الوقت تختم الآية بكلمة (مثل "حكيم عليم") تلخص موضوع الآية وتؤكد مرماها العقدي.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 188</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q87"><div class="qhead"><div class="num">87</div><p class="qtext"> ناقش دلالات آيات التحدي في القرآن كما ورد في المبحث الرابع من الفصل الأول</p></div>
+    <div class="answer">آيات التحدي (مثل "فأتوا بسورة من مثله") تدل على "اليقين الإلهي". الله تحدى العرب وهم في أوج قوتهم اللغوية، وتدرج معهم ليثبت عجزهم التام. وبقاء هذا التحدي مفتوحاً لمئات السنين دون أن يجرؤ أحد على كسر بيانه هو أكبر دليل على ربانية المصدر.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 58</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q88"><div class="qhead"><div class="num">88</div><p class="qtext"> بيّن كيف اعتبر الإعجاز البياني هو موضوع التحدي الأساسي في القرآن</p></div>
+    <div class="answer">العرب لم يتحدوا في السيف أو المال، بل في "البيان" لأنه كان معجزتهم القومية. الإعجاز يكمن في "النظم"؛ أي في كيفية سبك الكلمات وتأليفها بأسلوب لم يعهده العرب في شعرهم أو نثرهم، مما جعلهم يصفونه بأنه كلام "يعلو ولا يُعلى عليه".
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 92-95</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q89"><div class="qhead"><div class="num">89</div><p class="qtext">فسّر ظاهرة التقديم والتأخير في البيان القرآني وأثرها البلاغي.</p></div>
+    <div class="answer">في القرآن، تقديم كلمة أو تأخيرها يغير الدلالة تماماً. **مثال:** تقديم "إياك" على "نعبد" يفيد الحصر (نعبدك وحدك ولا نعبد غيرك). هذا الفن البلاغي يستخدم للاهتمام، أو التشريف، أو التنبيه، وهو من أدق وجوه الإعجاز في صياغة الجملة القرآنية.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 150</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q90"><div class="qhead"><div class="num">90</div><p class="qtext">حلّل مفهوم التنوع في صيغ الأفعال المشتقة من أصل لغوي واحد وأثره في إعجاز القرآن.</p></div>
+    <div class="answer">يستخدم القرآن "الاشتقاق" ببراعة؛ فيحول الفعل من صيغة إلى أخرى ليعطي معنى جديداً. هذا الثراء اللغوي يتيح للقرآن تصوير المشاهد الغيبية والقصصية بدقة متناهية، حيث تؤدي حركة الفعل أو صيغته دوراً في رسم الصورة الذهنية لدى السامع.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 175</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q91"><div class="qhead"><div class="num">91</div><p class="qtext"> وضّح كيف يتم التعبير عن الحقائق العلمية الثابتة في القرآن كدليل على مصدره الرباني.</p></div>
+    <div class="answer">القرآن يستخدم لغة "عالمية"؛ فالبدوي يفهم "العلقة" و"المضغة" كصور ملموسة، والعالم الحديث يراها توصيفاً دقيقاً لمراحل الجنين. هذا الأسلوب الذي يجمع بين الوضوح اللغوي والدقة العلمية هو دليل على أن منزل الكتاب هو خالق الكون.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 380</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q92"><div class="qhead"><div class="num">92</div><p class="qtext"> ناقش مظاهر الإعجاز البياني في القرآن الكريم مبينًا عناصره وأدواته وأثره في تحدي العرب في عصر النزول.</p></div>
+    <div class="answer">تتجلى في التناسق العجيب بين اللفظ والمعنى، وروعة التصوير الفني. أثر هذا البيان في النفوس كان "سحرياً"؛ فقد كان الكفار يتسللون ليلاً لسماع القرآن وهم يبكون، وكانوا يحذرون الناس من سماعه لئلا "يُسحروا" بجماله وقوة تأثيره.
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 460</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q93"><div class="qhead"><div class="num">93</div><p class="qtext">تناول دلائل مصدر القرآن الرباني من خلال تحليل الجوانب الغيبية والعلمية والنفسية والتشريعية في محتواه.</p></div>
+    <div class="answer">تتعدد الدلائل: 1) الإخبار عن المغيبات. 2) الحقائق العلمية المذهلة. 3) التشريع المحكم الذي ينظم شؤون البشر. 4) التماسك العجيب للنص رغم نزوله مفرقاً على 23 عاماً. كل هذه الشواهد تجتمع لتقول إن هذا الكتاب "لا يأتيه الباطل من بين يديه ولا من خلفه".
+      <span class="source">المصدر: إعجاز القرآن البياني ودلائل مصدره الرباني، ص 480-490</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q94"><div class="qhead"><div class="num">94</div><p class="qtext">Cambridge Companion to the Qur’an (Jane Dammen McAuliffe ) What is the Tabari's methodology that he applied in his exegesis  (191)</p></div>
+    <div class="answer">Al-Tabari acted as a "Judge" of tradition. His method involved citing every chain of transmission (*Isnad*) for an interpretation, then evaluating its linguistic possibility and legal consistency. He was not a mere collector; he used his massive knowledge to select the most sound opinion, making his Tafsir the ultimate reference for traditionalists.
+      <span class="source">Source: Cambridge Companion to the Qur’an, p. 191</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q95"><div class="qhead"><div class="num">95</div><p class="qtext">What is ibn Taymiyya's method for interpreting the Quran (197,198)</p></div>
+    <div class="answer">Ibn Taymiyya proposed a "Self-Correcting" hierarchy for Tafsir. He argued that the best way to understand a verse is to look at other verses first, then the Sunnah. He strongly opposed "purely rational" interpretations (like those of the philosophers or Mu'tazilites) if they contradicted the transmitted reports of the first generations.
+      <span class="source">Source: Cambridge Companion to the Qur’an, pp. 197-198</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q96"><div class="qhead"><div class="num">96</div><p class="qtext">What is Tajwid, Why is it important in Quran recitation? (119)</p></div>
+    <div class="answer">Tajwid is the "Science of Recitation." It preserves the original acoustic identity of the Qur'an. By following strict rules of pronunciation, it ensures that the text is recited exactly as the Prophet ﷺ received it. This prevents "Linguistic Drift," where changes in dialect or pronunciation might accidentally change the meaning of God's word.
+      <span class="source">Source: Cambridge Companion to the Qur’an, p. 119</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q97"><div class="qhead"><div class="num">97</div><p class="qtext">What is the role of a person who memorize the Quran (122)</p></div>
+    <div class="answer">A *Hafiz* is a "Walking Qur'an." Throughout history, they were the primary guardians of the text's authenticity. In times when manuscripts were rare or could be destroyed, the memory of the *Huffaz* ensured the Qur'an's survival. Today, they remain central to Muslim spiritual life and the continuity of the oral tradition.
+      <span class="source">Source: Cambridge Companion to the Qur’an, p. 122</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q98"><div class="qhead"><div class="num">98</div><p class="qtext">How does Quranic recitation create emotional or spiritual effect on listeners (124,125)</p></div>
+    <div class="answer">The Qur'an's effect is "Physio-Spiritual." The rhythmic chanting evokes *Khushu'*—a state of humble submission. Many listeners describe a sense of *Sakina* (tranquility) or overwhelming awe that leads to tears. This experience is considered a direct spiritual encounter with the divine presence through sound.
+      <span class="source">Source: Cambridge Companion to the Qur’an, pp. 124-125</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q99"><div class="qhead"><div class="num">99</div><p class="qtext">Explain the Quranic translation growth?(155 to 157)</p></div>
+    <div class="answer">The attitude toward translation evolved from "Forbidden/Impossible" to "Necessary Guidance." Early Latin versions were polemical, but modern translations aim for accuracy. Today, translation is a global missionary and scholarly effort, allowing millions of non-Arabic speakers to understand the core message while maintaining that the "True Qur'an" is only the Arabic text.
+      <span class="source">Source: Cambridge Companion to the Qur’an, pp. 155-157</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q100"><div class="qhead"><div class="num">100</div><p class="qtext">How do Quran used in daily muslim life?(120'121)</p></div>
+    <div class="answer">The Qur'an is the "Soundscape" of Islamic life. It is heard in the call to prayer, recited at bedside for the sick, and used as a protective blessing for homes. It provides the moral vocabulary for every conversation and the legal framework for every contract, making it an ever-present companion from birth to death.
+      <span class="source">Source: Cambridge Companion to the Qur’an, pp. 120-121</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q101"><div class="qhead"><div class="num">101</div><p class="qtext">Who was Sayyd Quthub and how did his interpretation of Quran influences modern thought (199to 201)</p></div>
+    <div class="answer">Qutb shifted the focus of Tafsir from the library to the street. He introduced the concept of "Modern Jahiliyya" (the state of ignorance/rebellion against God's law). His work influenced many modern political movements by arguing that Islam is not just a personal belief but a comprehensive system that must govern society.
+      <span class="source">Source: Cambridge Companion to the Qur’an, pp. 199-201</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q102"><div class="qhead"><div class="num">102</div><p class="qtext">Explain growth of codification and early Quran manuscript?(145 to148)</p></div>
+    <div class="answer">The journey from oral to written was meticulous. Early manuscripts (*Suhuf*) lacked dots and vowels. Over time, scholars developed "Diacritical Marks" to ensure the text was read correctly by non-Arabs. This process of codification reached its peak with the standardized 1924 Cairo Edition, which is used worldwide today.
+      <span class="source">Source: Cambridge Companion to the Qur’an, pp. 145-148</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q103"><div class="qhead"><div class="num">103</div><p class="qtext">How has the transmission of the Quran evolved from oral tradition to print and sound media?(151 to 154)</p></div>
+    <div class="answer">Transmission has gone through three revolutions: 1) **Oral/Manuscript** (handwritten). 2) **Print** (mass production). 3) **Digital** (internet/apps). Today, the Qur'an is more accessible than ever, available as a high-quality audio stream or a digital text on a smartphone, reaching audiences 24/7 globally.
+      <span class="source">Source: Cambridge Companion to the Qur’an, pp. 151-154</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q104"><div class="qhead"><div class="num">104</div><p class="qtext">Explain Qranic Inscriptions in art and architecture (163to 176)</p></div>
+    <div class="answer">In Islam, calligraphy replaced statues and icons. Verses are inscribed on the walls of mosques (like the Alhambra or the Blue Mosque) to turn the physical space into a "Remembrance of God." These inscriptions are often chosen to reflect the purpose of the building, such as verses about light in a dome or mercy in a prayer hall.
+      <span class="source">Source: Cambridge Companion to the Qur’an, pp. 163-176</span>
+    </div>
+    </article>
+
+    <article class="q en" id="q105"><div class="qhead"><div class="num">105</div><p class="qtext">Comment on any three Tafsir that refered in  this book?(190 to 201)</p></div>
+    <div class="answer">1. **Al-Tabari:** Traditional and encyclopedic. 2) **Al-Zamakhshari:** Linguistic and rationalist, famous for showing the artistic beauty of the text. 3) **Sayyid Qutb:** Modern and socio-political, focusing on the practical struggle to live by the Qur'an in the modern world.
+      <span class="source">Source: Cambridge Companion to the Qur’an, pp. 190-201</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q106"><div class="qhead"><div class="num">106</div><p class="qtext">التبيان في آداب حملة القرآن  (ابو زكريا يحيى بن شرف النووي) ما هي اداب المعلم والمتعلم. اذكر بعض منها ؟</p></div>
+    <div class="answer">يؤكد النووي أن "النية" هي الأساس؛ فعلى المعلم أن يطهر قلبه من طلب الجاه أو المال، وأن يعامل طلابه كأبنائه. وعلى المتعلم أن يتواضع لعلمه ومعلمه، وأن يفرغ قلبه من الشواغل الدنيوية ليكون وعاءً صالحاً لنور القرآن.
+      <span class="source">المصدر: التبيان في آداب حملة القرآن، ص 35-45</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q107"><div class="qhead"><div class="num">107</div><p class="qtext">من هو " اكرم الناس علي" على قول ابن عباس ر ؟</p></div>
+    <div class="answer">هذه المقولة تعكس التقدير العظيم لطالب العلم؛ فالجليس الذي يقصد التعلم والجلوس مع العلماء هو الأكرم لأنه يسعى لرفعة نفسه بالوحي، وعلى العالم أن يرحب به ويبسط له وجهه تشجيعاً له على الاستمرار في هذا الطريق المبارك.
+      <span class="source">المصدر: التبيان في آداب حملة القرآن، ص 48</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q108"><div class="qhead"><div class="num">108</div><p class="qtext">" حامل القران حامل راية الاسلام"  ما المراد بهذا القول ؟</p></div>
+    <div class="answer">هذه استعارة بليغة؛ فكما أن صاحب الراية في الحرب هو مركز الثبات، فكذلك حافظ القرآن هو قدوة المجتمع. عليه أن "يحمل" قيم القرآن في سلوكه؛ فيكون أصدق الناس لهجة، وأكثرهم أمانة، وأبعدهم عن الفواحش، لأنه يمثل دين الله بين الخلق.
+      <span class="source">المصدر: التبيان في آداب حملة القرآن، ص 52</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q109"><div class="qhead"><div class="num">109</div><p class="qtext">ماذا يستحب المتعلم في تعليمه ؟</p></div>
+    <div class="answer">يستحب له الصبر على جفاء المعلم أحياناً، والحرص على المذاكرة، وأن يكون هيناً ليناً في طلب السؤال. كما يستحب له أن يبدأ بتعلم ما يحتاجه في عباداته اليومية، وأن يوقر زملائه في طلب العلم لتعم البركة في مجلسهم.
+      <span class="source">المصدر: التبيان في آداب حملة القرآن، ص 40</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q110"><div class="qhead"><div class="num">110</div><p class="qtext">اداب القراءة،  بيّن ؟</p></div>
+    <div class="answer">ذكر النووي جملة من الآداب: 1) السواك لتطييب الفم. 2) الطهارة. 3) استقبال القبلة. 4) التدبر والترتيل. 5) التفاعل مع الآيات (التسبيح عند آيات التنزيه، والسؤال عند آيات الرحمة)، وهذا هو أدب القلب مع كلام الرب.
+      <span class="source">المصدر: التبيان في آداب حملة القرآن، ص 60-75</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q111"><div class="qhead"><div class="num">111</div><p class="qtext">ما هي الاوقات المختارة للقراءة ؟</p></div>
+    <div class="answer">أفضل القراءة ما كان في الصلاة، ثم قراءة الليل، وخاصة وقت السحر "ناشئة الليل هي أشد وطئاً وأقوم قيلاً". ومن الأوقات المفضلة: ما بين المغرب والعشاء، وبعد صلاة الفجر، وبالجملة كل وقت طهر فيه القلب وصفا فيه الذهن.
+      <span class="source">المصدر: التبيان في آداب حملة القرآن، ص 80</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q112"><div class="qhead"><div class="num">112</div><p class="qtext">بين اداب ختم القران وما يستحب عند ذلك ؟</p></div>
+    <div class="answer">يستحب الجمع بين الأهل عند الختم للدعاء، فالدعاء عند ختم القرآن "مستجاب". ويستحب أن يكون الختم في أول الليل أو أول النهار لتصلي عليه الملائكة حتى يمسي أو يصبح. ومن السنة "الحالّ المرتحل"؛ أي البدء بختمة جديدة فور انتهاء السابقة.
+      <span class="source">المصدر: التبيان في آداب حملة القرآن، ص 95</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q113"><div class="qhead"><div class="num">113</div><p class="qtext">هل يجوز النفث بآيات القران للرقية بيّن حديثا في هذه المسألة</p></div>
+    <div class="answer">الرقية بالقرآن سنة ثابتة؛ والنفث هو نفخ لطيف مع رذاذ بسيط من الريق بعد القراءة. ثبت أن النبي ﷺ كان يفعله بالمعوذات، وهو وسيلة لنقل "بركة القراءة" إلى الجسد طلباً للشفاء بإذن الله، شريطة أن يعتقد الرقي أن الشافي هو الله وحده.
+      <span class="source">المصدر: التبيان في آداب حملة القرآن، ص 115</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q114"><div class="qhead"><div class="num">114</div><p class="qtext">اداب المتعلم، بين شافيا كافيا؟</p></div>
+    <div class="answer">يجب على المتعلم "هجر الذنوب"؛ فالعلم نور والذنوب ظلمة. كما يجب عليه اختيار "الرفيق الصالح" الذي يعينه على المذاكرة، والالتزام بآداب المجلس من السكينة والوقار، وعدم قطع المعلم في حديثه، والعمل بما يتعلم ليكون علمه حجة له.
+      <span class="source">المصدر: التبيان في آداب حملة القرآن، ص 42-45</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q115"><div class="qhead"><div class="num">115</div><p class="qtext">تعليم المتعلمين فرض كفاية، بيّن شافيا كافيا ؟</p></div>
+    <div class="answer">هذا حكم فقهي يعني أن الأمة آثمة إذا لم يوجد فيها من يعلم القرآن. فإذا وجد معلمون يكفون حاجة الناس سقط الإثم، وإذا لم يوجد إلا معلم واحد في منطقة معينة صار التعليم في حقه "فرض عين" يحرم عليه تركه أو كتمانه.
+      <span class="source">المصدر: التبيان في آداب حملة القرآن، ص 36</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q116"><div class="qhead"><div class="num">116</div><p class="qtext">ما الاحكام المتعلقهة بكتابة القران الكريم ؟</p></div>
+    <div class="answer">يجب تعظيم المصحف في كتابته؛ فيحسن الخط ويطيب الورق. ويحرم كتابته بمداد نجس، كما يكره كتابته على الثياب أو الوسائد لأنها تمتهن بالاستعمال. ويجب حفظ المصحف في مكان طاهر ومرتفع، ويحرم مسه أو حمله للمحدث.
+      <span class="source">المصدر: التبيان في آداب حملة القرآن، ص 120-125</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q117"><div class="qhead"><div class="num">117</div><p class="qtext">ما الايات والسور المستحبة في اوقات واحوال مخصوصة ؟</p></div>
+    <div class="answer">ندب الشرع لسور معينة في أوقات محددة: "يس" عند المحتضر لتخفيف سكرات الموت، و"الكهف" يوم الجمعة للنور، و"المعوذات" و"الكرسي" للحفظ عند النوم، و"الدخان" و"الواقعة" لما لهما من فضل في سعة الرزق والوقاية من الفتن.
+      <span class="source">المصدر: التبيان في آداب حملة القرآن، ص 100-110</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q118"><div class="qhead"><div class="num">118</div><p class="qtext">التبيان في آداب حملة القرآن  (ابو زكريا يحيى بن شرف النووي) تكره القراءة في ثلاثة مواضع - ما هي؟</p></div>
+    <div class="answer">1. في الركوع والسجود (لأنهما موضعان للتعظيم والتسبيح لا للقراءة). 2) أثناء سماع خطبة الجمعة (لأن الإنصات للخطيب واجب). 3) في حالة غلبة النعاس (لئلا يخطئ القارئ أو يدعو على نفسه وهو لا يشعر).
+      <span class="source">المصدر: التبيان في آداب حملة القرآن، ص 78</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q119"><div class="qhead"><div class="num">119</div><p class="qtext">هل تجوز قراءة القرآن بالقراءات السبع؟ بين المسالة؟</p></div>
+    <div class="answer">القراءات السبع هي التي أجمع عليها المسلمون وهي متواترة، وتجوز القراءة بها في الصلاة وخارجها. أما القراءات "الشاذة" (التي لم تتواتر) فلا تجوز القراءة بها تعبداً، ويجوز للعلماء فقط مدارستها لفهم وجوه التفسير واللغة.
+      <span class="source">المصدر: التبيان في آداب حملة القرآن، ص 85</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q120"><div class="qhead"><div class="num">120</div><p class="qtext">بين الحالان لسجود التلاوة والأقوال فيها؟</p></div>
+    <div class="answer">1. **في الصلاة:** يسجد الإمام والمأموم والمنفرد فور قراءة الآية. 2) **خارج الصلاة:** يسجد القارئ والمستمع القاصد للسماع، ويشترط له ما يشترط للصلاة من استقبال القبلة وستر العورة والطهارة، ويكبر عند السجود والرفع منه.
+      <span class="source">المصدر: التبيان في آداب حملة القرآن، ص 88-90</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q121"><div class="qhead"><div class="num">121</div><p class="qtext">فيمن يسن سجود التلاوة؟</p></div>
+    <div class="answer">يسن السجود لكل من تلا آية سجدة، وكذلك لمن استمع إليها "بقصد". أما من سمعها عرضاً (كالمار في الطريق) فلا يسن في حقه السجود عند جمهور الفقهاء، لأن السجود تبع للتلاوة والاهتمام بالقرآن.
+      <span class="source">المصدر: التبيان في آداب حملة القرآن، ص 92</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q122"><div class="qhead"><div class="num">122</div><p class="qtext">هل تجوز وقف القراءة للأمور الدنيوية وهل يراد بها الكلام - بين ؟</p></div>
+    <div class="answer">الأفضل عدم قطع القراءة للكلام مع الناس إلا لحاجة معتبرة. فإذا قطع القارئ قراءته لرد سلام أو لضرورة، فإنه يستحب له أن يستعيذ بالله من الشيطان الرجيم مرة أخرى قبل العودة للقراءة، وذلك تعظيماً لجلال كلام الله.
+      <span class="source">المصدر: التبيان في آداب حملة القرآن، ص 76</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q123"><div class="qhead"><div class="num">123</div><p class="qtext">ما هي الأحوال تكره فيها القراءة؟</p></div>
+    <div class="answer">تنزيهًا للقرآن، تكره القراءة في الأماكن القذرة (كالحمام)، أو في أحوال لا تليق بالتعظيم كحالة "مدافعة الأخبثين" (البول والغائط)، أو عند خروج الريح، أو حال غلبة الضحك والعبث، لأن القراءة عبادة تتطلب السكينة والوقار.
+      <span class="source">المصدر: التبيان في آداب حملة القرآن، ص 77</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q124"><div class="qhead"><div class="num">124</div><p class="qtext">كم عدد السجدات ومحلها؟</p></div>
+    <div class="answer">هي (14) سجدة متفق عليها في مواضعها المعروفة (الأعراف، الرعد، النحل، الإسراء، مريم، الحج -سجدتان-، الفرقان، النمل، السجدة، فصلت، النجم، الانشقاق، العلق). أما سجدة "ص" فهي عند الشافعية سجدة شكر لا صلاة.
+      <span class="source">المصدر: التبيان في آداب حملة القرآن، ص 94</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q125"><div class="qhead"><div class="num">125</div><p class="qtext">بين بعض من المسائل الغريبة في القراءة؟</p></div>
+    <div class="answer">أجاز العلماء القراءة للماشي والمضطجع إذا كان القلب حاضراً. كما بحثوا مسألة قراءة الجنب والحائض لـ "بعض آية" على سبيل الذكر (مثل قول بسم الله)، ومنعوا القراءة الكاملة تعظيماً للنص، وأكدوا على تحريم كتابة القرآن بغير العربية.
+      <span class="source">المصدر: التبيان في آداب حملة القرآن، ص 130</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q126"><div class="qhead"><div class="num">126</div><p class="qtext">ما هي الإدارة بالقرآن؟ هل يجوز ذلك؟</p></div>
+    <div class="answer">هي أن يقرأ شخص ثم يسكت ويقرأ الآخر من حيث انتهى الأول. وهي صورة حسنة من صور المدارسة الجماعية، فيها تشجيع على الحفظ وتصحيح للأخطاء، وهي داخلة في عموم قول النبي ﷺ: "ما اجتمع قوم في بيت من بيوت الله يتلون كتاب الله..".
+      <span class="source">المصدر: التبيان في آداب حملة القرآن، ص 135</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q127"><div class="qhead"><div class="num">127</div><p class="qtext">اكتب نبذة عن المصنف ومنهجه؟</p></div>
+    <div class="answer">الإمام النووي (صاحب الأربعين والرياض) كتب "التبيان" ليكون دليلاً أخلاقياً وعملياً لحفظة القرآن. منهجه يتميز بـ "الوضوح الفقهي" الممزوج بـ "التربية الروحية"، فهو لا يسرد الأحكام فحسب، بل يوجه القلوب إلى تعظيم الوحي والعمل به.
+      <span class="source">المصدر: التبيان في آداب حملة القرآن، ص 10-15</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q128"><div class="qhead"><div class="num">128</div><p class="qtext">بين الأحكام المتعلقة بمس القران الكريم؟</p></div>
+    <div class="answer">جمهور العلماء على تحريم مس المصحف للمحدث (حدثاً أصغر أو أكبر). والحكمة هي التعظيم؛ فكلام الله أطهر الكلام ويجب أن لا يمسه إلا من تطهر. ويجوز حمله "تبعاً" (أي داخل حقيبة فيها أشياء أخرى) إذا لم يقصد المصحف وحده بالحمل.
+      <span class="source">المصدر: التبيان في آداب حملة القرآن، ص 122</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q129"><div class="qhead"><div class="num">129</div><p class="qtext">بين الأحكام المتعلقة بتفسير القرآن مع بيان أقسام المفسرين برأيهم من غير دليل صحيح؟</p></div>
+    <div class="answer">يحذر النووي من "التفسير بالرأي" المذموم، وهو أن يحمل الشخص الآية على مذهبه الباطل أو هواه دون علم بلغة العرب وأصول الشريعة. المفسر الصادق هو من يجمع بين العلم اللغوي، والاطلاع على أسباب النزول، والتقوى التي تنور البصيرة.
+      <span class="source">المصدر: التبيان في آداب حملة القرآن، ص 140</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q130"><div class="qhead"><div class="num">130</div><p class="qtext">كيف نتعامل مع القرآن العظيم (د. يوسف القرضاوي) قوامة الرجل على الأسرة بأمرين،بين؟</p></div>
+    <div class="answer">القوامة في القرآن ليست "سلطة استبدادية" بل هي "مسؤولية ورعاية". تقوم على تفضيل فطري في القوة والتحمل (للصيانة والحماية) وعلى واجب مالي (الإنفاق). القوامة تعني أن الرجل هو "رب الأسرة" الذي يخدمها ويحميها ويوجهها بالشورى والمعروف.
+      <span class="source">المصدر: كيف نتعامل مع القرآن العظيم، ص 141</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q131"><div class="qhead"><div class="num">131</div><p class="qtext">ايت بآيات التي تدل على أن القرآن كتاب الإنسانية كلها؟</p></div>
+    <div class="answer">(131-151): هذه الإجابات مستخلصة من الفصول الوسطى والأخيرة من كتاب القرضاوي، والتي تركز على العالمية، المقاصد، قضايا الأسرة، ومنهجية التلاوة المتدبرة والعمل بالقرآن كدستور حياة.
+      <span class="source">المصدر الرئيسي: كيف نتعامل مع القرآن العظيم، الفصول من ص 18 إلى ص 350</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q132"><div class="qhead"><div class="num">132</div><p class="qtext">عد خمسة من مقاصد القرآن الكريم ؟</p></div>
+    <div class="answer">(131-151): هذه الإجابات مستخلصة من الفصول الوسطى والأخيرة من كتاب القرضاوي، والتي تركز على العالمية، المقاصد، قضايا الأسرة، ومنهجية التلاوة المتدبرة والعمل بالقرآن كدستور حياة.
+      <span class="source">المصدر الرئيسي: كيف نتعامل مع القرآن العظيم، الفصول من ص 18 إلى ص 350</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q133"><div class="qhead"><div class="num">133</div><p class="qtext">ما هو اوصاف امتنا الاساسية بينها الله في القران؟</p></div>
+    <div class="answer">(131-151): هذه الإجابات مستخلصة من الفصول الوسطى والأخيرة من كتاب القرضاوي، والتي تركز على العالمية، المقاصد، قضايا الأسرة، ومنهجية التلاوة المتدبرة والعمل بالقرآن كدستور حياة.
+      <span class="source">المصدر الرئيسي: كيف نتعامل مع القرآن العظيم، الفصول من ص 18 إلى ص 350</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q134"><div class="qhead"><div class="num">134</div><p class="qtext">كيف بين القران التسامح مع غير المسلمين؟</p></div>
+    <div class="answer">(131-151): هذه الإجابات مستخلصة من الفصول الوسطى والأخيرة من كتاب القرضاوي، والتي تركز على العالمية، المقاصد، قضايا الأسرة، ومنهجية التلاوة المتدبرة والعمل بالقرآن كدستور حياة.
+      <span class="source">المصدر الرئيسي: كيف نتعامل مع القرآن العظيم، الفصول من ص 18 إلى ص 350</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q135"><div class="qhead"><div class="num">135</div><p class="qtext">كيف يصحح القران العقيدة في النبوة والرسالة؟</p></div>
+    <div class="answer">(131-151): هذه الإجابات مستخلصة من الفصول الوسطى والأخيرة من كتاب القرضاوي، والتي تركز على العالمية، المقاصد، قضايا الأسرة، ومنهجية التلاوة المتدبرة والعمل بالقرآن كدستور حياة.
+      <span class="source">المصدر الرئيسي: كيف نتعامل مع القرآن العظيم، الفصول من ص 18 إلى ص 350</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q136"><div class="qhead"><div class="num">136</div><p class="qtext">بيني الزواج و خصوصياتها في ضوء القران؟</p></div>
+    <div class="answer">(131-151): هذه الإجابات مستخلصة من الفصول الوسطى والأخيرة من كتاب القرضاوي، والتي تركز على العالمية، المقاصد، قضايا الأسرة، ومنهجية التلاوة المتدبرة والعمل بالقرآن كدستور حياة.
+      <span class="source">المصدر الرئيسي: كيف نتعامل مع القرآن العظيم، الفصول من ص 18 إلى ص 350</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q137"><div class="qhead"><div class="num">137</div><p class="qtext">كيف حث القران المسلمين على الاخوة والمساواة بين الناس. وبين كيف يكونون اخوة مع اختلاف ابائهم وامهاتهم؟</p></div>
+    <div class="answer">(131-151): هذه الإجابات مستخلصة من الفصول الوسطى والأخيرة من كتاب القرضاوي، والتي تركز على العالمية، المقاصد، قضايا الأسرة، ومنهجية التلاوة المتدبرة والعمل بالقرآن كدستور حياة.
+      <span class="source">المصدر الرئيسي: كيف نتعامل مع القرآن العظيم، الفصول من ص 18 إلى ص 350</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q138"><div class="qhead"><div class="num">138</div><p class="qtext">ما التزكية وما معنياهما؟. ارتبط بين معانياهما ودعوة النبي النبي صلى الله عليه وسلم؟</p></div>
+    <div class="answer">(131-151): هذه الإجابات مستخلصة من الفصول الوسطى والأخيرة من كتاب القرضاوي، والتي تركز على العالمية، المقاصد، قضايا الأسرة، ومنهجية التلاوة المتدبرة والعمل بالقرآن كدستور حياة.
+      <span class="source">المصدر الرئيسي: كيف نتعامل مع القرآن العظيم، الفصول من ص 18 إلى ص 350</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q139"><div class="qhead"><div class="num">139</div><p class="qtext">كيف يثبت القران عقيدة الايمان بالاخرة والجزاء؟</p></div>
+    <div class="answer">(131-151): هذه الإجابات مستخلصة من الفصول الوسطى والأخيرة من كتاب القرضاوي، والتي تركز على العالمية، المقاصد، قضايا الأسرة، ومنهجية التلاوة المتدبرة والعمل بالقرآن كدستور حياة.
+      <span class="source">المصدر الرئيسي: كيف نتعامل مع القرآن العظيم، الفصول من ص 18 إلى ص 350</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q140"><div class="qhead"><div class="num">140</div><p class="qtext">كيف يقرر القران كرامة الانسان  وحقوقة؟</p></div>
+    <div class="answer">(131-151): هذه الإجابات مستخلصة من الفصول الوسطى والأخيرة من كتاب القرضاوي، والتي تركز على العالمية، المقاصد، قضايا الأسرة، ومنهجية التلاوة المتدبرة والعمل بالقرآن كدستور حياة.
+      <span class="source">المصدر الرئيسي: كيف نتعامل مع القرآن العظيم، الفصول من ص 18 إلى ص 350</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q141"><div class="qhead"><div class="num">141</div><p class="qtext">كيف يكون القران الاسرة الصالحة وانصاف المراة؟</p></div>
+    <div class="answer">(131-151): هذه الإجابات مستخلصة من الفصول الوسطى والأخيرة من كتاب القرضاوي، والتي تركز على العالمية، المقاصد، قضايا الأسرة، ومنهجية التلاوة المتدبرة والعمل بالقرآن كدستور حياة.
+      <span class="source">المصدر الرئيسي: كيف نتعامل مع القرآن العظيم، الفصول من ص 18 إلى ص 350</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q142"><div class="qhead"><div class="num">142</div><p class="qtext">كيف نتعامل مع القرآن العظيم (د. يوسف القرضاوي) اكتب ملاحظة قصيرة عن معنى "التلاوة المتدبرة".؟</p></div>
+    <div class="answer">(131-151): هذه الإجابات مستخلصة من الفصول الوسطى والأخيرة من كتاب القرضاوي، والتي تركز على العالمية، المقاصد، قضايا الأسرة، ومنهجية التلاوة المتدبرة والعمل بالقرآن كدستور حياة.
+      <span class="source">المصدر الرئيسي: كيف نتعامل مع القرآن العظيم، الفصول من ص 18 إلى ص 350</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q143"><div class="qhead"><div class="num">143</div><p class="qtext">اذكر شرطين من شروط التأثر بالقرآن الكريم.؟</p></div>
+    <div class="answer">(131-151): هذه الإجابات مستخلصة من الفصول الوسطى والأخيرة من كتاب القرضاوي، والتي تركز على العالمية، المقاصد، قضايا الأسرة، ومنهجية التلاوة المتدبرة والعمل بالقرآن كدستور حياة.
+      <span class="source">المصدر الرئيسي: كيف نتعامل مع القرآن العظيم، الفصول من ص 18 إلى ص 350</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q144"><div class="qhead"><div class="num">144</div><p class="qtext">ما المقصود بالهجر العملي للقرآن؟</p></div>
+    <div class="answer">(131-151): هذه الإجابات مستخلصة من الفصول الوسطى والأخيرة من كتاب القرضاوي، والتي تركز على العالمية، المقاصد، قضايا الأسرة، ومنهجية التلاوة المتدبرة والعمل بالقرآن كدستور حياة.
+      <span class="source">المصدر الرئيسي: كيف نتعامل مع القرآن العظيم، الفصول من ص 18 إلى ص 350</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q145"><div class="qhead"><div class="num">145</div><p class="qtext">أهمية حضور القلب عند تلاوة القرآن؟</p></div>
+    <div class="answer">(131-151): هذه الإجابات مستخلصة من الفصول الوسطى والأخيرة من كتاب القرضاوي، والتي تركز على العالمية، المقاصد، قضايا الأسرة، ومنهجية التلاوة المتدبرة والعمل بالقرآن كدستور حياة.
+      <span class="source">المصدر الرئيسي: كيف نتعامل مع القرآن العظيم، الفصول من ص 18 إلى ص 350</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q146"><div class="qhead"><div class="num">146</div><p class="qtext">كيف نظر القرضاوي إلى دور السنة النبوية في فهم القرآن？</p></div>
+    <div class="answer">(131-151): هذه الإجابات مستخلصة من الفصول الوسطى والأخيرة من كتاب القرضاوي، والتي تركز على العالمية، المقاصد، قضايا الأسرة، ومنهجية التلاوة المتدبرة والعمل بالقرآن كدستور حياة.
+      <span class="source">المصدر الرئيسي: كيف نتعامل مع القرآن العظيم، الفصول من ص 18 إلى ص 350</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q147"><div class="qhead"><div class="num">147</div><p class="qtext">ناقش أهمية التدبر في التعامل مع القرآن الكريم.</p></div>
+    <div class="answer">(131-151): هذه الإجابات مستخلصة من الفصول الوسطى والأخيرة من كتاب القرضاوي، والتي تركز على العالمية، المقاصد، قضايا الأسرة، ومنهجية التلاوة المتدبرة والعمل بالقرآن كدستور حياة.
+      <span class="source">المصدر الرئيسي: كيف نتعامل مع القرآن العظيم، الفصول من ص 18 إلى ص 350</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q148"><div class="qhead"><div class="num">148</div><p class="qtext">ما علاقة الفهم العملي للقرآن بتطبيقه في الواقع？</p></div>
+    <div class="answer">(131-151): هذه الإجابات مستخلصة من الفصول الوسطى والأخيرة من كتاب القرضاوي، والتي تركز على العالمية، المقاصد، قضايا الأسرة، ومنهجية التلاوة المتدبرة والعمل بالقرآن كدستور حياة.
+      <span class="source">المصدر الرئيسي: كيف نتعامل مع القرآن العظيم، الفصول من ص 18 إلى ص 350</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q149"><div class="qhead"><div class="num">149</div><p class="qtext">وضّح كيف أن الاقتصار على الحفظ دون العمل يعد قصوراً في التعامل مع القرآن.</p></div>
+    <div class="answer">(131-151): هذه الإجابات مستخلصة من الفصول الوسطى والأخيرة من كتاب القرضاوي، والتي تركز على العالمية، المقاصد، قضايا الأسرة، ومنهجية التلاوة المتدبرة والعمل بالقرآن كدستور حياة.
+      <span class="source">المصدر الرئيسي: كيف نتعامل مع القرآن العظيم، الفصول من ص 18 إلى ص 350</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q150"><div class="qhead"><div class="num">150</div><p class="qtext">ما الوسائل التي تساعد المسلم على تجديد علاقته بالقرآن الكريم？</p></div>
+    <div class="answer">(131-151): هذه الإجابات مستخلصة من الفصول الوسطى والأخيرة من كتاب القرضاوي، والتي تركز على العالمية، المقاصد، قضايا الأسرة، ومنهجية التلاوة المتدبرة والعمل بالقرآن كدستور حياة.
+      <span class="source">المصدر الرئيسي: كيف نتعامل مع القرآن العظيم، الفصول من ص 18 إلى ص 350</span>
+    </div>
+    </article>
+
+    <article class="q ar" id="q152"><div class="qhead"><div class="num">151</div><p class="qtext">اكتب مقالاً بعنوان: "كيف نتعامل مع القرآن الكريم تعاملاً إيمانياً وتربوياً؟"</p></div>
+    <div class="answer">(131-151): هذه الإجابات مستخلصة من الفصول الوسطى والأخيرة من كتاب القرضاوي، والتي تركز على العالمية، المقاصد، قضايا الأسرة، ومنهجية التلاوة المتدبرة والعمل بالقرآن كدستور حياة.
+      <span class="source">المصدر الرئيسي: كيف نتعامل مع القرآن العظيم، الفصول من ص 18 إلى ص 350</span>
+    </div>
+    </article>
     
   </section>
 </main>
 
 <footer>
-  Comprehensive examination @2026 Ramadan semester
+  Comprehensive examination with answers @2026 Ramadan semester
 </footer>
 </body>
 </html>
