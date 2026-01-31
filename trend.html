@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OB Exam Prep Quiz</title>
+    <style>
+        :root {
+            --accent: #6366f1; /* Indigo */
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --success: #10b981;
+            --danger: #ef4444;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-dark);
+        }
+
+        .quiz-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 95%;
+            max-width: 550px;
+            transition: transform 0.3s ease;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-light);
+        }
+
+        .timer {
+            background: #fee2e2;
+            color: var(--danger);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .progress-bar-container {
+            height: 8px;
+            background-color: #e5e7eb;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .question {
+            font-size: 1.25rem;
+            font-weight: 700;
+            line-height: 1.5;
+            margin-bottom: 2rem;
+            color: var(--text-dark);
+            min-height: 60px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background: white;
+            border: 2px solid #f3f4f6;
+            padding: 16px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: left;
+            transition: all 0.2s ease;
+            color: var(--text-dark);
+        }
+
+        .option-btn:hover:not([disabled]) {
+            border-color: var(--accent);
+            background-color: #f8fafc;
+            transform: translateY(-2px);
+        }
+
+        .option-btn.correct {
+            background-color: var(--success) !important;
+            border-color: var(--success) !important;
+            color: white !important;
+        }
+
+        .option-btn.wrong {
+            background-color: var(--danger) !important;
+            border-color: var(--danger) !important;
+            color: white !important;
+        }
+
+        .footer {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .score-pill {
+            background: #e0e7ff;
+            color: var(--accent);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+
+        #next-btn {
+            padding: 12px 24px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        #next-btn:hover {
+            opacity: 0.9;
+        }
+
+        .results-screen {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .results-screen h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .restart-btn {
+            margin-top: 25px;
+            padding: 12px 30px;
+            background: var(--text-dark);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .quiz-container { padding: 1.5rem; }
+            .question { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div id="quiz-ui">
+        <div class="header">
+            <span>Question <span id="q-num">1</span>/222</span>
+            <span class="timer">Time: <span id="time">20</span>s</span>
+        </div>
+
+        <div class="progress-bar-container">
+            <div class="progress-fill" id="progress-bar"></div>
+        </div>
+
+        <div class="question" id="question-text">Loading question...</div>
+        
+        <div class="options" id="options-container"></div>
+
+        <div class="footer">
+            <div class="score-pill">Score: <span id="current-score">0</span></div>
+            <button id="next-btn" onclick="nextQuestion()" style="display: none;">Next Question</button>
+        </div>
+    </div>
+
+    <div class="results-screen" id="results">
+        <h2>🎉 Quiz Complete!</h2>
+        <p style="font-size: 1.2rem; margin: 20px 0;">You scored <span id="score" style="font-weight: bold; color: var(--accent);">0</span> out of <span id="total-res"></span></p>
+        <p id="performance-message"></p>
+        <button class="restart-btn" onclick="location.reload()">Try Again</button>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+    {
+        "q": "1. Abu Zayd primarily describes the Qur’an as a:",
+        "o": ["Purely transcendental text", "Legal constitution", "Scientific manual", "Cultural Product"],
+        "a": 3
+    },
+    {
+        "q": "2. In Abu Zayd’s hermeneutical theory, Qur’anic meaning is:",
+        "o": ["Produced through text, context, and reader", "Fixed and unchangeable", "Limited to classical tafsīr", "Known only to the Companions"],
+        "a": 0
+    },
+    {
+        "q": "3. Abu Zayd emphasizes which factor most strongly in understanding the Qur’an?",
+        "o": ["Numerical miracles", "Historical and social context", "Political authority", "Esoteric symbolism"],
+        "a": 1
+    },
+    {
+        "q": "4. Abu Zayd believes Qur’anic interpretation should be:",
+        "o": ["Restricted to early scholars", "Completed in the classical period", "Renewed by every generation", "Limited to legal rulings"],
+        "a": 2
+    },
+    {
+        "q": "5. A common scholarly criticism of Abu Zayd’s Qur’anic methodology is that it:",
+        "o": ["Rejects Arabic grammar", "Ignores all tradition", "Over-historicizes the Qur’an", "Focuses only on mysticism"],
+        "a": 2
+    },
+    {
+        "q": "6. Muhammad Tawfiq Sidqi is primarily known for which position?",
+        "o": ["Defending classical Hadith methodology", "Rejecting the Quran as a legal source", "Questioning the authenticity and universality of Hadith", "Promoting Sufism over jurisprudence"],
+        "a": 2
+    },
+    {
+        "q": "7. According to Sidqi, why did unreliable or corrupt hadith emerge?",
+        "o": ["Because Companions intentionally altered them", "Because hadith were recorded too late", "Because non-Arabs entered Islam", "Because the Quran was incomplete"],
+        "a": 1
+    },
+    {
+        "q": "8. Sidqi believed that the Sunnah of the Prophet was:",
+        "o": ["Divine revelation equal to the Quran", "Binding on all Muslims until the Day of Judgment", "Temporary and meant only for the Prophet’s era", "A later scholarly invention"],
+        "a": 2
+    },
+    {
+        "q": "9. What personal background strengthened Sidqi’s objection to certain hadith?",
+        "o": ["His training as a jurist", "His work as a historian", "His medical education and profession", "His role as a Quran reciter"],
+        "a": 2
+    },
+    {
+        "q": "10. Which hadith especially triggered Sidqi’s skepticism?",
+        "o": ["The hadith of intention", "The hadith of intercession", "The hadith of the fly", "The hadith of predestination"],
+        "a": 2
+    },
+    {
+        "q": "11. Why did Sidqi find the 'hadith of the fly' problematic?",
+        "o": ["It contradicted Quranic verses", "It conflicted with Arab customs", "It lacked a complete chain of transmission", "It opposed modern medical knowledge and germ theory"],
+        "a": 3
+    },
+    {
+        "q": "12. In which journal did Sidqi publish 'Islam is the Qur’an Alone'?",
+        "o": ["Al-Azhar", "Al-Hilal", "Al-Manar", "Al-Urwah al-Wuthqa"],
+        "a": 2
+    },
+    {
+        "q": "13. Sidqi argued that if the Sunnah were essential for all Muslims, it would have:",
+        "o": ["Been narrated by every Companion", "Been preserved and written like the Quran", "Replaced earlier scriptures", "Been immune from scholarly disagreement"],
+        "a": 1
+    },
+    {
+        "q": "14. What broader intellectual stance motivated Sidqi’s critique of Hadith?",
+        "o": ["Rejection of prophecy", "Political reform", "Opposition to taqlid and a search for authenticity", "Alignment with Christian missionary thought"],
+        "a": 2
+    },
+    {
+        "q": "15. What ultimately happened to Sidqi’s Quran-alone position?",
+        "o": ["It became dominant in Al-Azhar", "It was officially endorsed by Rashid Rida", "He later recanted it after opposition from Rashid Rida", "It remained unchanged until his death"],
+        "a": 2
+    },
+    {
+        "q": "16. Maulana Wahiduddin Khan’s concept of peace is best understood through which of the following principles?",
+        "o": ["Peace as a by-product of justice", "Peace as a strategic compromise", "Peace as a temporary political arrangement", "Peace as a prerequisite for justice"],
+        "a": 3
+    },
+    {
+        "q": "17. According to Wahiduddin Khan, the true meaning of Jihad primarily refers to:",
+        "o": ["Defensive warfare to protect Islam", "Political struggle for Islamic governance", "Ideological and spiritual struggle through da‘wah", "Collective resistance against oppression"],
+        "a": 2
+    },
+    {
+        "q": "18. Which of the following positions did Wahiduddin Khan strongly reject as un-Islamic?",
+        "o": ["Gandhian non-violence", "Political interpretation of Islam", "Interfaith dialogue", "Spiritual reform of the individual"],
+        "a": 1
+    },
+    {
+        "q": "19. The concept of Jihad-e-Akbar, as emphasized by Wahiduddin Khan, refers to:",
+        "o": ["Internal struggle against ego and negative impulses", "Military defense of the Muslim community", "Collective struggle against injustice", "Establishment of Islamic law"],
+        "a": 0
+    },
+    {
+        "q": "20. Which of the following works of Wahiduddin Khan attempts to provide scientific reasoning for belief in God?",
+        "o": ["God Arises", "The Prophet of Peace", "Tazkirul Quran", "Al-Risala"],
+        "a": 0
+    },
+    {
+        "q": "21. The Centre for Peace and Spirituality (CPS), founded by Wahiduddin Khan, primarily aims to:",
+        "o": ["Promote Islamic political ideology", "Institutionalize armed resistance narratives", "Develop mind-based spirituality and interfaith harmony", "Train religious scholars for state leadership"],
+        "a": 2
+    },
+    {
+        "q": "22. What is the primary nature of Sandow Birk's 'The American Qur'an'?",
+        "o": ["A new theological interpretation of Islam", "A contemporary art project and visual manuscript", "A political manifesto against religion", "A historical archaeological document"],
+        "a": 1
+    },
+    {
+        "q": "23. The calligraphy style used by Sandow Birk in this work is inspired by:",
+        "o": ["Traditional Arabic Kufic script", "Medieval European Gothic script", "American urban graffiti", "Chinese ink brush strokes"],
+        "a": 2
+    },
+    {
+        "q": "24. Which of the following best describes the English translation used in Sandow Birk's project?",
+        "o": ["It is a completely new translation written by Sandow Birk himself.", "It uses several respected English translations (like Marmaduke Pickthall’s) to ensure accessibility.", "It is a word-for-word translation of the very first Quran ever written.", "It is a poetic summary rather than a full translation of the verses."],
+        "a": 1
+    },
+    {
+        "q": "25. What was Sandow Birk’s main objective in creating 'The American Qur'an'?",
+        "o": ["To translate the Quran into a new language", "To show that the Quran’s messages are universal and relevant to the American experience", "To criticize religious practices in the United States", "To create a textbook for Islamic schools"],
+        "a": 1
+    },
+    {
+        "q": "26. What significant historical context motivated Sandow Birk to start 'The American Qur'an' project?",
+        "o": ["The American Civil Rights Movement of the 1960s", "The aftermath of September 11 (9/11) and the desire to bridge cultural gaps", "The discovery of ancient Quranic manuscripts in California", "A government request to create a new religious textbook"],
+        "a": 1
+    },
+    {
+        "q": "27. What is considered the first major Arabic–Malayalam Qur’anic work in Kerala?",
+        "o": ["تفسير القران", "ترجمة تفسير القرآن الكريم", "تحقيق الإخوان بترجمة القرآن", "تفسير المنار"],
+        "a": 1
+    },
+    {
+        "q": "28. Which tafsir was mainly used by Mayan Kutty Elaya for his work?",
+        "o": ["Tafsir al-Jalalayn", "Tafsir Ibn Kathir", "Tafsir al-Tabari", "Tafsir al-Qurtubi"],
+        "a": 0
+    },
+    {
+        "q": "29. Who authored the work Fathahu-r-Raḥmān fī Tafsīr al-Qur’ān?",
+        "o": ["K. V. Muhammad Musliar", "E. K. Abubacker Musliar", "Mayan Kutty Elaya", "Makki Thangal"],
+        "a": 0
+    },
+    {
+        "q": "30. Who produced the first complete, government-aided Malayalam translation of the Qur’an in 1963?",
+        "o": ["Vakkom P. Muhammad Maideen", "E. K. Abubacker Musliar", "K. V. Muhammad Musliar", "C. N. Ahmed Moulavi"],
+        "a": 3
+    },
+    {
+        "q": "31. Amina Wadud critiques classical tafsīr primarily because it is:",
+        "o": ["Linguistically weak", "Theologically inconsistent", "Historically male-centered", "Juridically irrelevant"],
+        "a": 2
+    },
+    {
+        "q": "32. According to Amina Wadud, Tawḥīd primarily emphasizes:",
+        "o": ["Equality and justice in human relations", "Ritual worship", "Political authority", "Legal dominance"],
+        "a": 0
+    },
+    {
+        "q": "33. Amina Wadud led Friday prayer in the USA in:",
+        "o": ["1994", "1999", "2005", "2012"],
+        "a": 2
+    },
+    {
+        "q": "34. Which Qur'anic principle is described as 'all-inclusive, applying to every facet of individual and communal life, manifested through moderation in all things'?",
+        "o": ["Freedom (Hurriyah)", "Beauty (Jamal)", "Peace (Salam)", "Justice (Adl)"],
+        "a": 3
+    },
+    {
+        "q": "35. According to The Qur'anic Worldview, what principle is inseparable from freedom and signifies accountability for choices within one's capabilities?",
+        "o": ["Responsibility (Mas'uliyah)", "Justice (Adl)", "Mutual Consultation (Shura)", "Reform (Islah)"],
+        "a": 0
+    },
+    {
+        "q": "36. The Qur'anic worldview's approach to globalism is characterized by:",
+        "o": ["Recognition of humanity's essential unity beyond nationalism", "Support for economic globalization in all its forms", "Prioritizing Muslim nations in international relations", "Rejecting cross-cultural interactions to preserve identity"],
+        "a": 0
+    },
+    {
+        "q": "37. In the Qur'anic worldview, the concept of Beauty (Jamal) encompasses:",
+        "o": ["Only natural beauty created by God", "Aesthetic enjoyment, creativity, and harmony balanced with ethics", "Material wealth and prosperity as signs of divine favor", "Exclusively spiritual beauty disconnected from material reality"],
+        "a": 1
+    },
+    {
+        "q": "38. Farid Esack’s Qur’anic interpretation is primarily shaped by:",
+        "o": ["His experience of social oppression", "Classical Arabic grammar", "Numerical patterns in the Qur’an", "Philosophical mysticism"],
+        "a": 0
+    },
+    {
+        "q": "39. The socio-political reality that significantly influenced Farid Esack’s thought was:",
+        "o": ["Colonial Interferences, Middle East", "Post-war Europe", "Modern Middle East conflicts", "Apartheid South Africa"],
+        "a": 3
+    },
+    {
+        "q": "40. In Farid Esack’s view, the Qur’an consistently aligns itself with:",
+        "o": ["Political authority", "The oppressed and marginalized", "Religious elites", "Social neutrality"],
+        "a": 1
+    },
+    {
+        "q": "41. Farid Esack’s method of interpreting the Qur’an can best be described as:",
+        "o": ["Contextual and ethics-centered", "Purely mystical", "Strictly pluralistic", "Textually isolated"],
+        "a": 0
+    },
+    {
+        "q": "42. According to Esack, liberation in the Qur’anic sense is closely connected to:",
+        "o": ["Withdrawal from society", "Ritual observance alone", "Moral action and justice", "Doctrinal exclusivism"],
+        "a": 2
+    },
+    {
+        "q": "43. One major criticism Esack raises against traditional tafsīr is its:",
+        "o": ["Excessive engagement with politics", "Dependence on philosophy", "Neglect of social injustice", "Overuse of modern theory"],
+        "a": 2
+    },
+    {
+        "q": "44. Farid Esack’s contribution to modern Qur’anic studies is best categorized as:",
+        "o": ["Scientific exegesis and Liberation", "Mystical reinterpretation", "Classical revivalism", "Post-colonial liberationist hermeneutics"],
+        "a": 3
+    },
+    {
+        "q": "45. The word Isrāʾīliyyah is attributed to:",
+        "o": ["Prophet Mūsā", "Prophet Ibrāhīm", "Prophet Yaʿqūb", "Prophet Dāwūd"],
+        "a": 2
+    },
+    {
+        "q": "46. According to Ibn Khaldūn, which factor encouraged acceptance of Isrāʾīliyyāt among early Arabs?",
+        "o": ["Strong literacy skills", "Political alliances", "Dependence on People of the Book for historical knowledge", "Qur’anic encouragement"],
+        "a": 2
+    },
+    {
+        "q": "47. Which event significantly increased Jewish presence in Arabia, influencing cultural exchange?",
+        "o": ["The destruction of Jerusalem by Titus in 70 CE", "The Battle of Khaybar", "The Hijrah to Madinah", "The conquest of Makkah"],
+        "a": 0
+    },
+    {
+        "q": "48. Tafsīr was initially part of which discipline before emerging as an independent field?",
+        "o": ["Fiqh", "Kalām", "Ḥadīth compilations", "Arabic grammar"],
+        "a": 2
+    },
+    {
+        "q": "49. Find the odd one out:",
+        "o": ["عبد الله بن سلام", "أبو هريرة رضي الله عنه", "كعب الأحبار", "تميم الداري رضي الله عنه"],
+        "a": 2
+    },
+    {
+        "q": "50. Who was the first person to light lamps in the mosque, the first to relate stories (qaṣaṣ) with the permission of ʿUmar (رضي الله عنه), and the one who made the pulpit (minbar) of the Prophet صلى الله عليه وسلم?",
+        "o": ["ʿAbdullāh ibn Salām", "Abū Hurayrah (رضي الله عنه)", "Tamīm al-Dārī (رضي الله عنه)", "Kaʿb al-Aḥbār"],
+        "a": 2
+    },
+    {
+        "q": "51. Which Tafsīr is known for its strong and strict rejection of Isrāʾīliyyāt?",
+        "o": ["Tafsīr al-Ṭabarī", "Tafsīr al-Jalalayn", "Tafsīr al-Manār", "Tafsīr al-Thaʿlabī"],
+        "a": 2
+    },
+    {
+        "q": "52. Tafsīr Muqātil ibn Sulaymān falls under which category regarding Isrāʾīliyyāt?",
+        "o": ["Narrates Isrāʾīliyyāt with isnād and critically evaluates them", "Narrates Isrāʾīliyyāt without isnād and without criticism", "Narrates Isrāʾīliyyāt with isnād and partial criticism", "Narrates Isrāʾīliyyāt only to refute them"],
+        "a": 1
+    },
+    {
+        "q": "53. What is identified as the fundamental, unifying ideological position at the heart of all Ahlul Quran movements?",
+        "o": ["The belief that Hadith literature is partially reliable but requires extensive re-evaluation", "The rejection of historical Islamic jurisprudence (fiqh) in favor of modern interpretations", "The concept that the Quran is the sole, preserved revelation and the only scriptural authority in Islam", "The argument that Hadith compilations were corrupted primarily during the Umayyad period"],
+        "a": 2
+    },
+    {
+        "q": "54. What was a central theological argument made by the 20th-century Egyptian writer Muhammad Tawfiq Sidqi in his article 'Al-Islam Huwa Al-Quran Wahdahu' (Islam is the Quran-Alone)?",
+        "o": ["The Hadith contains errors, it remains essential for understanding the historical context of the Qur’an", "The Quran is self-sufficient as guidance, as it is a book that 'explains all things' and from which nothing is omitted", "The authority of the Prophet extends beyond the Quran to include his personal judgments and habits", "The compilation of Hadith was a divinely inspired project parallel to the compilation of the Quran"],
+        "a": 1
+    },
+    {
+        "q": "55. How did Ahlul Quran movements in Malabar fundamentally challenge the existing Islamic landscape?",
+        "o": ["By introducing the debate on the authority of Prophetic tradition as the second source of Islamic knowledge", "By advocating for the complete abandonment of Arabic in favor of Malayalam for religious practice", "By partially denying the Quranic exegesis", "By rejecting the Quran itself in favor of a rationalist, humanist philosophy"],
+        "a": 0
+    },
+    {
+        "q": "56. Which of the following practical reforms was instituted by B. Kunjahmad Haji's group?",
+        "o": ["The abolition of the five daily prayers in favor of a single daily meditation", "The introduction of Friday (Juma'a) prayers for women and the delivery of the sermon (khutba) in Malayalam", "The replacement of the Hajj pilgrimage with a local charitable donation", "Zakath will also be distributed to non-Muslims"],
+        "a": 1
+    },
+    {
+        "q": "57. The Khuran Sunnath Society (Quran Sunnath Society), founded by Chekanur Moulavi, was officially established in which year?",
+        "o": ["1968", "1970", "1985", "1979"],
+        "a": 3
+    },
+    {
+        "q": "58. A key methodological step in Chekannur Moulavi's intellectual development, following his disappointment with scholars in Medina, was:",
+        "o": ["Different opinions in Islamic culture", "Initiating a period of rigorous self-study of Islamic texts and traditions", "Mingling with people with different ideas to find answers to his spiritual questions", "Collaborating exclusively with the Jamaat-e-Islami to publish his findings"],
+        "a": 1
+    },
+    {
+        "q": "59. Who is the author of Abu-Hurierayudey Thaniniram (1986)?",
+        "o": ["Chekannur Moulavi", "K.M. Moulavi", "C.N. Ahmad Moulavi", "Mayan Kutty Elaya"],
+        "a": 0
+    },
+    {
+        "q": "60. A cornerstone of Chekannur Moulavi's interfaith theology, as presented in Sarva Matha Sathya Vadam Khuranil, was the argument that:",
+        "o": ["Islam replaces all earlier religions, making their scriptures invalid", "Only those who declare the Shahada can enter heaven", "In the Qur’an, 'Islam' refers broadly to all God-sent religions, and truth and righteousness exist in many faiths", "Interfaith marriage is completely forbidden to preserve religious purity"],
+        "a": 2
+    },
+    {
+        "q": "61. From an Islamic theological perspective, the crucifixion of Jesus would contradict:",
+        "o": ["Divine justice and protection of prophets", "Prophetic mission", "Divine mercy", "Human free will"],
+        "a": 0
+    },
+    {
+        "q": "62. In the New Testament, which Roman official authorized Jesus’ crucifixion?",
+        "o": ["Herod Antipas", "Pontius Pilate", "Caiaphas", "Tiberius Caesar"],
+        "a": 1
+    },
+    {
+        "q": "63. Islamic Liberation Theology primarily focuses on:",
+        "o": ["Ritual performance", "Metaphysical debates", "Social justice and liberation", "Mystical experience"],
+        "a": 2
+    },
+    {
+        "q": "64. In Islamic Liberation Theology, Qur’anic justice (ʿadl) means:",
+        "o": ["Legal punishment only", "Abstract moral theory", "State authority", "Active responsibility against oppression"],
+        "a": 3
+    },
+    {
+        "q": "65. The term praxis in Liberation Theology refers to:",
+        "o": ["Faith combined with social action", "Ritual worship only", "Theory without action", "Legal obedience"],
+        "a": 0
+    },
+    {
+        "q": "66. Ali Shariati is important to Islamic Liberation Theology due to his:",
+        "o": ["Defense of classical theology", "Rejection of politics in religion", "Integration of Islam and revolutionary thought", "Focus on mysticism"],
+        "a": 2
+    },
+    {
+        "q": "67. A key difference between Islamic and Christian Liberation Theology is:",
+        "o": ["Centralized religious authority", "Rejection of scripture", "Decentralized theological structure", "Lack of social concern"],
+        "a": 2
+    },
+    {
+        "q": "68. Jamal al-Banna believes that the Qur’an should be understood mainly as:",
+        "o": ["A legal manual with fixed rulings", "A text explained only by earlier scholars", "A moral guide that addresses changing human realities", "A historical document limited to its first audience"],
+        "a": 2
+    },
+    {
+        "q": "69. For Jamal al-Banna, the main weakness of classical Islamic law is that it often:",
+        "o": ["Ignores Arabic language", "Focuses on rules more than ethical purpose", "Rejects rational thinking", "Denies the authority of revelation"],
+        "a": 1
+    },
+    {
+        "q": "70. When Jamal al-Banna questions the obligation of hijab, his main argument is that:",
+        "o": ["Modesty is unnecessary in Islam", "Culture has been confused with religion", "Women should follow modern fashion", "Scholars misunderstood Arabic grammar"],
+        "a": 1
+    },
+    {
+        "q": "71. For Jamal al-Banna, Islamic rituals are meaningful only when they:",
+        "o": ["Follow classical legal forms", "Are performed publicly", "Produce moral and social good", "Are strictly regulated by scholars"],
+        "a": 2
+    },
+    {
+        "q": "72. Book by Imam Ahmed Raza refuting Earth orbit:",
+        "o": ["Fauz-e Mubeen", "Kanzul Iman", "Fatawa Razawiyya", "Khazain Irfan"],
+        "a": 0
+    },
+    {
+        "q": "73. Where was Imam Ahmed Raza from?",
+        "o": ["Bareilly", "Delhi", "Lahore", "Mecca"],
+        "a": 0
+    },
+    {
+        "q": "74. Which Qur’anic verse is central to discussions of qiwāmah in the document?",
+        "o": ["Qur’an Surah Al-Baqarah: 228", "Qur’an Surah An-Nisa’:1", "Qur’an Surah An-Nisa’:34", "Qur’an Surah Al-Ahzab:35"],
+        "a": 2
+    },
+    {
+        "q": "75. Classical exegetes such as al-Ṭabarī and Ibn Kathīr grounded qiwāmah mainly in:",
+        "o": ["Biological superiority", "Cultural custom alone", "Faḍl (divine preference) and nafaqa (financial responsibility)", "Mutual consultation"],
+        "a": 2
+    },
+    {
+        "q": "76. How did traditional tafsīr generally understand darb in Qur’an 4:34?",
+        "o": ["As unrestricted physical punishment", "As symbolic and highly discouraged disciplinary action", "As complete separation only", "As metaphor with no physical meaning"],
+        "a": 1
+    },
+    {
+        "q": "77. According to Sayyid Quṭb, the Islamic family system functions as:",
+        "o": ["A hierarchical institution", "A patriarchal authority model", "A dual institution with complementary roles", "A matriarchal structure"],
+        "a": 2
+    },
+    {
+        "q": "78. Zeenath Kausar characterizes the Islamic family system as:",
+        "o": ["Patriarchal", "Matriarchal", "Egalitarian in all roles", "Consultational and shūrā-based"],
+        "a": 3
+    },
+    {
+        "q": "79. Muḥammad ʿAlī al-Ṣābūnī describes qiwāmah primarily as:",
+        "o": ["Spiritual superiority", "Functional leadership based on responsibility", "Cultural dominance", "Legal inequality"],
+        "a": 1
+    },
+    {
+        "q": "80. Amina Wadud argues that the Qur’an:",
+        "o": ["Fixes rigid gender roles for all societies", "Establishes male rule permanently", "Allows flexibility based on social realities", "Supports capitalist family models"],
+        "a": 2
+    },
+    {
+        "q": "81. Asma Barlas claims that patriarchal interpretations of qiwāmah arise mainly from:",
+        "o": ["The Qur’anic text itself", "Linguistic ambiguity only", "Extra-Qur’anic traditions and historical contexts", "Feminist ideology"],
+        "a": 2
+    },
+    {
+        "q": "82. Modern exegetes often reinterpret darb as:",
+        "o": ["Mandatory physical discipline", "Legal punishment", "Non-violent separation or withdrawal", "Cultural metaphor with no ethical limits"],
+        "a": 2
+    },
+    {
+        "q": "83. In Qurʾān 2:143, the description of the Muslim community as Ummatan Wasaṭan primarily establishes their qualification for:",
+        "o": ["Political authority", "Ritual distinction", "Witnessing over humanity", "Numerical centrality"],
+        "a": 2
+    },
+    {
+        "q": "84. The Qurʾānic logic presented in the document links wasaṭiyya to shahāda (witnessing) through which necessary condition?",
+        "o": ["Moderation in belief", "Social consensus", "Justice (ʿadl)", "Cultural superiority"],
+        "a": 2
+    },
+    {
+        "q": "85. How did classical Qurʾānic scholars justify interpreting wasaṭ as ʿadl (justice)?",
+        "o": ["By equating it with numerical balance", "By linking wasaṭiyya to valid witnessing, which requires justice", "By restricting its meaning to moderation", "By deriving it from political necessity"],
+        "a": 1
+    },
+    {
+        "q": "86. According to al-Ṭabarī, the term wasaṭ in Qurʾān 2:143 signifies:",
+        "o": ["Moral justice (ʿadl)", "Ethical neutrality", "Balance between religions", "Legal flexibility"],
+        "a": 0
+    },
+    {
+        "q": "87. Al-Rāghib al-Iṣfahānī defines justice as existing only when:",
+        "o": ["Law overrides ethics", "Moderation avoids clarity", "Flexibility dominates firmness", "Both excess (ifrāṭ) and negligence (tafrīṭ) are avoided"],
+        "a": 3
+    },
+    {
+        "q": "88. In the framework of wasaṭiyya, how are ifrāṭ and tafrīṭ understood by Qurʾānic scholars?",
+        "o": ["As acceptable forms of flexibility", "As necessary stages of moral growth", "As two blameworthy extremes that negate justice", "As cultural variations in practice"],
+        "a": 2
+    },
+    {
+        "q": "89. In which city was Fatima Mernissi born in 1940?",
+        "o": ["Rabat", "Paris", "Fez", "Casablanca"],
+        "a": 2
+    },
+    {
+        "q": "90. Which of Mernissi's works is described as a memoir recounting her childhood?",
+        "o": ["Beyond the Veil", "The Veil and the Male Elite", "Forgotten Queens of Islam", "Dreams of Trespass: Tales of a Harem Girlhood"],
+        "a": 3
+    },
+    {
+        "q": "91. According to the text, what did Mernissi argue was the true source of many restrictions on Muslim women?",
+        "o": ["The Quran itself", "Social customs, political authority, and patriarchal interpretations", "Women's lack of education in traditional societies", "Western colonial influence on Islamic societies"],
+        "a": 1
+    },
+    {
+        "q": "92. Which award was created in Mernissi's name after her death?",
+        "o": ["The Prince of Asturias Award", "The Erasmus Prize", "MESA Fatema Mernissi Book Award", "The Nobel Peace Prize"],
+        "a": 2
+    },
+    {
+        "q": "93. In 'The Veil and the Male Elite,' what was one of Mernissi's main arguments?",
+        "o": ["That veiling is essential to Islamic practice", "That early Muslim women had public influence", "That Western feminism is compatible with Islam", "That the harem system empowered women"],
+        "a": 1
+    },
+    {
+        "q": "94. What did Mernissi contribute to the academic study of Muslim women?",
+        "o": ["She reinforced Orientalist stereotypes about Muslim women", "She positioned Islamic feminism as an academic field", "She argued that Islam is inherently oppressive to women", "She promoted the idea that Muslim women lack agency"],
+        "a": 1
+    },
+    {
+        "q": "95. What is the central slogan of Muhammad Shahrour's approach to the Quran?",
+        "o": ["Read the Quran through hadith traditions", "Read the Quran as if it was revealed last night", "Study the Quran only via asbab al-nuzul", "Interpret the Quran solely from seventh-century context"],
+        "a": 1
+    },
+    {
+        "q": "96. Shahrour divides Quranic verses into al-qur'an (eternal, objective) and umm al-kitab (subjective, temporal); what supports his view of umm al-kitab?",
+        "o": ["It is inscribed in the preserved tablet (lawh mahfuz)", "It supersedes all prophetic teachings", "It contains only ambiguous (mutashabih) verses", "It responds to causes of revelation (asbab al-nuzul) and allows alteration"],
+        "a": 3
+    },
+    {
+        "q": "97. Shahrour redefines al-islam as universal submission to God (belief in God and Hereafter), distinct from al-iman; what are its three pillars per his view?",
+        "o": ["Shahada, prayer, zakat", "Fasting, hajj, jihad", "Belief in God, Hereafter, righteous deeds (al-amal al-salih)", "Obedience to Prophet and caliphs"],
+        "a": 2
+    },
+    {
+        "q": "98. In Shahrour's theory of limits (hudud), what characterizes the space between upper and lower boundaries?",
+        "o": ["Fixed sharia rulings from fiqh schools", "Strict adherence to prophetic hadith", "Abolition of all Quranic legal verses", "Flexible human legislation via ijtihad, relative to time and place"],
+        "a": 3
+    },
+    {
+        "q": "99. What does Maqāṣid al-Qur’ān primarily refer to?",
+        "o": ["Literal meanings of Qur’anic words", "Historical causes of revelation only", "Higher objectives and purposes behind Qur’anic revelation", "Juristic rulings derived from the Qur’an"],
+        "a": 2
+    },
+    {
+        "q": "100. The term “Maqāṣid” is derived from which of the following ideas?",
+        "o": ["Grammar and syntax", "Intention, direction, and purpose", "Abrogation of verses", "Chronology of revelation"],
+        "a": 1
+    },
+    {
+        "q": "101. According to Imam al-Ghazālī, what forms the core of the Qur’an?",
+        "o": ["Political governance and law", "Linguistic beauty and eloquence", "Knowledge of God, the Hereafter, and moral purification", "Historical narratives of prophets"],
+        "a": 2
+    },
+    {
+        "q": "102. Who stated that all divine commands seek justice, mercy, wisdom, and goodness?",
+        "o": ["Al-Shātibī", "Ibn al-Qayyim", "Al-Biqāʿī", "Sayyid Qutb"],
+        "a": 1
+    },
+    {
+        "q": "103. In the case study of war verses, what is identified as the primary objective?",
+        "o": ["Territorial expansion", "Political dominance", "Protection of justice and ending oppression", "Punishment of disbelievers"],
+        "a": 2
+    },
+    {
+        "q": "104. Which Qur’anic verse grants conditional permission for armed jihad?",
+        "o": ["Qur’an – Surah al-Baqarah: 256", "Qur’an – Surah al-Ḥajj: 39", "Qur’an – Surah at-Tawbah: 5", "Qur’an – Surah al-Mā’idah: 32"],
+        "a": 1
+    },
+    {
+        "q": "105. Ibn Kathir stressed that Qur’anic verses on fighting must be understood with:",
+        "o": ["Literal absolutism", "Modern political goals", "Historical and situational context", "Philosophical symbolism"],
+        "a": 2
+    },
+    {
+        "q": "106. What controversial view did Rashid Rida hold regarding the Prophet Muhammad's miracles?",
+        "o": ["All hadith-reported miracles were literal", "The Qur’an was the only miracle", "Miracles were entirely rejected", "Miracles were metaphorical teachings"],
+        "a": 1
+    },
+    {
+        "q": "107. In Tafsir al-Manar, what was Rashid Rida’s strict rule regarding earlier commentaries?",
+        "o": ["Priority to Sahaba opinions", "Avoided reading them until forming his own view", "Applied all four legal schools to every verse", "Included Isra’iliyyat narrations"],
+        "a": 1
+    },
+    {
+        "q": "108. When did Rashid Rida begin publishing his Quranic interpretation 'Tafsir al-Manar'?",
+        "o": ["1884", "1890", "1898", "1923"],
+        "a": 2
+    },
+    {
+        "q": "109. Which primary factor did Rida blame for the 'religious stagnation' of his era?",
+        "o": ["The decline of the Arabic language", "Despotic rulers and scientific stagnation", "The influence of Jamal al-Din al-Afghani", "The lack of 'radical' reformist movements"],
+        "a": 1
+    },
+    {
+        "q": "110. Which of these was NOT a primary source for Rida’s interpretation?",
+        "o": ["Other Quranic verses", "Prophetic Hadith", "Independent reasoning", "Isra’iliyyat"],
+        "a": 3
+    },
+    {
+        "q": "111. Laleh Bakhtiar is best known internationally for which major contribution?",
+        "o": ["Writing a tafsīr based on medieval commentaries", "Producing the first English Qur’an translation by a Muslim woman in America", "Establishing the first Sufi order in the United States", "Translating major Hadith collections into English"],
+        "a": 1
+    },
+    {
+        "q": "112. In Qur’an 4:34, how did Laleh Bakhtiar reinterpret the word “daraba”?",
+        "o": ["To punish physically", "To discipline morally", "To separate or go away", "To command obedience"],
+        "a": 2
+    },
+    {
+        "q": "113. Which hermeneutical method did Bakhtiar strongly emphasize in Qur’anic interpretation?",
+        "o": ["Tafsīr based solely on juristic consensus", "Tafsīr al-Qur’ān bi’l-Qur’ān", "Allegorical interpretation detached from language", "Historical criticism without ethical concern"],
+        "a": 1
+    },
+    {
+        "q": "114. According to Bakhtiar, no Qur’anic interpretation should contradict which of the following?",
+        "o": ["Tribal customs", "Political authority", "Universal Qur’anic principles like justice and mercy", "Classical scholarly opinions"],
+        "a": 2
+    },
+    {
+        "q": "115. What does the term 'kalala' refer to in Islamic inheritance law?",
+        "o": ["A person who dies leaving children but no spouse", "A person who dies leaving a spouse but no children", "A person who dies leaving neither children nor parents", "A person who dies leaving only distant relatives"],
+        "a": 2
+    },
+    {
+        "q": "116. In pre-Islamic Arabia, inheritance was primarily based on:",
+        "o": ["Need", "Age", "Ability to fight", "Family size"],
+        "a": 2
+    },
+    {
+        "q": "117. According to Qadyani belief, the second coming of ʿĪsā (Jesus, peace be upon him) is understood as:",
+        "o": ["A literal bodily descent from heaven", "A symbolic spiritual return", "The appearance of Mirza Ghulam Ahmad", "A future unknown prophet"],
+        "a": 2
+    },
+    {
+        "q": "118. The Qadiani Ahmadiyya position on Mirza Ghulam Ahmad’s status is best described as:",
+        "o": ["Mujaddid without any revelatory claim", "Political reformer inspired by Islam", "Philosopher-theologian rejecting revelation", "Nabi zillī with spiritual prophethood under Muhammad صلى الله عليه وسلم"],
+        "a": 3
+    },
+    {
+        "q": "119. The Kodiyathur Mubāhalah episode is significant in Kerala’s religious history because it:",
+        "o": ["Ended all Ahmadiyya activity in South India", "Represented a symbolic theological confrontation over khatm al-nubuwwah", "Was an interfaith Christian–Muslim debate", "Resulted in state recognition of Ahmadiyya theology"],
+        "a": 1
+    },
+    {
+        "q": "120. The reinterpretation of wa-mā qatalūhu wa-mā ṣalabūhu (Qurʾān 4:157) in Qadyanism results in:",
+        "o": ["Belief in the survival and natural death of ʿĪsā", "Denial of attempted killing", "Acceptance of crucifixion", "Total rejection of Gospel narratives"],
+        "a": 0
+    },
+    {
+        "q": "121. The reinterpretation of khatam al-nabiyyīn as 'seal of perfection rather than finality' is identified as problematic mainly because it:",
+        "o": ["Introduces philosophical metaphors into theology", "Contradicts historical linguistics", "Undermines a foundational ijmāʿ of the Muslim ummah", "Rejects Sufi understandings of prophethood"],
+        "a": 2
+    },
+    {
+        "q": "122. From the standpoint of classical Qur’anic hermeneutics, the epistemological shift in Ahmadiyya tafsīr is marked most clearly by:",
+        "o": ["Replacement of Arabic with vernacular languages", "Elevation of personal ilhām over transmitted knowledge", "Abandonment of linguistic analysis", "Exclusive reliance on philosophical reasoning"],
+        "a": 1
+    },
+    {
+        "q": "123. Muhammad Ali’s Lahori commentary is described as 'apologetic' not merely because it defends Islam, but because it:",
+        "o": ["Privileges fiqh over tafsīr", "Reinterprets miracles to satisfy modern scientific rationality", "Rejects Western critique entirely", "Asserts legal prophethood after Muhammad (s)"],
+        "a": 1
+    },
+    {
+        "q": "124. How does a contextualist approach differ from a textualist approach in contemporary Islamic gender debates?",
+        "o": ["Contextualists rely only on ḥadīth, while textualists rely on the Qur’ān", "Textualists see the Qur’ān as fixed in pre-modern interpretations, while contextualists argue that changing social contexts require fresh interpretation", "Contextualists reject all Qur’ānic verses on gender, while textualists accept them all", "Textualists ignore history, while contextualists emphasize cultural relativism alone"],
+        "a": 1
+    },
+    {
+        "q": "125. According to al-Ṭabarī, what does Ibn ʿAbbās say about the meaning of the phrase 'Men are qawwām over women'?",
+        "o": ["That men are spiritual equals but financially responsible for women", "That the term qawwām refers only to economic support, not authority", "That men are merely guardians of women's legal rights, with no authority to command", "That men are 'commanders' (umaraʾ) over women, whom they may command in religiously lawful matters"],
+        "a": 3
+    },
+    {
+        "q": "126. How does al-Rāzī interpret the term qa-nita-t (qāni-tāt) applied to righteous women?",
+        "o": ["As obedience to God only, with no required obedience to the husband", "As obedience to God, but with an implied obligation to obey the husband when he is present", "As a grammatical requirement that does not create a practical duty", "As a description of ritual piety, not of marital relations"],
+        "a": 1
+    },
+    {
+        "q": "127. How does al-Suyūṭī generally structure his commentary on Qur’ān 4:34?",
+        "o": ["By presenting the words of past authorities without adjudicating between them", "By harmonising conflicting views and giving a new contextual reading", "By presenting his own rational interpretation and rejecting earlier authorities", "By focusing only on linguistic and grammatical analysis"],
+        "a": 0
+    },
+    {
+        "q": "128. Why does the Qur’an contain critical passages about some Jewish communities?",
+        "o": ["Because of racial differences", "Because Jews rejected all prophets", "Due to specific historical and political opposition during the Medinan period", "Because the Torah was subjected to Tahrif"],
+        "a": 2
+    },
+    {
+        "q": "129. Which scholar strongly argued that distortion occurred in meaning, not in the actual text?",
+        "o": ["Al-Rāzī", "Al-Qurṭubī", "Ibn Ḥazm", "Al-Masʿūdī"],
+        "a": 0
+    },
+    {
+        "q": "130. What is meant by 'taḥrīf as concealment'?",
+        "o": ["Changing letters in scripture", "Hiding or withholding parts of scripture from the public", "Translating scriptures incorrectly", "Destroying earlier revelations"],
+        "a": 1
+    },
+    {
+        "q": "131. Which shared background is emphasized as a reason for the Qur’an’s engagement with Jews?",
+        "o": ["Cultural similarity", "Shared Abrahamic heritage", "Linguistic unity", "Political alliance"],
+        "a": 1
+    },
+    {
+        "q": "132. Which figure is known for explaining the Torah in Medina after converting to Islam?",
+        "o": ["Wahb ibn Munabbih", "Ibn Ḥazm", "Kaʿb al-Aḥbār", "Al-Masʿūdī"],
+        "a": 2
+    },
+    {
+        "q": "133. What is the evidence for advocating the Quran-only movement?",
+        "o": ["Quran says it is clear", "Quran is complete", "Quran is preserved", "All of the above"],
+        "a": 3
+    },
+    {
+        "q": "134. Who is among the Egyptian Quranists?",
+        "o": ["Towfiq Sidqi", "Sayyed Ahmed", "Ghulam Ahmed Parwez", "Kassim Ahmed"],
+        "a": 0
+    },
+    {
+        "q": "135. According to G.A Parwez, what is his core argument in his major work Tolue-Islam?",
+        "o": ["Qur’an as sole legal source", "Hadith has little role in Islamic law", "Qur’an, hadith, qiyas is legal source", "None of the above"],
+        "a": 0
+    },
+    {
+        "q": "136. What is a common characteristic of the Quran-only movement?",
+        "o": ["Print culture", "Rationalism", "Anti-clerical critique", "All of the above"],
+        "a": 3
+    },
+    {
+        "q": "137. Who is the advocate of rejection of Hadith and Code 19 miracles in the Qur’an?",
+        "o": ["Rashad Khalifa", "Shahroor", "Subhy Mansoor", "Ahmed Riza"],
+        "a": 0
+    },
+    {
+        "q": "138. Kala–Katho movement in North Africa is related to:",
+        "o": ["Quran-only movement", "Anti-Quranist movement", "Terrorist movement", "Qur’an and Sunna movement"],
+        "a": 0
+    },
+    {
+        "q": "139. Example of Kerala Quran-only movement:",
+        "o": ["Egyptian rationalism in Kerala", "Chekannurism", "Qadianism", "Wahabism"],
+        "a": 1
+    },
+    {
+        "q": "140. Al-Sheikh Saeed Ramadan Al-Bouthi strictly rejected the textual claims of numerology of:",
+        "o": ["Rashad al-Khalifa", "Shahroor", "Fazlu al-Rahman", "Amina Wadud"],
+        "a": 0
+    },
+    {
+        "q": "141. Hadith: A Re-Evaluation was authored by:",
+        "o": ["Kassim Ahmed", "G.A Parwez", "Subhy Mansoor", "Sir Sayed Ahmed Khan"],
+        "a": 0
+    },
+    {
+        "q": "142. Which Qur’anic chapter is most central to the discussion of social ethics and anti-racism?",
+        "o": ["Sūrat al-Baqarah", "Sūrat al-Ḥujurāt", "Sūrat al-Kahf", "Sūrat al-Nisāʾ"],
+        "a": 1
+    },
+    {
+        "q": "143. The Prophet (pbuh) described racial and tribal arrogance as belonging to:",
+        "o": ["Immorality", "Barbarism", "Sharīʿah", "Jāhiliyyah"],
+        "a": 3
+    },
+    {
+        "q": "144. Which Muslim scholar is regarded as the earliest to write a dedicated book addressing racism and racial superiority?",
+        "o": ["Ibn Taymiyyah", "Al-Ghazālī", "Al-Jāḥiẓ", "Ibn Khaldūn"],
+        "a": 2
+    },
+    {
+        "q": "145. The book Rafʿ Shaʾn al-Ḥubshān, which defends Black Africans against racial prejudice, was authored by:",
+        "o": ["Ibn al-Jawzī", "Al-Jāḥiẓ", "Al-Suyūṭī", "Ibn Khaldūn"],
+        "a": 2
+    },
+    {
+        "q": "146. In Qur’anic discourse, what replaces lineage and race as the basis of honor?",
+        "o": ["Knowledge", "Connection to Islam", "Wealth for Islam", "Taqwā"],
+        "a": 3
+    },
+    {
+        "q": "147. In Qur’anic ethics, ridicule based on race is considered sinful because it:",
+        "o": ["Weakens social unity", "Violates human honor granted by Allah", "Disrupts economic balance", "Opposes cultural identity"],
+        "a": 1
+    },
+    {
+        "q": "148. Which Western scholar alleged that racial hierarchy existed within Islamic civilization?",
+        "o": ["Max Weber", "Wilfred Cantwell Smith", "Bernard Lewis", "Michael Cook"],
+        "a": 2
+    },
+    {
+        "q": "149. Khaled Abou El Fadl’s approach to Islamic law primarily emphasizes:",
+        "o": ["Legal formalism and textual rigidity", "State enforcement of religious norms", "Ethical reasoning grounded in justice and mercy", "Political sovereignty of Islamic states"],
+        "a": 2
+    },
+    {
+        "q": "150. Which academic tradition most strongly influences Abou El Fadl’s methodology in interpreting Shari‘ah?",
+        "o": ["Wahhabi literalism", "Orientalist philology", "Legal positivism", "Classical Islamic jurisprudence combined with moral philosophy"],
+        "a": 3
+    },
+    {
+        "q": "151. In Reasoning with God, Abou El Fadl argues that Shari‘ah should be understood as:",
+        "o": ["A closed legal system fixed in history", "A tool for religious authority", "A dynamic moral discourse oriented toward human welfare", "A replacement for secular law"],
+        "a": 2
+    },
+    {
+        "q": "152. Which of the following best captures Abou El Fadl’s critique of 'puritanical' Islam?",
+        "o": ["It rejects all modern institutions", "It prioritizes cultural customs", "It reduces Islam to rigid rules while ignoring moral purpose", "It focuses excessively on mysticism"],
+        "a": 2
+    },
+    {
+        "q": "153. Abou El Fadl’s views on democracy are best summarized as:",
+        "o": ["Islam conditionally tolerates democracy", "Democracy is a Western imposition on Islam", "Democracy contradicts divine sovereignty", "Democracy aligns with Islamic values of justice and accountability"],
+        "a": 3
+    },
+    {
+        "q": "154. In discussions of gender, Abou El Fadl argues that many restrictions on women:",
+        "o": ["Are unanimously agreed upon by jurists", "Are mandated explicitly by the Qur’an", "Are biologically determined", "Stem from patriarchal culture rather than Islamic revelation"],
+        "a": 3
+    },
+    {
+        "q": "155. The Usuli Institute founded by Abou El Fadl primarily seeks to:",
+        "o": ["Promote Islamic social theory", "Preserve medieval legal rulings", "Advance moral, humanistic, and anti-authoritarian interpretations of Islam", "Train judges in Islamic courts"],
+        "a": 2
+    },
+    {
+        "q": "156. How does Islam answer the question: 'What do women receive in Paradise?'",
+        "o": ["Women receive less than men", "Women are excluded from special rewards", "Women receive whatever fulfills them completely", "Women receive spiritual rewards only"],
+        "a": 2
+    },
+    {
+        "q": "157. What is the correct linguistic meaning of the word 'Ḥūr'?",
+        "o": ["White grapes or raisins", "Abstract purity", "Intense contrast of black and white in the eyes", "Symbolic imagination"],
+        "a": 2
+    },
+    {
+        "q": "158. What do authentic hadiths describe about Ḥūr al-ʿAyn?",
+        "o": ["They are created companions in Paradise", "They are human beings", "They are symbolic expressions", "They are angels"],
+        "a": 0
+    },
+    {
+        "q": "159. Why does Islam consider sexual desire a significant moral trial for men?",
+        "o": ["Because it is discouraged entirely", "Because it often conflicts with daily responsibilities", "Because men generally experience stronger visual and sexual impulses", "Because it is culturally constructed"],
+        "a": 2
+    },
+    {
+        "q": "160. What is the Islamic position on suicide and vigilante violence?",
+        "o": ["Permissible in extreme cases", "Allowed for political causes", "Categorically forbidden", "Encouraged in warfare"],
+        "a": 2
+    },
+    {
+        "q": "161. How did Orientalist narratives affect the understanding of Ḥūr al-ʿAyn?",
+        "o": ["They strengthened classical Islamic scholarship", "They accurately represented Islamic theology", "They were limited to medieval debates", "They ignored Qur’anic context and influenced media discourse"],
+        "a": 3
+    },
+    {
+        "q": "162. What misconception links Ḥūr al-ʿAyn to extremism?",
+        "o": ["That they are angels", "That they encourage charity", "That they serve as an incentive for suicide violence", "That they replace worship"],
+        "a": 2
+    },
+    {
+        "q": "163. Toshihiko Izutsu is best known in Qurʾānic studies for his emphasis on:",
+        "o": ["Historical chronology of revelation", "Juridical interpretation of the Qurʾān", "Semantic and conceptual analysis of Qurʾānic language", "Comparative tafsīr methodology"],
+        "a": 2
+    },
+    {
+        "q": "164. Izutsu’s methodological approach to the Qurʾān primarily focuses on:",
+        "o": ["Asbāb al-nuzūl narratives", "Philological criticism of manuscripts", "The ethical worldview expressed through key Qurʾānic terms", "The abrogation (naskh) of verses"],
+        "a": 2
+    },
+    {
+        "q": "165. According to Izutsu, the meaning of Qurʾānic concepts can best be understood by:",
+        "o": ["Analyzing semantic relationships within the Qurʾānic vocabulary system", "Translating verses literally", "Referring only to classical tafsīr literature", "Studying post-Qurʾānic theological debates"],
+        "a": 0
+    },
+    {
+        "q": "166. Izutsu’s concept of 'semantic field' in Qurʾānic studies refers to:",
+        "o": ["The historical context of revelation", "The grammatical structure of Arabic sentences", "A network of interrelated meanings among Qurʾānic terms", "The thematic division of sūrahs"],
+        "a": 2
+    },
+    {
+        "q": "167. Which pair of concepts did Izutsu frequently analyze to explain the Qurʾānic moral worldview?",
+        "o": ["ʿIlm and jahl", "Īmān and kufr", "Naskh and mansūkh", "Makki and Madani"],
+        "a": 1
+    },
+    {
+        "q": "168. One major contribution of Izutsu to modern Qurʾānic studies is that he:",
+        "o": ["Rejected classical Arabic lexicons", "Applied modern linguistic philosophy to Qurʾānic concepts", "Focused exclusively on Western theological interpretations", "Ignored the Arabic language of the Qurʾān"],
+        "a": 1
+    },
+    {
+        "q": "169. What is the 'Myth of Gharānīq' primarily associated with?",
+        "o": ["Compilation of the Qur’an", "Alleged interpolation during the recitation of Surah al-Najm", "The Battle of Badr", "The Treaty of Hudaybiyyah"],
+        "a": 1
+    },
+    {
+        "q": "170. According to the Gharānīq story, which Surah was being recited when the alleged incident occurred?",
+        "o": ["Surah al-Baqarah", "Surah al-Hajj", "Surah al-Najm", "Surah al-Fussilat"],
+        "a": 2
+    },
+    {
+        "q": "171. According to scholars like Muhammad Asad and Fazlur Rahman, how should Qur’an 22:52 be understood?",
+        "o": ["As proof of satanic interference in revelation", "As a metaphor for opposition faced by prophets", "As a historical explanation of idol compromise", "As evidence of textual alteration"],
+        "a": 1
+    },
+    {
+        "q": "172. What methodological principle do modern Qur’anic scholars apply when rejecting the Gharānīq story?",
+        "o": ["Preference for historical excitement", "Acceptance of all early reports", "Qur’an interpreting itself (القرآن يفسر بعضه بعضا)", "Reliance on Orientalist criticism"],
+        "a": 2
+    },
+    {
+        "q": "173. How do modern Muslim academics respond to Orientalist use of the Gharānīq narrative?",
+        "o": ["By accepting it as partial truth", "By suspending judgment", "By viewing it as a polemical tool against Qur’anic authenticity", "By revising the doctrine of ʿIsmah"],
+        "a": 2
+    },
+    {
+        "q": "174. How do most modern Qur’anic scholars evaluate the Gharānīq (Satanic Verses) narrative?",
+        "o": ["As historically reliable but theologically symbolic", "As weak but acceptable for historical study", "As an authentic event later abrogated", "As a fabrication contradicting Qur’anic doctrine and Prophetic infallibility"],
+        "a": 3
+    },
+    {
+        "q": "175. Contemporary scholars such as Sayyid Qutb interpret satanic 'casting' (إلقاء الشيطان) in Qur’an 22:52 as referring to:",
+        "o": ["Words entering the Prophet’s recitation", "External disruption and confusion by opponents", "Errors in revelation", "Angelic misunderstanding"],
+        "a": 1
+    },
+    {
+        "q": "176. What is one Qur’anic commendation toward Christians?",
+        "o": ["They follow Islamic law", "They have unchanged scriptures", "They pray like Muslims", "They are closest in love to the believers"],
+        "a": 3
+    },
+    {
+        "q": "177. How does the Qur’an engage with the Bible and biblical tradition?",
+        "o": ["By ignoring earlier traditions", "By mentioning biblical figures such as Moses and Jesus", "By offering textual criticism of the Bible", "By replacing biblical law"],
+        "a": 1
+    },
+    {
+        "q": "178. Which theme is common to both the Bible and the Qur’an?",
+        "o": ["Reincarnation", "Polytheism", "Judgment Day", "Numerology"],
+        "a": 2
+    },
+    {
+        "q": "179. In Islamic tradition, what is a key reason for differing interpretations of the Qur’an and Ḥadīth?",
+        "o": ["Multiple translations", "Ambiguous and context-dependent passages", "Language evolution alone", "Restricted access to scholars"],
+        "a": 1
+    },
+    {
+        "q": "180. Why were the Gospels originally written in Greek instead of Aramaic?",
+        "o": ["Greek had superior philosophical vocabulary", "Greek was the common language of trade and communication", "Rome mandated Greek", "Aramaic was unsuitable"],
+        "a": 1
+    },
+    {
+        "q": "181. In the context of sacred texts, which principle emphasizes understanding multiple interpretations?",
+        "o": ["Hermeneutics", "Dogmatism", "Exegesis", "Literalism"],
+        "a": 0
+    },
+    {
+        "q": "182. What was the significance of the 1924 Cairo Qur’an in the development of the Qur’an’s text?",
+        "o": ["It affected only the artistic presentation", "It was a translation into local dialects", "It standardized the reading variants (qirāʾāt)", "It introduced new readings"],
+        "a": 2
+    },
+    {
+        "q": "183. What is the significance of the Ṣanʿāʾ Palimpsest in the study of the Qur’an?",
+        "o": ["It disproves all previous translations", "It confirms textual uniformity", "It was discovered in a British library", "It provides evidence of early textual variations"],
+        "a": 3
+    },
+    {
+        "q": "184. Contemporary scholarly contestations over Qur’ān 4:34 are best understood as debates concerning:",
+        "o": ["Historical authenticity", "Sectarian divergence", "Text–ethics–context relationship", "Linguistic primacy"],
+        "a": 2
+    },
+    {
+        "q": "185. The semantic force of qiwāmah (qawwāmūn) primarily denotes:",
+        "o": ["Ontological superiority", "Juridical sovereignty", "Functional responsibility", "Political guardianship"],
+        "a": 2
+    },
+    {
+        "q": "186. A maqāṣid-oriented reading of Qur’ān 4:34 prioritizes:",
+        "o": ["Literal continuity", "Juristic consensus", "Human dignity and harm prevention", "Linguistic determinism"],
+        "a": 2
+    },
+    {
+        "q": "187. Nushūz in Qur’ānic discourse signifies:",
+        "o": ["Minor conflict", "Sexual disobedience", "Serious marital breach", "Divorce"],
+        "a": 2
+    },
+    {
+        "q": "188. According to Fazlur Rahman, what was the most important prerequisite for Islamic revival?",
+        "o": ["Political reform", "Economic development", "Military strength", "Intellectual renaissance"],
+        "a": 3
+    },
+    {
+        "q": "189. Fazlur Rahman’s 'double movement theory' refers to:",
+        "o": ["Migration between East and West", "A hermeneutical movement from present to past and back to present", "Separation of religion and state", "Duality of human nature"],
+        "a": 1
+    },
+    {
+        "q": "190. According to Fazlur Rahman, the downfall of Muslim civilization was caused mainly by:",
+        "o": ["Colonial domination", "The absence of ijtihād", "Secular governance", "Greek philosophical influence"],
+        "a": 1
+    },
+    {
+        "q": "191. Which climatic event is linked to the destruction of the people of ʿĀd?",
+        "o": ["River flooding", "Earthquakes", "Severe drought and destructive winds", "Volcanic eruptions"],
+        "a": 2
+    },
+    {
+        "q": "192. Which Islamic principle is most directly connected to sustainable living?",
+        "o": ["Social justice", "Taqdīr", "Avoidance of isrāf", "Human resources"],
+        "a": 2
+    },
+    {
+        "q": "193. Speaking in God’s Name: Islamic Law, Authority and Women is authored by:",
+        "o": ["Amina Wadud", "Fatema Mernissi", "Khaled Abou El Fadl", "Laleh Bakhtiar"],
+        "a": 2
+    },
+    {
+        "q": "194. Which of the following books is authored by Wahiduddin Khan?",
+        "o": ["Islam and Modernity", "The Qur’an: A New Translation", "The Concept of God in Islam", "The Reconstruction of Religious Thought in Islam"],
+        "a": 2
+    },
+    {
+        "q": "195. Fatema Mernissi is best known for her critical work on:",
+        "o": ["Qur’anic linguistics", "Hadith and gender", "Isrāʾīliyyāt traditions", "Tafsīr methodology"],
+        "a": 1
+    },
+    {
+        "q": "196. The Qur’an and Woman was written by:",
+        "o": ["Laleh Bakhtiar", "Amina Wadud", "Farid Esack", "Nasr Hamid Abu Zayd"],
+        "a": 1
+    },
+    {
+        "q": "197. The Sublime Qur’an translation was produced by:",
+        "o": ["Muhammad Asad", "Amina Wadud", "Laleh Bakhtiar", "Khaled Abou El Fadl"],
+        "a": 2
+    },
+    {
+        "q": "198. Liberation theology in Qur’anic studies is most strongly associated with:",
+        "o": ["Fazlur Rahman", "Mohammed Arkoun", "Farid Esack", "Sayyid Qutb"],
+        "a": 2
+    },
+    {
+        "q": "199. Islam and Modernity: Transformation of an Intellectual Tradition is authored by:",
+        "o": ["Jamal al-Banna", "Fazlur Rahman", "Nasr Hamid Abu Zayd", "Muhammad Shahrour"],
+        "a": 1
+    },
+    {
+        "q": "200. Isrāʾīliyyāt refers to:",
+        "o": ["Scientific Qur’anic interpretations", "Linguistic borrowings", "Judeo-Christian narratives in tafsīr", "Political readings of the Qur’an"],
+        "a": 2
+    },
+    {
+        "q": "201. Mohammed Arkoun is best known for applying which method to Qur’anic studies?",
+        "o": ["Traditional tafsīr", "Juridical exegesis", "Historical–critical approach", "Mystical interpretation"],
+        "a": 2
+    },
+    {
+        "q": "202. The concept of wasatiyyah emphasizes:",
+        "o": ["Literalism", "Political activism", "Extremism", "Moderation and balance"],
+        "a": 3
+    },
+    {
+        "q": "203. The American Qur’an is associated with:",
+        "o": ["North African tafsīr", "Translation and commentary in the US context", "Early manuscripts", "Feminist exegesis"],
+        "a": 1
+    },
+    {
+        "q": "204. Rashid Rida’s famous Qur’anic commentary is:",
+        "o": ["Fī Ẓilāl al-Qur’an", "Tafsīr al-Manār", "Al-Mīzān", "Al-Kashshāf"],
+        "a": 1
+    },
+    {
+        "q": "205. Fī Ẓilāl al-Qur’an was written by:",
+        "o": ["Hassan al-Banna", "Jamal al-Banna", "Sayyid Qutb", "Muhammad Shahrour"],
+        "a": 2
+    },
+    {
+        "q": "206. Toshihiko Izutsu is renowned for his work on:",
+        "o": ["Qur’anic law", "Qur’anic semantics", "Manuscript studies", "Recitation sciences"],
+        "a": 1
+    },
+    {
+        "q": "207. Jamal al-Banna is best described as:",
+        "o": ["Traditional mufassir", "Conservative jurist", "Reformist critical of hadith dominance", "Sufi exegete"],
+        "a": 2
+    },
+    {
+        "q": "208. Tawfiq Sidqi is associated with:",
+        "o": ["Qur’anic linguistics", "Qur’an-only thought", "Feminist tafsīr", "Political Islam"],
+        "a": 1
+    },
+    {
+        "q": "209. Muhammad Shahrour’s Qur’anic approach emphasizes:",
+        "o": ["Classical authority", "Literalism", "Modern linguistic and scientific reasoning", "Mystical symbolism"],
+        "a": 2
+    },
+    {
+        "q": "210. Critique of Religious Discourse is authored by:",
+        "o": ["Fazlur Rahman", "Mohammed Arkoun", "Nasr Hamid Abu Zayd", "Farid Esack"],
+        "a": 2
+    },
+    {
+        "q": "211. Nasr Hamid Abu Zayd viewed the Qur’an primarily as:",
+        "o": ["A divine legal code", "Mystical revelation", "Historical and cultural discourse", "Scientific manual"],
+        "a": 2
+    },
+    {
+        "q": "212. Qur’an, Liberation and Pluralism is written by:",
+        "o": ["Amina Wadud", "Farid Esack", "Laleh Bakhtiar", "Khaled Abou El Fadl"],
+        "a": 1
+    },
+    {
+        "q": "213. Which scholar emphasized the Qur’an’s moral vision over atomistic legalism?",
+        "o": ["Sayyid Qutb", "Fazlur Rahman", "Rashid Rida", "Muhammad Shahrour"],
+        "a": 1
+    },
+    {
+        "q": "214. The Critique of Islamic Reason is a major project of:",
+        "o": ["Nasr Hamid Abu Zayd", "Mohammed Arkoun", "Jamal al-Banna", "Toshihiko Izutsu"],
+        "a": 1
+    },
+    {
+        "q": "215. Which scholar faced apostasy charges due to his hermeneutical views?",
+        "o": ["Farid Esack", "Muhammad Shahrour", "Nasr Hamid Abu Zayd", "Khaled Abou El Fadl"],
+        "a": 2
+    },
+    {
+        "q": "216. The 'double movement theory' is associated with:",
+        "o": ["Mohammed Arkoun", "Fazlur Rahman", "Toshihiko Izutsu", "Jamal al-Banna"],
+        "a": 1
+    },
+    {
+        "q": "217. Who reinterpreted ḥudūd using modern linguistic theory?",
+        "o": ["Sayyid Qutb", "Rashid Rida", "Muhammad Shahrour", "Wahiduddin Khan"],
+        "a": 2
+    },
+    {
+        "q": "218. Semantic field analysis of Qur’anic concepts is characteristic of:",
+        "o": ["Toshihiko Izutsu", "Nasr Hamid Abu Zayd", "Amina Wadud", "Farid Esack"],
+        "a": 0
+    },
+    {
+        "q": "219. Which scholar links Qur’anic interpretation with anti-apartheid struggle?",
+        "o": ["Khaled Abou El Fadl", "Amina Wadud", "Farid Esack", "Jamal al-Banna"],
+        "a": 2
+    },
+    {
+        "q": "220. The idea that meaning emerges from text–reader interaction is emphasized by:",
+        "o": ["Rashid Rida", "Sayyid Qutb", "Nasr Hamid Abu Zayd", "Wahiduddin Khan"],
+        "a": 2
+    },
+    {
+        "q": "221. Sayyid Qutb’s Qur’anic approach is best described as:",
+        "o": ["Feminist hermeneutics", "Mystical symbolism", "Literary–ideological interpretation", "Historical skepticism"],
+        "a": 2
+    },
+    {
+        "q": "222. Jamal al-Banna emphasized in Qur’anic interpretation:",
+        "o": ["Absolute fiqh authority", "Rejection of reason", "Human freedom and ethical universals", "Revolutionary legalism"],
+        "a": 2
+    }
+    ];
+
+    let currentIdx = 0;
+    let score = 0;
+    let timer;
+    let timeLeft = 20;
+
+    const qText = document.getElementById('question-text');
+    const optionsCont = document.getElementById('options-container');
+    const qNum = document.getElementById('q-num');
+    const timeDisp = document.getElementById('time');
+    const nextBtn = document.getElementById('next-btn');
+    const currentScoreDisp = document.getElementById('current-score');
+    const progressBar = document.getElementById('progress-bar');
+    const quizUI = document.getElementById('quiz-ui');
+    const resultsUI = document.getElementById('results');
+
+    function updateProgressBar() {
+        const progress = ((currentIdx + 1) / quizData.length) * 100;
+        progressBar.style.width = `${progress}%`;
+    }
+
+    function startTimer() {
+        timeLeft = 20;
+        timeDisp.innerText = timeLeft;
+        timer = setInterval(() => {
+            timeLeft--;
+            timeDisp.innerText = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                revealAnswer(-1);
+            }
+        }, 1000);
+    }
+
+    function loadQuestion() {
+        clearInterval(timer);
+        const data = quizData[currentIdx];
+        
+        // Update labels
+        qText.innerText = data.q;
+        qNum.innerText = currentIdx + 1;
+        document.querySelector('.header span:first-child').innerHTML = `Question <span id="q-num">${currentIdx + 1}</span>/${quizData.length}`;
+        
+        optionsCont.innerHTML = '';
+        nextBtn.style.display = 'none';
+        updateProgressBar();
+
+        data.o.forEach((opt, i) => {
+            const btn = document.createElement('button');
+            btn.innerText = opt;
+            btn.classList.add('option-btn');
+            btn.onclick = () => revealAnswer(i);
+            optionsCont.appendChild(btn);
+        });
+        startTimer();
+    }
+
+    function revealAnswer(selectedIdx) {
+        clearInterval(timer);
+        const correctIdx = quizData[currentIdx].a;
+        const buttons = optionsCont.getElementsByClassName('option-btn');
+
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].disabled = true;
+            if (i === correctIdx) {
+                buttons[i].classList.add('correct');
+            }
+            if (i === selectedIdx && selectedIdx !== correctIdx) {
+                buttons[i].classList.add('wrong');
+            }
+        }
+
+        if (selectedIdx === correctIdx) {
+            score++;
+            currentScoreDisp.textContent = score;
+        }
+        nextBtn.style.display = 'block';
+    }
+
+    function nextQuestion() {
+        currentIdx++;
+        if (currentIdx < quizData.length) {
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        quizUI.style.display = 'none';
+        resultsUI.style.display = 'block';
+        document.getElementById('score').innerText = score;
+        document.getElementById('total-res').innerText = quizData.length;
+        
+        const performanceMsg = document.getElementById('performance-message');
+        const percentage = (score / quizData.length) * 100;
+        
+        if (percentage >= 80) {
+            performanceMsg.textContent = "Outstanding! You've mastered these concepts.";
+            performanceMsg.style.color = "var(--success)";
+        } else if (percentage >= 50) {
+            performanceMsg.textContent = "Good job! Keep reviewing to improve.";
+            performanceMsg.style.color = "var(--accent)";
+        } else {
+            performanceMsg.textContent = "Keep studying and try again to improve your score.";
+            performanceMsg.style.color = "var(--danger)";
+        }
+    }
+
+    // Initialize
+    loadQuestion();
+</script>
+</body>
+</html>
