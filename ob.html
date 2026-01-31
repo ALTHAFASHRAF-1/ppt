@@ -1,0 +1,1739 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OB Exam Prep Quiz</title>
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --secondary: #f5f7fa;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --text: #2c3e50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--secondary);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .quiz-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .timer {
+            color: var(--danger);
+            font-size: 1.2rem;
+        }
+
+        .question {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            min-height: 80px;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: var(--secondary);
+            border: 2px solid #ddd;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            outline: none;
+            text-align: left;
+        }
+
+        .option-btn:hover:not([disabled]) {
+            background: #e1e5ea;
+            border-color: var(--primary);
+        }
+
+        .correct {
+            background-color: var(--success) !important;
+            color: white !important;
+            border-color: #27ae60 !important;
+        }
+
+        .wrong {
+            background-color: var(--danger) !important;
+            color: white !important;
+            border-color: #c0392b !important;
+        }
+
+        .results {
+            display: none;
+        }
+
+        #next-btn {
+            margin-top: 20px;
+            padding: 10px 25px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .score-display {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--text);
+        }
+
+        .progress-bar {
+            height: 5px;
+            background-color: #eee;
+            border-radius: 2px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.5s;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container" id="quiz">
+    <div class="header">
+        <span>Question <span id="q-num">1</span>/275</span>
+        <span class="timer">Time: <span id="time">20</span>s</span>
+    </div>
+    <div class="progress-bar">
+        <div class="progress" id="progress-bar"></div>
+    </div>
+    <div class="question" id="question-text">Loading question...</div>
+    <div class="options" id="options-container"></div>
+    <div class="score-display">Score: <span id="current-score">0</span>/275</div>
+    <button id="next-btn" onclick="nextQuestion()">Next Question</button>
+
+    <div class="results" id="results">
+        <h2>Quiz Complete!</h2>
+        <p>Your Final Score: <span id="score">0</span>/275</p>
+        <p id="performance-message"></p>
+        <button onclick="location.reload()" style="padding: 10px 20px; cursor: pointer; margin-top: 15px;">Restart Quiz</button>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        
+    // OB Basics - MCQs (1-15)
+    {
+        q: "Organizational Behavior (OB) is mainly the study of:",
+        o: ["Machines in organizations", "People's behavior in organizations", "Office buildings", "Marketing strategies"],
+        a: 1
+    },
+    {
+        q: "OB focuses on behavior at which levels?",
+        o: ["Only individual level", "Only group level", "Individual, group, and structure level", "Only organization level"],
+        a: 2
+    },
+    {
+        q: "A manager is a person who:",
+        o: ["Works alone", "Achieves goals through others", "Only gives orders", "Avoids decisions"],
+        a: 1
+    },
+    {
+        q: "An organization is:",
+        o: ["A place to work only", "A coordinated social unit of two or more people", "A single-person business", "Only a government office"],
+        a: 1
+    },
+    {
+        q: "Which one is NOT a management activity?",
+        o: ["Planning", "Organizing", "Dancing", "Controlling"],
+        a: 2
+    },
+    {
+        q: "Planning means:",
+        o: ["Monitoring employees", "Defining goals and developing plans", "Hiring employees", "Solving conflicts"],
+        a: 1
+    },
+    {
+        q: "Organizing includes:",
+        o: ["Setting goals only", "Grouping tasks and assigning work", "Sleeping at work", "Ignoring employees"],
+        a: 1
+    },
+    {
+        q: "Leading involves:",
+        o: ["Motivating and directing employees", "Counting money only", "Only writing reports", "Ignoring problems"],
+        a: 0
+    },
+    {
+        q: "Controlling means:",
+        o: ["Checking progress and correcting deviations", "Only punishing employees", "Ignoring goals", "Only planning"],
+        a: 0
+    },
+    {
+        q: "Mintzberg's managerial roles are divided into:",
+        o: ["Two roles", "Three roles", "Four roles", "Five roles"],
+        a: 1
+    },
+    {
+        q: "The interpersonal roles include:",
+        o: ["Leader, Liaison, Figurehead", "Monitor, Spokesperson, Disseminator", "Entrepreneur and Negotiator", "Planning and Organizing"],
+        a: 0
+    },
+    {
+        q: "The informational roles include:",
+        o: ["Figurehead, Leader, Liaison", "Monitor, Disseminator, Spokesperson", "Planning, Organizing, Leading", "Negotiator and Entrepreneur"],
+        a: 1
+    },
+    {
+        q: "The decisional roles include:",
+        o: ["Monitor and Spokesperson", "Figurehead and Liaison", "Entrepreneur and Negotiator", "None of the above"],
+        a: 2
+    },
+    {
+        q: "Technical skills refer to the:",
+        o: ["Ability to motivate people", "Ability to use specialized knowledge or expertise", "Ability to negotiate", "Ability to avoid communication"],
+        a: 1
+    },
+    {
+        q: "People skills (Human skills) refer to the:",
+        o: ["Ability to do calculations", "Ability to use machines", "Ability to avoid communication", "Ability to work with, understand, and motivate people"],
+        a: 3
+    },
+    
+    // OB Basics - Yes/No (16-20)
+    {
+        q: "Is Organizational Behavior (OB) a field of study?",
+        o: ["Yes", "No"],
+        a: 0
+    },
+    {
+        q: "Planning is part of management activities.",
+        o: ["Yes", "No"],
+        a: 0
+    },
+    {
+        q: "A manager achieves goals only by working alone.",
+        o: ["Yes", "No"],
+        a: 1
+    },
+    {
+        q: "OB focuses only on individual behavior.",
+        o: ["Yes", "No"],
+        a: 1
+    },
+    {
+        q: "Technical skills are required in every job.",
+        o: ["Yes", "No"],
+        a: 0
+    },
+    
+    // OB Basics - True/False (21-25)
+    {
+        q: "OB helps improve organizational effectiveness by studying behavior.",
+        o: ["True", "False"],
+        a: 0
+    },
+    {
+        q: "An organization must always have only one person.",
+        o: ["True", "False"],
+        a: 1
+    },
+    {
+        q: "Mintzberg identified managerial roles as interpersonal, informational, and decisional.",
+        o: ["True", "False"],
+        a: 0
+    },
+    {
+        q: "People skills are not important for managers.",
+        o: ["True", "False"],
+        a: 1
+    },
+    {
+        q: "Controlling ensures activities are completed as planned.",
+        o: ["True", "False"],
+        a: 0
+    },
+    
+    // ==========================================
+    // SECTION 2: PERSONALITY (25 Questions)
+    // ==========================================
+    
+    // Personality - MCQs (1-15)
+    {
+        q: "Personality is best defined as:",
+        o: ["Physical appearance", "The sum of ways an individual reacts and interacts", "Job position", "Salary earned"],
+        a: 1
+    },
+    {
+        q: "Personality traits are:",
+        o: ["Temporary feelings", "Enduring characteristics that describe behavior", "Only inherited", "Only learned habits"],
+        a: 1
+    },
+    {
+        q: "The most common way of measuring personality is:",
+        o: ["Blood test", "Self-report survey", "Medical scan", "Salary review"],
+        a: 1
+    },
+    {
+        q: "A major problem with self-report surveys is:",
+        o: ["They are always accurate", "Candidates may fake responses to look good", "They take too much time", "They are free of bias"],
+        a: 1
+    },
+    {
+        q: "Observer-rating surveys are conducted by:",
+        o: ["The same person being tested", "Another observer or manager", "Only a doctor", "The HR department only"],
+        a: 1
+    },
+    {
+        q: "MBTI classifies people into how many personality types?",
+        o: ["4", "8", "16", "20"],
+        a: 2
+    },
+    {
+        q: "MBTI is based on the theories of:",
+        o: ["Carl Jung", "Frederick Taylor", "Abraham Maslow", "Frederick Herzberg"],
+        a: 0
+    },
+    {
+        q: "Which of the following is NOT a pair in MBTI?",
+        o: ["Extraverted vs Introverted", "Sensing vs Intuitive", "Thinking vs Feeling", "Agreeable vs Disagreeable"],
+        a: 3
+    },
+    {
+        q: "The Big Five model includes all EXCEPT:",
+        o: ["Conscientiousness", "Extraversion", "Agreeableness", "Intelligence Quotient (IQ)"],
+        a: 3
+    },
+    {
+        q: "Conscientiousness is associated with:",
+        o: ["Carelessness", "Organization and reliability", "High aggression", "Shyness"],
+        a: 1
+    },
+    {
+        q: "Emotional stability refers to:",
+        o: ["Being calm and self-confident", "Being aggressive", "Being disorganized", "Being nervous and anxious"],
+        a: 0
+    },
+    {
+        q: "Extraversion refers to being:",
+        o: ["Quiet and reserved", "Sociable and assertive", "Disorganized", "Nervous"],
+        a: 1
+    },
+    {
+        q: "Openness to experience refers to:",
+        o: ["Creativity and curiosity", "Anger and fear", "Strictness and rigidity", "Laziness"],
+        a: 0
+    },
+    {
+        q: "Agreeableness refers to being:",
+        o: ["Cold and antagonistic", "Cooperative and trusting", "Highly emotional", "Shy"],
+        a: 1
+    },
+    {
+        q: "Person-organization fit means:",
+        o: ["Employees match the values of the organization", "Employees have the same salary", "Employees use the same machines", "Employees are all the same age"],
+        a: 0
+    },
+    
+    // Personality - Yes/No (16-20)
+    {
+        q: "Personality is the sum of ways an individual reacts and interacts with the world.",
+        o: ["Yes", "No"],
+        a: 0
+    },
+    {
+        q: "Personality traits are temporary and change every day.",
+        o: ["Yes", "No"],
+        a: 1
+    },
+    {
+        q: "MBTI has strong scientific evidence and predicts job performance well.",
+        o: ["Yes", "No"],
+        a: 1
+    },
+    {
+        q: "The Big Five model is widely supported by research.",
+        o: ["Yes", "No"],
+        a: 0
+    },
+    {
+        q: "Self-report surveys can be affected by faking responses.",
+        o: ["Yes", "No"],
+        a: 0
+    },
+    
+    // Personality - True/False (21-25)
+    {
+        q: "The Big Five personality model includes five basic dimensions of personality.",
+        o: ["True", "False"],
+        a: 0
+    },
+    {
+        q: "Conscientiousness is one of the strongest predictors of job performance.",
+        o: ["True", "False"],
+        a: 0
+    },
+    {
+        q: "Observer ratings predict job success better than self-ratings alone.",
+        o: ["True", "False"],
+        a: 0
+    },
+    {
+        q: "Agreeable people are usually cold and antagonistic.",
+        o: ["True", "False"],
+        a: 1
+    },
+    {
+        q: "Person–organization fit means employees match the values of the organization.",
+        o: ["True", "False"],
+        a: 0
+    },
+    
+    // ==========================================
+    // SECTION 3: PERCEPTION (25 Questions)
+    // ==========================================
+    
+    // Perception - MCQs (1-15)
+    {
+        q: "Perception is best defined as:",
+        o: ["Memorizing information", "Organizing and interpreting sensory impressions", "Judging others accurately", "The study of behavior only"],
+        a: 1
+    },
+    {
+        q: "Which factor influences perception?",
+        o: ["Attitudes", "Motives", "Experience", "All of the above"],
+        a: 3
+    },
+    {
+        q: "In perception, the individual who interprets information is called:",
+        o: ["The target", "The situation", "The perceiver", "The stimulus"],
+        a: 2
+    },
+    {
+        q: "Attribution theory mainly deals with:",
+        o: ["Organizational structure", "How we judge people differently based on the meaning we attribute to behavior", "Motivation development", "Marketing"],
+        a: 1
+    },
+    {
+        q: "The tendency to judge a person based on one prominent trait is known as:",
+        o: ["Stereotyping", "Halo effect", "Projection", "Contrast effect"],
+        a: 1
+    },
+    {
+        q: "When people interpret situations according to their own interests, it is called:",
+        o: ["Attribution", "Projection", "Selective perception", "Contrast effect"],
+        a: 2
+    },
+    {
+        q: "Which bias occurs when individuals assume others are similar to themselves?",
+        o: ["Stereotyping", "Projection", "Selective perception", "Fundamental attribution error"],
+        a: 1
+    },
+    {
+        q: "The fundamental attribution error refers to:",
+        o: ["Overestimating internal factors and underestimating external factors", "Overestimating external factors and underestimating internal factors", "Ignoring personal behavior", "Ignoring organizational rules"],
+        a: 0
+    },
+    {
+        q: "Stereotyping is best described as:",
+        o: ["Individual evaluation", "Group-based generalization", "Objective assessment", "Behavioral modification"],
+        a: 1
+    },
+    {
+        q: "Which of the following is NOT a component of perception?",
+        o: ["Perceiver", "Target", "Situation", "Motivation"],
+        a: 3
+    },
+    {
+        q: "First impressions strongly influence later perceptions due to:",
+        o: ["Projection", "Primacy effect", "Recency effect", "None of the above"],
+        a: 1
+    },
+    {
+        q: "Decision-making in organizations is largely influenced by:",
+        o: ["Reality alone", "Perception of reality", "Rules only", "Technology only"],
+        a: 1
+    },
+    {
+        q: "The contrast effect occurs when:",
+        o: ["People ignore differences", "Evaluation is affected by comparisons with others recently encountered", "People stereotype others", "None of the above"],
+        a: 1
+    },
+    {
+        q: "Which factor belongs to the situation influencing perception?",
+        o: ["Past experience", "Motivation", "Time", "Attitude"],
+        a: 2
+    },
+    {
+        q: "Perception mainly affects which organizational outcome?",
+        o: ["Salary structure", "Decision-making", "Office layout", "Technology use"],
+        a: 1
+    },
+    
+    // Perception - Yes/No (16-20)
+    {
+        q: "Perception differs from objective reality.",
+        o: ["Yes", "No"],
+        a: 0
+    },
+    {
+        q: "All individuals perceive situations in the same way.",
+        o: ["Yes", "No"],
+        a: 1
+    },
+    {
+        q: "Attribution theory explains how people judge behavior.",
+        o: ["Yes", "No"],
+        a: 0
+    },
+    {
+        q: "Stereotyping always leads to accurate judgments.",
+        o: ["Yes", "No"],
+        a: 1
+    },
+    {
+        q: "Perception plays a role in managerial decision-making.",
+        o: ["Yes", "No"],
+        a: 0
+    },
+    
+    // Perception - True/False (21-25)
+    {
+        q: "Perception is influenced by personal attitudes and experiences.",
+        o: ["True", "False"],
+        a: 0
+    },
+    {
+        q: "Halo effect leads to unbiased evaluation of employees.",
+        o: ["True", "False"],
+        a: 1
+    },
+    {
+        q: "Fundamental attribution error emphasizes external causes of behavior.",
+        o: ["True", "False"],
+        a: 1
+    },
+    {
+        q: "Selective perception helps individuals process all available information.",
+        o: ["True", "False"],
+        a: 1
+    },
+    {
+        q: "Accurate perception improves organizational effectiveness.",
+        o: ["True", "False"],
+        a: 0
+    },
+    
+    // ==========================================
+    // SECTION 4: EMOTIONS AND MOODS (25 Questions)
+    // ==========================================
+    
+    // Emotions - MCQs (1-20)
+    {
+        q: "Emotions are best described as:",
+        o: ["Long-lasting feelings without cause", "Intense feelings directed at someone or something", "General personality traits", "Rational thoughts"],
+        a: 1
+    },
+    {
+        q: "Moods differ from emotions because moods are:",
+        o: ["More intense", "Short-lived", "Less intense and longer lasting", "Always negative"],
+        a: 2
+    },
+    {
+        q: "The term 'affect' refers to:",
+        o: ["Only negative emotions", "Only positive moods", "A broad range of feelings", "Cognitive ability"],
+        a: 2
+    },
+    {
+        q: "Which of the following is a basic emotion?",
+        o: ["Satisfaction", "Pride", "Fear", "Motivation"],
+        a: 2
+    },
+    {
+        q: "Positive affect refers to:",
+        o: ["Feeling nervous and tense", "Feeling active and excited", "Feeling depressed", "None of the above"],
+        a: 1
+    },
+    {
+        q: "Negative affect includes emotions such as:",
+        o: ["Excitement", "Pride", "Stress and anxiety", "Satisfaction"],
+        a: 2
+    },
+    {
+        q: "Emotional labor is defined as:",
+        o: ["Physical effort at work", "Managing emotions to meet job requirements", "Cognitive workload", "Stress caused by workload"],
+        a: 1
+    },
+    {
+        q: "Displaying emotions that are not genuinely felt is called:",
+        o: ["Deep acting", "Emotional intelligence", "Surface acting", "Mood regulation"],
+        a: 2
+    },
+    {
+        q: "Emotional intelligence does NOT include:",
+        o: ["Self-awareness", "Self-regulation", "Technical expertise", "Empathy"],
+        a: 2
+    },
+    {
+        q: "Which component of emotional intelligence involves understanding others' emotions?",
+        o: ["Self-management", "Motivation", "Empathy", "Self-awareness"],
+        a: 2
+    },
+    {
+        q: "Moral emotions are associated with:",
+        o: ["Personal success", "Ethical judgment", "Job satisfaction only", "Cognitive intelligence"],
+        a: 1
+    },
+    {
+        q: "Which of the following is a moral emotion?",
+        o: ["Joy", "Guilt", "Excitement", "Surprise"],
+        a: 1
+    },
+    {
+        q: "The affective events theory explains:",
+        o: ["Personality traits", "How workplace events influence emotions", "Job design", "Organizational structure"],
+        a: 1
+    },
+    {
+        q: "Emotional contagion refers to:",
+        o: ["Suppression of emotions", "Transfer of emotions from one person to another", "Emotional regulation", "Mood stability"],
+        a: 1
+    },
+    {
+        q: "Which job is most likely to involve high emotional labor?",
+        o: ["Accountant", "Data analyst", "Customer service representative", "Research scientist"],
+        a: 2
+    },
+    {
+        q: "Deep acting involves:",
+        o: ["Faking emotions", "Suppressing feelings", "Modifying inner feelings to match required emotions", "Ignoring emotional rules"],
+        a: 2
+    },
+    {
+        q: "Which factor most strongly influences daily moods at work?",
+        o: ["Salary structure", "Daily work events", "Organizational hierarchy", "Office location"],
+        a: 1
+    },
+    {
+        q: "Emotions at work were traditionally viewed as:",
+        o: ["Helpful to productivity", "Neutral", "Detrimental to performance", "Essential for decision-making"],
+        a: 2
+    },
+    {
+        q: "Emotional regulation refers to:",
+        o: ["Ignoring emotions", "Expressing all emotions freely", "Managing emotional responses", "Avoiding emotional situations"],
+        a: 2
+    },
+    {
+        q: "Which of the following improves emotional intelligence?",
+        o: ["Technical training only", "Self-reflection and feedback", "Job rotation", "Automation"],
+        a: 1
+    },
+    
+    // Emotions - True/False (21-25)
+    {
+        q: "Emotions are usually caused by specific events.",
+        o: ["True", "False"],
+        a: 0
+    },
+    {
+        q: "Moods are more intense than emotions.",
+        o: ["True", "False"],
+        a: 1
+    },
+    {
+        q: "Emotional intelligence can be developed over time.",
+        o: ["True", "False"],
+        a: 0
+    },
+    {
+        q: "Emotional labor is irrelevant in service organizations.",
+        o: ["True", "False"],
+        a: 1
+    },
+    {
+        q: "Positive moods generally enhance creativity at work.",
+        o: ["True", "False"],
+        a: 0
+    },
+    
+    // ==========================================
+    // SECTION 5: MOTIVATION (25 Questions)
+    // ==========================================
+    
+    // Motivation - MCQs (1-20)
+    {
+        q: "Motivation refers to:",
+        o: ["Employee satisfaction only", "Intensity, direction, and persistence of effort", "Skill and ability of employees", "Organizational culture"],
+        a: 1
+    },
+    {
+        q: "Who proposed the Hierarchy of Needs Theory?",
+        o: ["Herzberg", "Vroom", "Maslow", "McClelland"],
+        a: 2
+    },
+    {
+        q: "Which theory classifies factors into hygiene and motivators?",
+        o: ["ERG Theory", "Expectancy Theory", "Two-Factor Theory", "Equity Theory"],
+        a: 2
+    },
+    {
+        q: "The need for affiliation emphasizes:",
+        o: ["Power and control", "Achievement and success", "Friendly relationships", "Job security"],
+        a: 2
+    },
+    {
+        q: "According to Maslow, unmet needs:",
+        o: ["Stop motivating behavior", "Do not influence behavior", "Continue to motivate behavior", "Become irrelevant"],
+        a: 2
+    },
+    {
+        q: "Hygiene factors mainly prevent:",
+        o: ["High performance", "Dissatisfaction", "Motivation", "Commitment"],
+        a: 1
+    },
+    {
+        q: "Expectancy theory assumes employees:",
+        o: ["Act emotionally", "Act irrationally", "Act rationally", "Act habitually"],
+        a: 2
+    },
+    {
+        q: "Valence in expectancy theory refers to:",
+        o: ["Effort level", "Performance expectancy", "Value of the reward", "Skill requirement"],
+        a: 2
+    },
+    {
+        q: "A manager gives recognition to improve motivation. This reflects:",
+        o: ["Hygiene factor", "Motivator factor", "Equity principle", "Reinforcement punishment"],
+        a: 1
+    },
+    {
+        q: "An employee works harder believing promotion will follow good performance. This illustrates:",
+        o: ["Equity theory", "Reinforcement theory", "Expectancy theory", "Goal-setting theory"],
+        a: 2
+    },
+    {
+        q: "Setting specific and challenging goals is based on:",
+        o: ["Maslow's theory", "Goal-setting theory", "ERG theory", "Equity theory"],
+        a: 1
+    },
+    {
+        q: "A bonus given immediately after good performance represents:",
+        o: ["Negative reinforcement", "Punishment", "Positive reinforcement", "Extinction"],
+        a: 2
+    },
+    {
+        q: "An employee feels underpaid compared to colleagues. This reflects:",
+        o: ["Expectancy failure", "Goal ambiguity", "Underpayment inequity", "Hygiene satisfaction"],
+        a: 2
+    },
+    {
+        q: "Which theory best explains reactions to unfair reward distribution?",
+        o: ["Maslow's theory", "Equity theory", "ERG theory", "Reinforcement theory"],
+        a: 1
+    },
+    {
+        q: "If salary increase does not improve performance, it suggests salary is a:",
+        o: ["Motivator factor", "Hygiene factor", "Equity factor", "Reinforcement factor"],
+        a: 1
+    },
+    {
+        q: "When employees reduce effort due to perceived unfairness, they are restoring:",
+        o: ["Motivation", "Equity", "Expectancy", "Reinforcement"],
+        a: 1
+    },
+    {
+        q: "Which motivational approach is most effective for knowledge workers?",
+        o: ["Punishment-based control", "Monetary rewards only", "Challenging work and autonomy", "Strict supervision"],
+        a: 2
+    },
+    {
+        q: "Which theory best supports linking rewards directly to performance?",
+        o: ["Maslow's theory", "Expectancy theory", "ERG theory", "Need for affiliation"],
+        a: 1
+    },
+    {
+        q: "If an organization wants long-term motivation, it should focus on:",
+        o: ["Salary alone", "Hygiene factors only", "Intrinsic motivators", "Punishment mechanisms"],
+        a: 2
+    },
+    {
+        q: "Which practice best integrates multiple motivation theories?",
+        o: ["Uniform rewards", "Job enrichment with fair pay", "Strict rules", "Job rotation only"],
+        a: 1
+    },
+    
+    // Motivation - True/False (21-25)
+    {
+        q: "Motivation directly influences employee performance and persistence.",
+        o: ["True", "False"],
+        a: 0
+    },
+    {
+        q: "According to Herzberg, improving salary alone increases motivation.",
+        o: ["True", "False"],
+        a: 1
+    },
+    {
+        q: "Expectancy theory links effort, performance, and rewards.",
+        o: ["True", "False"],
+        a: 0
+    },
+    {
+        q: "Equity theory is based on perceived fairness rather than absolute rewards.",
+        o: ["True", "False"],
+        a: 0
+    },
+    {
+        q: "Intrinsic motivation is more sustainable than extrinsic motivation.",
+        o: ["True", "False"],
+        a: 0
+    },
+    
+    // ==========================================
+    // SECTION 6: GROUPS AND TEAMS (25 Questions)
+    // ==========================================
+    
+    // Groups - MCQs (1-20)
+    {
+        q: "A group is defined as:",
+        o: ["Individuals working independently", "Two or more individuals interacting to achieve a common goal", "A collection of people in an organization", "Employees under one supervisor"],
+        a: 1
+    },
+    {
+        q: "A team differs from a group because a team has:",
+        o: ["More members", "Shared responsibility", "Formal leadership only", "Individual accountability only"],
+        a: 1
+    },
+    {
+        q: "Which of the following is NOT a type of group?",
+        o: ["Formal group", "Informal group", "Command group", "Virtual reward group"],
+        a: 3
+    },
+    {
+        q: "The stages of group development were proposed by:",
+        o: ["Maslow", "Herzberg", "Tuckman", "McClelland"],
+        a: 2
+    },
+    {
+        q: "The forming stage of group development is characterized by:",
+        o: ["Conflict and disagreement", "High performance", "Orientation and uncertainty", "Group dissolution"],
+        a: 2
+    },
+    {
+        q: "The storming stage mainly involves:",
+        o: ["Cooperation", "Conflict among members", "Task completion", "Group celebration"],
+        a: 1
+    },
+    {
+        q: "Group norms are:",
+        o: ["Legal rules", "Informal standards of behavior", "Written job descriptions", "Organizational policies"],
+        a: 1
+    },
+    {
+        q: "Group cohesiveness refers to:",
+        o: ["Size of the group", "Degree of attraction among group members", "Group productivity only", "Leadership authority"],
+        a: 1
+    },
+    {
+        q: "A manager encourages open communication to reduce conflicts. This mainly affects:",
+        o: ["Group size", "Group norms", "Group roles", "Group cohesiveness"],
+        a: 3
+    },
+    {
+        q: "Assigning clear responsibilities to members helps to reduce:",
+        o: ["Social loafing", "Groupthink", "Group polarization", "Role ambiguity"],
+        a: 3
+    },
+    {
+        q: "A team that evaluates alternatives critically before deciding is avoiding:",
+        o: ["Social facilitation", "Social loafing", "Groupthink", "Cohesiveness"],
+        a: 2
+    },
+    {
+        q: "Rewarding team performance instead of individual performance helps to reduce:",
+        o: ["Cohesion", "Conflict", "Social loafing", "Norm formation"],
+        a: 2
+    },
+    {
+        q: "When highly cohesive groups make poor decisions due to pressure for agreement, it is called:",
+        o: ["Group polarization", "Social loafing", "Groupthink", "Role conflict"],
+        a: 2
+    },
+    {
+        q: "Increasing group size beyond a limit generally leads to:",
+        o: ["Higher efficiency", "Better coordination", "Communication problems", "Stronger norms"],
+        a: 2
+    },
+    {
+        q: "A team becomes more extreme in its decisions after discussion. This is known as:",
+        o: ["Groupthink", "Group polarization", "Social facilitation", "Role ambiguity"],
+        a: 1
+    },
+    {
+        q: "Free-riding behavior in groups indicates:",
+        o: ["High motivation", "Strong leadership", "Social loafing", "High accountability"],
+        a: 2
+    },
+    {
+        q: "Which leadership style is most effective for self-managed teams?",
+        o: ["Autocratic", "Laissez-faire", "Supportive and participative", "Bureaucratic"],
+        a: 2
+    },
+    {
+        q: "To improve team decision quality, a manager should:",
+        o: ["Discourage dissent", "Encourage critical evaluation", "Appoint a dominant leader", "Reduce communication"],
+        a: 1
+    },
+    {
+        q: "Which factor most strongly contributes to team effectiveness?",
+        o: ["Large group size", "Clear goals and mutual accountability", "Strict supervision", "Uniform personality"],
+        a: 1
+    },
+    {
+        q: "The best way to manage conflict in teams is to:",
+        o: ["Avoid it completely", "Suppress it", "Address it constructively", "Ignore differences"],
+        a: 2
+    },
+    
+    // Groups - True/False (21-25)
+    {
+        q: "Teams generally perform better than individuals for complex tasks.",
+        o: ["True", "False"],
+        a: 0
+    },
+    {
+        q: "High group cohesiveness always leads to better decisions.",
+        o: ["True", "False"],
+        a: 1
+    },
+    {
+        q: "Group norms strongly influence individual behavior.",
+        o: ["True", "False"],
+        a: 0
+    },
+    {
+        q: "Social loafing occurs when individual efforts are easily identifiable.",
+        o: ["True", "False"],
+        a: 1
+    },
+    {
+        q: "Effective teams balance task roles and relationship roles.",
+        o: ["True", "False"],
+        a: 0
+    },
+    
+    // ==========================================
+    // SECTION 7: COMMUNICATION (25 Questions)
+    // ==========================================
+    
+    // Communication - MCQs (1-20)
+    {
+        q: "Communication is defined as:",
+        o: ["Transfer of authority", "Exchange of information and understanding", "Issuing orders", "Organizational control"],
+        a: 1
+    },
+    {
+        q: "The sender in the communication process is the person who:",
+        o: ["Receives the message", "Interprets the message", "Encodes the message", "Decodes the message"],
+        a: 2
+    },
+    {
+        q: "Which of the following is a formal communication channel?",
+        o: ["Grapevine", "Rumors", "Informal discussion", "Official memo"],
+        a: 3
+    },
+    {
+        q: "Feedback in communication refers to:",
+        o: ["Message transmission", "Noise", "Response from the receiver", "Encoding process"],
+        a: 2
+    },
+    {
+        q: "Noise in communication means:",
+        o: ["Loud sound only", "Any disturbance that distorts the message", "Delay in response", "Feedback error"],
+        a: 1
+    },
+    {
+        q: "Upward communication mainly flows from:",
+        o: ["Top management to employees", "Employees to top management", "Peers to peers", "External stakeholders to managers"],
+        a: 1
+    },
+    {
+        q: "Non-verbal communication includes:",
+        o: ["Emails", "Reports", "Body language", "Circulars"],
+        a: 2
+    },
+    {
+        q: "Effective communication in teams leads to:",
+        o: ["Increased conflict", "Role ambiguity", "Better coordination", "Reduced accountability"],
+        a: 2
+    },
+    {
+        q: "A team leader encourages members to share ideas freely. This improves:",
+        o: ["Noise", "One-way communication", "Open communication climate", "Message distortion"],
+        a: 2
+    },
+    {
+        q: "Using visual aids during a team meeting mainly helps to:",
+        o: ["Increase authority", "Improve message clarity", "Reduce feedback", "Increase noise"],
+        a: 1
+    },
+    {
+        q: "Clarifying roles and expectations in a team reduces:",
+        o: ["Motivation", "Communication overload", "Misunderstanding", "Group cohesiveness"],
+        a: 2
+    },
+    {
+        q: "Asking team members to repeat instructions ensures:",
+        o: ["Encoding", "Decoding", "Feedback", "Noise"],
+        a: 2
+    },
+    {
+        q: "When team members interpret the same message differently, it indicates:",
+        o: ["Effective communication", "Semantic problems", "Upward communication", "Information richness"],
+        a: 1
+    },
+    {
+        q: "Excessive emails causing confusion in a team illustrate:",
+        o: ["Communication clarity", "Communication overload", "Feedback efficiency", "Formal communication"],
+        a: 1
+    },
+    {
+        q: "A highly technical message is best communicated through:",
+        o: ["Informal chat", "Telephone", "Rich communication channel", "Grapevine"],
+        a: 2
+    },
+    {
+        q: "Lack of trust among team members mainly affects:",
+        o: ["Encoding", "Decoding", "Communication effectiveness", "Channel selection"],
+        a: 2
+    },
+    {
+        q: "Which communication practice best supports high-performing teams?",
+        o: ["One-way communication", "Open and timely feedback", "Strict hierarchy", "Limited information sharing"],
+        a: 1
+    },
+    {
+        q: "For resolving conflicts in teams, the most effective communication approach is:",
+        o: ["Avoidance", "Written warnings", "Open dialogue", "Downward instructions"],
+        a: 2
+    },
+    {
+        q: "Which channel is most effective for conveying emotions in teams?",
+        o: ["Email", "Notice board", "Face-to-face communication", "Written report"],
+        a: 2
+    },
+    {
+        q: "Team communication effectiveness is best evaluated by:",
+        o: ["Number of messages sent", "Speed of communication", "Shared understanding and outcomes", "Formal documentation"],
+        a: 2
+    },
+    
+    // Communication - True/False (21-25)
+    {
+        q: "Effective communication enhances team performance.",
+        o: ["True", "False"],
+        a: 0
+    },
+    {
+        q: "Non-verbal cues can contradict verbal messages.",
+        o: ["True", "False"],
+        a: 0
+    },
+    {
+        q: "Communication overload reduces decision quality in teams.",
+        o: ["True", "False"],
+        a: 0
+    },
+    {
+        q: "Feedback is an optional element in the communication process.",
+        o: ["True", "False"],
+        a: 1
+    },
+    {
+        q: "Trust among team members improves communication effectiveness.",
+        o: ["True", "False"],
+        a: 0
+    },
+    
+    // ==========================================
+    // SECTION 8: LEADERSHIP (25 Questions)
+    // ==========================================
+    
+    // Leadership - MCQs (1-20)
+    {
+        q: "Leadership can best be defined as:",
+        o: ["The ability to control employees", "The process of influencing a group toward goal achievement", "The authority given by position", "The power to enforce rules"],
+        a: 1
+    },
+    {
+        q: "Which of the following is NOT a leadership trait according to trait theory?",
+        o: ["Extraversion", "Intelligence", "Emotional stability", "Job rotation"],
+        a: 3
+    },
+    {
+        q: "Behavioral theories of leadership mainly focus on:",
+        o: ["Leader's inherited qualities", "Leader's actions and behaviors", "Organizational structure", "External environment"],
+        a: 1
+    },
+    {
+        q: "Consideration behavior in leadership emphasizes:",
+        o: ["Task completion", "Employee welfare and relationships", "Strict supervision", "Performance targets"],
+        a: 1
+    },
+    {
+        q: "A leader who clearly defines roles and sets deadlines is practicing:",
+        o: ["Laissez-faire leadership", "Consideration behavior", "Initiating structure", "Transformational leadership"],
+        a: 2
+    },
+    {
+        q: "When a leader adapts their style based on follower readiness, it reflects:",
+        o: ["Trait theory", "Behavioral theory", "Situational leadership theory", "Charismatic leadership"],
+        a: 2
+    },
+    {
+        q: "Which leadership style is MOST effective in a highly uncertain environment?",
+        o: ["Autocratic", "Transactional", "Transformational", "Bureaucratic"],
+        a: 2
+    },
+    {
+        q: "High task orientation and low relationship orientation describe which leader style?",
+        o: ["Team management", "Country club management", "Authority-compliance management", "Middle-of-the-road management"],
+        a: 2
+    },
+    {
+        q: "Which leadership style is most suitable for knowledge-based organizations?",
+        o: ["Autocratic", "Transactional", "Transformational", "Coercive"],
+        a: 2
+    },
+    {
+        q: "A leadership approach that motivates followers through rewards and penalties is:",
+        o: ["Servant leadership", "Transformational leadership", "Transactional leadership", "Ethical leadership"],
+        a: 2
+    },
+    {
+        q: "Which leadership style focuses on developing future leaders?",
+        o: ["Autocratic", "Servant leadership", "Bureaucratic", "Directive leadership"],
+        a: 1
+    },
+    {
+        q: "A leader encouraging innovation and vision is practicing:",
+        o: ["Transactional leadership", "Charismatic leadership", "Autocratic leadership", "Contingency leadership"],
+        a: 1
+    },
+    {
+        q: "Emotional intelligence in leadership primarily enhances:",
+        o: ["Technical competence", "Interpersonal effectiveness", "Authority power", "Organizational rules"],
+        a: 1
+    },
+    {
+        q: "Which leadership theory emphasizes leader-member relationships?",
+        o: ["Path-goal theory", "Leader-Member Exchange (LMX) theory", "Trait theory", "Behavioral theory"],
+        a: 1
+    },
+    {
+        q: "Ethical leadership mainly promotes:",
+        o: ["Profit maximization", "Rule enforcement", "Moral conduct and fairness", "Centralized control"],
+        a: 2
+    },
+    {
+        q: "Which leadership style avoids decision-making responsibility?",
+        o: ["Democratic", "Autocratic", "Laissez-faire", "Transformational"],
+        a: 2
+    },
+    {
+        q: "Power derived from personal qualities is known as:",
+        o: ["Legitimate power", "Reward power", "Referent power", "Coercive power"],
+        a: 2
+    },
+    {
+        q: "A leader who removes obstacles to help employees perform follows:",
+        o: ["Trait theory", "Path-goal theory", "Contingency theory", "Behavioral theory"],
+        a: 1
+    },
+    {
+        q: "Which theory suggests leadership effectiveness depends on situational favorableness?",
+        o: ["Fiedler's contingency theory", "Trait theory", "Behavioral theory", "LMX theory"],
+        a: 0
+    },
+    {
+        q: "Leadership that inspires followers beyond self-interest is:",
+        o: ["Transactional", "Autocratic", "Transformational", "Bureaucratic"],
+        a: 2
+    },
+    
+    // Leadership - True/False (21-25)
+    {
+        q: "Transformational leaders motivate followers by appealing to higher-order needs.",
+        o: ["True", "False"],
+        a: 0
+    },
+    {
+        q: "Trait theory claims that leadership skills can only be learned, not inherited.",
+        o: ["True", "False"],
+        a: 1
+    },
+    {
+        q: "Transactional leadership focuses mainly on long-term vision.",
+        o: ["True", "False"],
+        a: 1
+    },
+    {
+        q: "Emotional intelligence improves a leader's ability to manage relationships.",
+        o: ["True", "False"],
+        a: 0
+    },
+    {
+        q: "Laissez-faire leadership involves active supervision of employees.",
+        o: ["True", "False"],
+        a: 1
+    },
+    
+    // ==========================================
+    // SECTION 9: CONFLICT AND NEGOTIATION (25 Questions)
+    // ==========================================
+    
+    // Conflict - MCQs (1-20)
+    {
+        q: "Which of the following best defines conflict?",
+        o: ["A process that begins when one party perceives that another party has negatively affected something they care about", "A situation where disagreement occurs between two people", "A formal meeting between opposing parties", "An inevitable outcome of poor communication"],
+        a: 0
+    },
+    {
+        q: "Functional conflict can be characterized as:",
+        o: ["Conflict that hinders group performance", "Conflict that supports group goals and improves performance", "Conflict that occurs between departments", "Conflict that is always destructive"],
+        a: 1
+    },
+    {
+        q: "Which type of conflict is almost always dysfunctional in work settings?",
+        o: ["Task conflict", "Process conflict", "Relationship conflict", "Structural conflict"],
+        a: 2
+    },
+    {
+        q: "The three types of conflict can be categorized as:",
+        o: ["Internal, external, and organizational", "Task, relationship, and process", "Functional, dysfunctional, and neutral", "Vertical, horizontal, and diagonal"],
+        a: 1
+    },
+    {
+        q: "Dyadic conflict refers to:",
+        o: ["Conflict between two people", "Conflict within a large group", "Conflict between organizations", "Conflict within a team"],
+        a: 0
+    },
+    {
+        q: "Which of the following is NOT one of the antecedent conditions to conflict?",
+        o: ["Communication", "Structure", "Personal variables", "Emotional intelligence alone"],
+        a: 3
+    },
+    {
+        q: "The conflict process model contains how many stages?",
+        o: ["Three stages", "Four stages", "Five stages", "Six stages"],
+        a: 2
+    },
+    {
+        q: "In the conflict process, cognition and personalization refers to:",
+        o: ["When the conflict becomes internalized and emotional", "When the conflict is first recognized", "When behavioral changes occur", "When the resolution is reached"],
+        a: 0
+    },
+    {
+        q: "Which of the following best describes 'fixed pie' thinking in negotiations?",
+        o: ["The belief that resources are unlimited", "The belief that there is only a set amount of goods or services to be divided", "The belief that both parties will always benefit", "The belief that negotiation is unnecessary"],
+        a: 1
+    },
+    {
+        q: "Distributive bargaining seeks to:",
+        o: ["Expand resources and create value", "Divide up a fixed amount of resources", "Maintain relationships at all costs", "Avoid making concessions"],
+        a: 1
+    },
+    {
+        q: "Integrative negotiation differs from distributive negotiation in that it:",
+        o: ["Focuses on dividing resources", "Creates a win-lose situation", "Seeks to expand the pie and find mutually beneficial solutions", "Is always unsuccessful"],
+        a: 2
+    },
+    {
+        q: "The five steps of the negotiation process include all of the following EXCEPT:",
+        o: ["Preparation and planning", "Definition of ground rules", "Clarification of wants and needs", "Immediate agreement and closure"],
+        a: 3
+    },
+    {
+        q: "Which individual difference variable has been found to consistently relate to negotiation outcomes?",
+        o: ["Age", "Self-efficacy", "Height", "Physical appearance"],
+        a: 1
+    },
+    {
+        q: "According to the textbook, when displaying anger in negotiations, power is important because:",
+        o: ["Anger is always effective regardless of power", "You should show anger only if you have at least as much power as your counterpart", "Anger is never effective", "Power has no relation to anger effectiveness"],
+        a: 1
+    },
+    {
+        q: "Third-party negotiations are conducted by:",
+        o: ["Two primary parties only", "An external neutral party who helps resolve conflict", "The organization's management", "Legal representatives"],
+        a: 1
+    },
+    {
+        q: "Emotional intelligence (EI) in negotiations is linked to:",
+        o: ["Decreased cooperation", "Lower perception of likability", "Gains in negotiation performance and perception of cooperativeness", "Increased deception"],
+        a: 2
+    },
+    {
+        q: "The case of Tesla's board of directors illustrates that:",
+        o: ["Conflict within organizations is always beneficial", "The absence of conflict can signal that important issues aren't being discussed", "Boards should avoid all disagreements", "Conflict is only dysfunctional"],
+        a: 1
+    },
+    {
+        q: "Which of the following best describes the Merkel model of negotiation?",
+        o: ["Aggressive confrontation approach", "Quick decision-making process", "Patient, deliberate, integrative approach based on rational analysis", "Exclusively distributive strategy"],
+        a: 2
+    },
+    {
+        q: "According to research on team performance and conflict, task conflict is MORE likely to have a positive effect when:",
+        o: ["A few members perceive strong disagreement while most perceive weak disagreement", "Everyone perceives the same level of conflict", "No members perceive disagreement", "Conflict occurs with relationship conflict simultaneously"],
+        a: 0
+    },
+    {
+        q: "Intergroup conflict outcomes are influenced by:",
+        o: ["Individual power and status within groups only", "The interplay between an individual's position within their group and how they manage conflict between groups", "Only organizational factors", "Only interpersonal relationships"],
+        a: 1
+    },
+    
+    // Conflict - Statement Questions (21-25)
+    {
+        q: "Relationship conflict is always dysfunctional and should be completely eliminated from organizations.",
+        o: ["True - Relationship conflict always damages group performance and should be eradicated", "False - While relationship conflict is almost always dysfunctional in work settings, eliminating all conflict may stifle important discussions and innovation", "Partially true - Relationship conflict is sometimes functional in small teams", "Irrelevant - The level of relationship conflict has no bearing on organizational outcomes"],
+        a: 1
+    },
+    {
+        q: "The first offer in a negotiation should always be aggressive and precise to establish strong anchoring.",
+        o: ["True - Precision in the first offer is always advantageous and anchors expectations favorably", "False - Making the first offer with high precision can convey information about your priorities and limits; precision may work against you if the other party is motivated to maximize their own returns, though vague ranges can be more strategic", "True with conditions - This works only with less experienced negotiators", "False - Never make the first offer in negotiations"],
+        a: 1
+    },
+    {
+        q: "Communication problems are the primary cause of all organizational conflicts.",
+        o: ["True - All conflicts stem from poor communication", "False - While communication is one significant antecedent condition to conflict, there are multiple causes including structure and personal variables; misunderstanding is one source, but conflicts also arise from incompatible goals, differing interpretations of facts, and behavioral expectation disagreements", "True - Research definitively proves this", "Irrelevant - Communication doesn't affect conflict"],
+        a: 1
+    },
+    {
+        q: "Individual personality traits have minimal impact on negotiation success compared to the objective value of offers and concessions.",
+        o: ["True - Personality is irrelevant; only objective terms matter", "False - Personality traits significantly influence negotiation outcomes; factors like agreeableness, confidence, emotional intelligence, and reputation consistently affect whether negotiators reach favorable agreements and the quality of their relationships with counterparts", "Partially true - Personality matters only in relationship-focused negotiations", "False - Personality completely determines outcomes regardless of offer value"],
+        a: 1
+    },
+    {
+        q: "Creating an optimal level of intragroup task conflict requires a supportive team climate where mistakes are not penalized and all team members have each other's support.",
+        o: ["False - Task conflict should be completely eliminated regardless of team climate", "False - Team climate doesn't matter; only the level of conflict matters", "True - For intragroup task conflict to positively influence team performance, the team must have a supportive climate where mistakes are not penalized and members feel backed by their colleagues", "Partially true - This applies only to management-level teams"],
+        a: 2
+    },
+    
+    // ==========================================
+    // SECTION 10: ORGANIZATIONAL STRUCTURE - SET 1 (25 Questions)
+    // ==========================================
+    
+    // Structure Set 1 - MCQs (1-20)
+    {
+        q: "What is defined as the way in which job tasks are formally divided, grouped, and coordinated?",
+        o: ["Departmentalization", "Organizational structure", "Span of control", "Formalization"],
+        a: 1
+    },
+    {
+        q: "Which element of structure identifies how many individuals a manager can efficiently and effectively direct?",
+        o: ["Chain of command", "Centralization", "Span of control", "Work specialization"],
+        a: 2
+    },
+    {
+        q: "What is the primary characteristic of a 'simple structure'?",
+        o: ["High formalization", "Authority centralized in a single person", "Narrow spans of control", "Multiple layers of hierarchy"],
+        a: 1
+    },
+    {
+        q: "A 'matrix structure' creates dual lines of authority by combining which two forms of departmentalization?",
+        o: ["Geographic and Customer", "Functional and Product", "Process and Service", "Simple and Bureaucratic"],
+        a: 1
+    },
+    {
+        q: "According to the text, a major drawback of narrow spans of control is that they:",
+        o: ["Are less expensive", "Encourage employee autonomy", "Slow down decision making", "Simplify vertical communication"],
+        a: 2
+    },
+    {
+        q: "The degree to which jobs within an organization are standardized is known as:",
+        o: ["Specialization", "Centralization", "Formalization", "Departmentalization"],
+        a: 2
+    },
+    {
+        q: "Which term describes an unbroken line of authority that extends from the top to the lowest echelon?",
+        o: ["Span of control", "Chain of command", "Formalization", "Boundary spanning"],
+        a: 1
+    },
+    {
+        q: "'Boundary spanning' occurs when individuals:",
+        o: ["Stay within their assigned units", "Form relationships outside their formally assigned groups", "Report to only one supervisor", "Focus on highly routine tasks"],
+        a: 1
+    },
+    {
+        q: "The 'bureaucracy' is characterized primarily by:",
+        o: ["Low formalization", "Standardized work processes", "Decentralized authority", "Wide spans of control"],
+        a: 1
+    },
+    {
+        q: "A 'virtual structure' is typically a small, core organization that:",
+        o: ["Owns all its manufacturing plants", "Outsources its major business functions", "Has a very tall hierarchy", "Avoids the use of contractors"],
+        a: 1
+    },
+    {
+        q: "Which strategy emphasizes tight cost controls and avoidance of unnecessary innovation?",
+        o: ["Innovation strategy", "Imitation strategy", "Cost-minimization strategy", "Growth strategy"],
+        a: 2
+    },
+    {
+        q: "In a 'circular structure,' executives are located:",
+        o: ["At the top of the chart", "In the outer ring", "At the center", "On the left side"],
+        a: 2
+    },
+    {
+        q: "Downsizing is defined as a systematic effort to make an organization leaner by:",
+        o: ["Adding management levels", "Reducing staff or closing locations", "Increasing office space per worker", "Hiring more middle managers"],
+        a: 1
+    },
+    {
+        q: "The 'organic model' of organizational design is generally:",
+        o: ["Flat and flexible", "Highly centralized", "Rigid and rule-bound", "Characterized by high formalization"],
+        a: 0
+    },
+    {
+        q: "Which environmental dimension refers to the degree of instability in the environment?",
+        o: ["Capacity", "Complexity", "Volatility", "Abundance"],
+        a: 2
+    },
+    {
+        q: "Institutional theory describes forces that lead organizations to have similar structures due to:",
+        o: ["Economic efficiency alone", "Regulatory pressures and social norms", "Innovative breakthroughs", "Individual personality traits"],
+        a: 1
+    },
+    {
+        q: "Which type of departmentalization groups jobs by the functions performed, such as engineering or accounting?",
+        o: ["Product departmentalization", "Functional departmentalization", "Geographic departmentalization", "Customer departmentalization"],
+        a: 1
+    },
+    {
+        q: "The idea that a subordinate should have only one superior to whom they are directly responsible is:",
+        o: ["Authority", "Chain of command", "Unity of command", "Span of control"],
+        a: 2
+    },
+    {
+        q: "What is a major weakness of the simple structure as an organization grows?",
+        o: ["Excessive red tape", "Information overload at the top", "Too many rules", "High duplication of costs"],
+        a: 1
+    },
+    {
+        q: "Research suggests that mechanistic structures are often more accepted in cultures with:",
+        o: ["Low power distance", "High power distance", "Low uncertainty avoidance", "High individualism"],
+        a: 1
+    },
+    
+    // Structure Set 1 - True/False (21-25)
+    {
+        q: "Work specialization, or division of labor, is a means of making the most efficient use of employees' skills.",
+        o: ["True", "False"],
+        a: 0
+    },
+    {
+        q: "Centralized organizations are better for avoiding omission errors (lost opportunities).",
+        o: ["True", "False"],
+        a: 1
+    },
+    {
+        q: "The matrix structure breaks the unity-of-command concept.",
+        o: ["True", "False"],
+        a: 0
+    },
+    {
+        q: "An imitation strategy is best matched with a purely mechanistic structure.",
+        o: ["True", "False"],
+        a: 1
+    },
+    {
+        q: "The team structure seeks to eliminate the chain of command and replace departments with empowered teams.",
+        o: ["True", "False"],
+        a: 0
+    },
+    
+    // ==========================================
+    // SECTION 11: ORGANIZATIONAL STRUCTURE - SET 2 (25 Questions)
+    // ==========================================
+    
+    // Structure Set 2 - MCQs (1-20)
+    {
+        q: "What term defines the way in which job tasks are formally divided, grouped, and coordinated?",
+        o: ["Formalization", "Departmentalization", "Organizational structure", "Span of control"],
+        a: 2
+    },
+    {
+        q: "Which element of structure identifies the basis by which jobs are grouped together?",
+        o: ["Work specialization", "Departmentalization", "Chain of command", "Formalization"],
+        a: 1
+    },
+    {
+        q: "In the context of work specialization, 'human diseconomies' like boredom and fatigue typically occur when:",
+        o: ["Specialization is too low", "Employees work in teams", "Specialization is carried too far", "Spans of control are too wide"],
+        a: 2
+    },
+    {
+        q: "Which form of departmentalization groups jobs based on the territory or market where customers are located?",
+        o: ["Functional", "Process", "Product", "Geographical"],
+        a: 3
+    },
+    {
+        q: "The 'unity of command' principle suggests that:",
+        o: ["A manager should have at least ten subordinates", "Employees should report to only one superior", "All decisions must be made by the CEO", "Different departments must share the same tools"],
+        a: 1
+    },
+    {
+        q: "What is a major drawback of a 'narrow' span of control?",
+        o: ["It is less expensive than a wide span", "It makes vertical communication more complex", "It encourages too much employee autonomy", "It speeds up the decision-making process"],
+        a: 1
+    },
+    {
+        q: "'Centralization' refers to the degree to which:",
+        o: ["Jobs are standardized across the company", "Decision making is concentrated at a single point", "Employees form relationships outside their groups", "Tasks are subdivided into separate jobs"],
+        a: 1
+    },
+    {
+        q: "A job is considered 'highly formalized' when:",
+        o: ["The employee has a great deal of freedom", "There are minimal rules and regulations", "There are explicit job descriptions and clearly defined procedures", "Decision-making authority is pushed down to lower levels"],
+        a: 2
+    },
+    {
+        q: "Which term describes individuals forming relationships outside their formally assigned groups?",
+        o: ["Chain of command", "Boundary spanning", "Work specialization", "Centralization"],
+        a: 1
+    },
+    {
+        q: "A 'simple structure' is most commonly characterized by:",
+        o: ["High formalization and narrow spans of control", "Extensive departmentalization and dual authority", "Low formalization and authority centralized in one person", "Highly routine operating tasks and standardization"],
+        a: 2
+    },
+    {
+        q: "The primary characteristic underlying all bureaucracies is:",
+        o: ["Flexibility", "Standardization", "Decentralization", "Dual reporting lines"],
+        a: 1
+    },
+    {
+        q: "A 'matrix structure' creates dual lines of authority by combining which two forms of departmentalization?",
+        o: ["Customer and Geographic", "Functional and Product", "Simple and Virtual", "Process and Service"],
+        a: 1
+    },
+    {
+        q: "What is the essence of a 'virtual structure'?",
+        o: ["It owns all its manufacturing plants and assets", "It is a large organization with many vertical levels", "It is a small, core organization that outsources major business functions", "it relies on a very high degree of departmentalization"],
+        a: 2
+    },
+    {
+        q: "The 'team structure' is designed specifically to:",
+        o: ["Increase the number of management levels", "Eliminate the chain of command and empower teams", "Strengthen horizontal boundaries between departments", "Centralize all decision-making at the top management level"],
+        a: 1
+    },
+    {
+        q: "In a 'circular structure,' the CEO is located:",
+        o: ["At the top of a vertical pyramid", "In the outermost ring of the target", "At the center, spreading vision outward in rings", "In a separate node outside the main organization"],
+        a: 2
+    },
+    {
+        q: "'Downsizing' is defined as a systematic effort to make an organization leaner by:",
+        o: ["Increasing the number of employees", "Adding more layers to the hierarchy", "Closing locations or reducing staff", "Expanding into new geographic markets"],
+        a: 2
+    },
+    {
+        q: "Which structural model is characterized by high specialization, rigid departmentalization, and a clear chain of command?",
+        o: ["Organic model", "Mechanistic model", "Matrix model", "Boundaryless model"],
+        a: 1
+    },
+    {
+        q: "An 'innovation strategy' is best matched with which type of structure?",
+        o: ["Mechanistic structure", "Organic structure", "Bureaucratic structure", "Highly centralized structure"],
+        a: 1
+    },
+    {
+        q: "According to institutional theory, organizations often have similar structures because of:",
+        o: ["Maximum economic efficiency", "Regulatory pressures and social norms", "Differences in technology used", "The small size of the organization"],
+        a: 1
+    },
+    {
+        q: "Research suggests that employees in high-power-distance cultures are more accepting of:",
+        o: ["Organic structures", "Team structures", "Mechanistic structures", "Boundaryless structures"],
+        a: 2
+    },
+    
+    // Structure Set 2 - True/False (21-25)
+    {
+        q: "Work specialization increases efficiency by making the most use of employees' skills and improving them through repetition.",
+        o: ["True", "False"],
+        a: 0
+    },
+    {
+        q: "Decentralized organizations are generally better for avoiding commission errors (bad choices).",
+        o: ["True", "False"],
+        a: 1
+    },
+    {
+        q: "The matrix structure maintains the principle of 'unity of command' while increasing coordination.",
+        o: ["True", "False"],
+        a: 1
+    },
+    {
+        q: "An organization's size becomes less important as a determinant of structure once it employs around 2,000 people.",
+        o: ["True", "False"],
+        a: 0
+    },
+    {
+        q: "Boundary spanning is most effective in organizations that also encourage extensive internal communication.",
+        o: ["True", "False"],
+        a: 0
+    }
+];
+
+    let currentIdx = 0;
+    let score = 0;
+    let timer;
+    let timeLeft = 20;
+
+    const qText = document.getElementById('question-text');
+    const optionsCont = document.getElementById('options-container');
+    const qNum = document.getElementById('q-num');
+    const timeDisp = document.getElementById('time');
+    const nextBtn = document.getElementById('next-btn');
+    const currentScore = document.getElementById('current-score');
+    const progressBar = document.getElementById('progress-bar');
+    const totalQuestions = quizData.length;
+
+    function updateProgressBar() {
+        const progress = ((currentIdx + 1) / totalQuestions) * 100;
+        progressBar.style.width = `${progress}%`;
+    }
+
+    function startTimer() {
+        timeLeft = 20;
+        timeDisp.innerText = timeLeft;
+        timer = setInterval(() => {
+            timeLeft--;
+            timeDisp.innerText = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                revealAnswer(-1);
+            }
+        }, 1000);
+    }
+
+    function loadQuestion() {
+        clearInterval(timer);
+        const data = quizData[currentIdx];
+        qText.innerText = data.q;
+        qNum.innerText = currentIdx + 1;
+        optionsCont.innerHTML = '';
+        nextBtn.style.display = 'none';
+        updateProgressBar();
+
+        data.o.forEach((opt, i) => {
+            const btn = document.createElement('button');
+            btn.innerText = `${String.fromCharCode(97 + i)}. ${opt}`;
+            btn.classList.add('option-btn');
+            btn.onclick = () => revealAnswer(i);
+            optionsCont.appendChild(btn);
+        });
+        startTimer();
+    }
+
+    function revealAnswer(selectedIdx) {
+        clearInterval(timer);
+        const correctIdx = quizData[currentIdx].a;
+        const buttons = optionsCont.getElementsByClassName('option-btn');
+
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].disabled = true;
+            if (i === correctIdx) {
+                buttons[i].classList.add('correct');
+            }
+            if (i === selectedIdx && selectedIdx !== correctIdx) {
+                buttons[i].classList.add('wrong');
+            }
+        }
+
+        if (selectedIdx === correctIdx) {
+            score++;
+            currentScore.textContent = score;
+        }
+        nextBtn.style.display = 'inline-block';
+    }
+
+    function nextQuestion() {
+        currentIdx++;
+        if (currentIdx < quizData.length) {
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        clearInterval(timer);
+        document.getElementById('question-text').style.display = 'none';
+        optionsCont.style.display = 'none';
+        document.querySelector('.header').style.display = 'none';
+        document.querySelector('.score-display').style.display = 'none';
+        nextBtn.style.display = 'none';
+        progressBar.style.display = 'none';
+        
+        const res = document.getElementById('results');
+        res.style.display = 'block';
+        document.getElementById('score').innerText = score;
+        
+        const performanceMsg = document.getElementById('performance-message');
+        const percentage = (score / totalQuestions) * 100;
+        
+        if (percentage >= 90) {
+            performanceMsg.textContent = "Outstanding! You have mastered Organizational Behavior concepts.";
+            performanceMsg.style.color = "var(--success)";
+        } else if (percentage >= 75) {
+            performanceMsg.textContent = "Excellent! You have a comprehensive understanding of OB concepts.";
+            performanceMsg.style.color = "#4a90e2";
+        } else if (percentage >= 60) {
+            performanceMsg.textContent = "Good job! You have a solid foundation in Organizational Behavior.";
+            performanceMsg.style.color = "#f39c12";
+        } else if (percentage >= 50) {
+            performanceMsg.textContent = "Fair. Review the topics you missed to strengthen your knowledge.";
+            performanceMsg.style.color = "#e67e22";
+        } else {
+            performanceMsg.textContent = "Keep studying! Review all OB concepts and try again.";
+            performanceMsg.style.color = "var(--danger)";
+        }
+    }
+
+    // Initialize
+    loadQuestion();
+</script>
+</body>
+</html>
