@@ -49,14 +49,6 @@
             color: var(--text-light);
         }
 
-        .timer {
-            background: #fee2e2;
-            color: var(--danger);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-variant-numeric: tabular-nums;
-        }
-
         .progress-bar-container {
             height: 8px;
             background-color: #e5e7eb;
@@ -183,8 +175,7 @@
 <div class="quiz-container">
     <div id="quiz-ui">
         <div class="header">
-            <span>Question <span id="q-num">1</span>/222</span>
-            <span class="timer">Time: <span id="time">20</span>s</span>
+            <span>Question <span id="q-num">1</span>/<span id="total-questions">0</span></span>
         </div>
 
         <div class="progress-bar-container">
@@ -210,8 +201,9 @@
 </div>
 
 <script>
+    // Quiz data will be inserted here
     const quizData = [
-    {
+        {
         "q": "1. Abu Zayd primarily describes the Qur’an as a:",
         "o": ["Purely transcendental text", "Legal constitution", "Scientific manual", "Cultural Product"],
         "a": 3
@@ -1286,7 +1278,7 @@
         "o": ["Farid Esack", "Muhammad Shahrour", "Nasr Hamid Abu Zayd", "Khaled Abou El Fadl"],
         "a": 2
     },
-    {
+    { 
         "q": "216. The 'double movement theory' is associated with:",
         "o": ["Mohammed Arkoun", "Fazlur Rahman", "Toshihiko Izutsu", "Jamal al-Banna"],
         "a": 1
@@ -1321,49 +1313,85 @@
         "o": ["Absolute fiqh authority", "Rejection of reason", "Human freedom and ethical universals", "Revolutionary legalism"],
         "a": 2
     }
-    ];
+        ]; // Empty array - you'll add your data here
 
     let currentIdx = 0;
     let score = 0;
-    let timer;
-    let timeLeft = 20;
+    let shuffledQuizData = [];
+    let questionOrder = [];
 
     const qText = document.getElementById('question-text');
     const optionsCont = document.getElementById('options-container');
     const qNum = document.getElementById('q-num');
-    const timeDisp = document.getElementById('time');
+    const totalQuestionsDisp = document.getElementById('total-questions');
     const nextBtn = document.getElementById('next-btn');
     const currentScoreDisp = document.getElementById('current-score');
     const progressBar = document.getElementById('progress-bar');
     const quizUI = document.getElementById('quiz-ui');
     const resultsUI = document.getElementById('results');
 
+    // Fisher-Yates shuffle algorithm
+    function shuffleArray(array) {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    }
+
+    // Function to remove number prefix from question text
+    function removeNumberPrefix(questionText) {
+        // Remove patterns like "1. ", "2. ", "10. ", "100. " from the beginning of the question
+        return questionText.replace(/^\d+\.\s*/, '');
+    }
+
+    // Shuffle options for a question while keeping track of the correct answer
+    function shuffleQuestionOptions(question) {
+        const options = [...question.o];
+        const correctAnswer = question.a;
+        const shuffledOptions = shuffleArray(options);
+        
+        // Find the new index of the correct answer
+        const newCorrectIndex = shuffledOptions.indexOf(question.o[correctAnswer]);
+        
+        return {
+            q: removeNumberPrefix(question.q), // Remove number prefix here
+            o: shuffledOptions,
+            a: newCorrectIndex,
+            originalIndex: question.a // Keep original for reference if needed
+        };
+    }
+
+    function initializeQuiz() {
+        // Shuffle the order of questions
+        shuffledQuizData = shuffleArray(quizData);
+        
+        // Shuffle options for each question and remove number prefixes
+        shuffledQuizData = shuffledQuizData.map(shuffleQuestionOptions);
+        
+        // Store the order for potential tracking
+        questionOrder = shuffledQuizData.map((q, index) => index);
+        
+        // Update total questions display
+        totalQuestionsDisp.textContent = shuffledQuizData.length;
+        
+        loadQuestion();
+    }
+
     function updateProgressBar() {
-        const progress = ((currentIdx + 1) / quizData.length) * 100;
+        const progress = ((currentIdx + 1) / shuffledQuizData.length) * 100;
         progressBar.style.width = `${progress}%`;
     }
 
-    function startTimer() {
-        timeLeft = 20;
-        timeDisp.innerText = timeLeft;
-        timer = setInterval(() => {
-            timeLeft--;
-            timeDisp.innerText = timeLeft;
-            if (timeLeft <= 0) {
-                clearInterval(timer);
-                revealAnswer(-1);
-            }
-        }, 1000);
-    }
-
     function loadQuestion() {
-        clearInterval(timer);
-        const data = quizData[currentIdx];
+        const data = shuffledQuizData[currentIdx];
         
         // Update labels
-        qText.innerText = data.q;
+        qText.innerText = data.q; // This already has the number removed
         qNum.innerText = currentIdx + 1;
-        document.querySelector('.header span:first-child').innerHTML = `Question <span id="q-num">${currentIdx + 1}</span>/${quizData.length}`;
+        document.querySelector('.header span:first-child').innerHTML = 
+            `Question <span id="q-num">${currentIdx + 1}</span>/${shuffledQuizData.length}`;
         
         optionsCont.innerHTML = '';
         nextBtn.style.display = 'none';
@@ -1376,12 +1404,10 @@
             btn.onclick = () => revealAnswer(i);
             optionsCont.appendChild(btn);
         });
-        startTimer();
     }
 
     function revealAnswer(selectedIdx) {
-        clearInterval(timer);
-        const correctIdx = quizData[currentIdx].a;
+        const correctIdx = shuffledQuizData[currentIdx].a;
         const buttons = optionsCont.getElementsByClassName('option-btn');
 
         for (let i = 0; i < buttons.length; i++) {
@@ -1403,7 +1429,7 @@
 
     function nextQuestion() {
         currentIdx++;
-        if (currentIdx < quizData.length) {
+        if (currentIdx < shuffledQuizData.length) {
             loadQuestion();
         } else {
             showResults();
@@ -1414,10 +1440,10 @@
         quizUI.style.display = 'none';
         resultsUI.style.display = 'block';
         document.getElementById('score').innerText = score;
-        document.getElementById('total-res').innerText = quizData.length;
+        document.getElementById('total-res').innerText = shuffledQuizData.length;
         
         const performanceMsg = document.getElementById('performance-message');
-        const percentage = (score / quizData.length) * 100;
+        const percentage = (score / shuffledQuizData.length) * 100;
         
         if (percentage >= 80) {
             performanceMsg.textContent = "Outstanding! You've mastered these concepts.";
@@ -1431,8 +1457,12 @@
         }
     }
 
-    // Initialize
-    loadQuestion();
+    // Initialize when quiz data is loaded
+    if (quizData && quizData.length > 0) {
+        initializeQuiz();
+    } else {
+        qText.innerText = "Loading quiz data...";
+    }
 </script>
 </body>
 </html>
