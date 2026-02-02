@@ -43,17 +43,6 @@
             gap: 10px;
         }
 
-        .header-center {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .timer {
-            color: var(--danger);
-            font-size: 1.2rem;
-        }
-
         .question {
             font-size: 1.4rem;
             margin-bottom: 1.5rem;
@@ -154,13 +143,9 @@
 <div class="quiz-container" id="quiz">
     <div class="header">
         <span><span id="q-num">1</span>/<span id="total-questions">275</span></span>
-        <div class="header-center">
-            <span></span>
-            <select class="start-selector" id="start-selector" onchange="changeStartQuestion()">
-                <!-- Options will be populated by JavaScript -->
-            </select>
-        </div>
-        <span class="timer"><span id="time">20</span>s</span>
+        <select class="start-selector" id="start-selector" onchange="changeStartQuestion()">
+            <!-- Options will be populated by JavaScript -->
+        </select>
     </div>
     <div class="progress-bar">
         <div class="progress" id="progress-bar"></div>
@@ -1649,15 +1634,12 @@
 
     let currentIdx = 0;
     let score = 0;
-    let timer;
-    let timeLeft = 20;
     const totalQuestions = quizData.length;
 
     const qText = document.getElementById('question-text');
     const optionsCont = document.getElementById('options-container');
     const qNum = document.getElementById('q-num');
     const totalQuestionsEl = document.getElementById('total-questions');
-    const timeDisp = document.getElementById('time');
     const nextBtn = document.getElementById('next-btn');
     const currentScore = document.getElementById('current-score');
     const totalScore = document.getElementById('total-score');
@@ -1693,21 +1675,7 @@
         progressBar.style.width = `${progress}%`;
     }
 
-    function startTimer() {
-        timeLeft = 20;
-        timeDisp.innerText = timeLeft;
-        timer = setInterval(() => {
-            timeLeft--;
-            timeDisp.innerText = timeLeft;
-            if (timeLeft <= 0) {
-                clearInterval(timer);
-                revealAnswer(-1);
-            }
-        }, 1000);
-    }
-
     function loadQuestion() {
-        clearInterval(timer);
         const data = quizData[currentIdx];
         qText.innerText = data.q;
         qNum.innerText = currentIdx + 1;
@@ -1725,11 +1693,9 @@
             btn.onclick = () => revealAnswer(i);
             optionsCont.appendChild(btn);
         });
-        startTimer();
     }
 
     function revealAnswer(selectedIdx) {
-        clearInterval(timer);
         const correctIdx = quizData[currentIdx].a;
         const buttons = optionsCont.getElementsByClassName('option-btn');
 
@@ -1760,7 +1726,6 @@
     }
 
     function showResults() {
-        clearInterval(timer);
         document.getElementById('question-text').style.display = 'none';
         optionsCont.style.display = 'none';
         document.querySelector('.header').style.display = 'none';
