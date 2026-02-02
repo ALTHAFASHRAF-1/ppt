@@ -36,8 +36,17 @@
         .header {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
             font-weight: bold;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .header-center {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .timer {
@@ -122,36 +131,57 @@
             width: 0%;
             transition: width 0.5s;
         }
+
+        .start-selector {
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 2px solid var(--primary);
+            background: white;
+            color: var(--text);
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .start-selector:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
     </style>
 </head>
 <body>
 
 <div class="quiz-container" id="quiz">
     <div class="header">
-        <span>Question <span id="q-num">1</span>/275</span>
-        <span class="timer">Time: <span id="time">20</span>s</span>
+        <span><span id="q-num">1</span>/<span id="total-questions">275</span></span>
+        <div class="header-center">
+            <span></span>
+            <select class="start-selector" id="start-selector" onchange="changeStartQuestion()">
+                <!-- Options will be populated by JavaScript -->
+            </select>
+        </div>
+        <span class="timer"><span id="time">20</span>s</span>
     </div>
     <div class="progress-bar">
         <div class="progress" id="progress-bar"></div>
     </div>
     <div class="question" id="question-text">Loading question...</div>
     <div class="options" id="options-container"></div>
-    <div class="score-display">Score: <span id="current-score">0</span>/275</div>
+    <div class="score-display">Score: <span id="current-score">0</span>/<span id="total-score">275</span></div>
     <button id="next-btn" onclick="nextQuestion()">Next Question</button>
 
     <div class="results" id="results">
         <h2>Quiz Complete!</h2>
-        <p>Your Final Score: <span id="score">0</span>/275</p>
+        <p>Your Final Score: <span id="score">0</span>/<span id="final-total">275</span></p>
         <p id="performance-message"></p>
         <button onclick="location.reload()" style="padding: 10px 20px; cursor: pointer; margin-top: 15px;">Restart Quiz</button>
     </div>
 </div>
 
 <script>
+    // Reduced quiz data for testing
     const quizData = [
-        
-    // OB Basics - MCQs (1-15)
-    {
+        {
         q: "Organizational Behavior (OB) is mainly the study of:",
         o: ["Machines in organizations", "People's behavior in organizations", "Office buildings", "Marketing strategies"],
         a: 1
@@ -1614,21 +1644,49 @@
         o: ["True", "False"],
         a: 0
     }
-];
+       
+    ];
 
     let currentIdx = 0;
     let score = 0;
     let timer;
     let timeLeft = 20;
+    const totalQuestions = quizData.length;
 
     const qText = document.getElementById('question-text');
     const optionsCont = document.getElementById('options-container');
     const qNum = document.getElementById('q-num');
+    const totalQuestionsEl = document.getElementById('total-questions');
     const timeDisp = document.getElementById('time');
     const nextBtn = document.getElementById('next-btn');
     const currentScore = document.getElementById('current-score');
+    const totalScore = document.getElementById('total-score');
+    const finalTotal = document.getElementById('final-total');
     const progressBar = document.getElementById('progress-bar');
-    const totalQuestions = quizData.length;
+    const startSelector = document.getElementById('start-selector');
+
+    // Populate the dropdown with question numbers
+    function populateStartSelector() {
+        startSelector.innerHTML = '';
+        for (let i = 1; i <= totalQuestions; i++) {
+            const option = document.createElement('option');
+            option.value = i - 1; // zero-based index
+            option.textContent = i;
+            startSelector.appendChild(option);
+        }
+        startSelector.value = 0; // Default to first question
+    }
+
+    // Change starting question
+    function changeStartQuestion() {
+        const newStart = parseInt(startSelector.value);
+        if (newStart >= 0 && newStart < totalQuestions) {
+            currentIdx = newStart;
+            score = 0;
+            currentScore.textContent = score;
+            loadQuestion();
+        }
+    }
 
     function updateProgressBar() {
         const progress = ((currentIdx + 1) / totalQuestions) * 100;
@@ -1656,6 +1714,9 @@
         optionsCont.innerHTML = '';
         nextBtn.style.display = 'none';
         updateProgressBar();
+
+        // Update selector to current question
+        startSelector.value = currentIdx;
 
         data.o.forEach((opt, i) => {
             const btn = document.createElement('button');
@@ -1691,7 +1752,7 @@
 
     function nextQuestion() {
         currentIdx++;
-        if (currentIdx < quizData.length) {
+        if (currentIdx < totalQuestions) {
             loadQuestion();
         } else {
             showResults();
@@ -1710,6 +1771,7 @@
         const res = document.getElementById('results');
         res.style.display = 'block';
         document.getElementById('score').innerText = score;
+        document.getElementById('final-total').innerText = totalQuestions;
         
         const performanceMsg = document.getElementById('performance-message');
         const percentage = (score / totalQuestions) * 100;
@@ -1733,6 +1795,10 @@
     }
 
     // Initialize
+    totalQuestionsEl.textContent = totalQuestions;
+    totalScore.textContent = totalQuestions;
+    finalTotal.textContent = totalQuestions;
+    populateStartSelector();
     loadQuestion();
 </script>
 </body>
