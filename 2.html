@@ -1,0 +1,781 @@
+ <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OB Exam Prep Quiz</title>
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --secondary: #f5f7fa;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --text: #2c3e50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--secondary);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .quiz-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .question {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            min-height: 80px;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: var(--secondary);
+            border: 2px solid #ddd;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            outline: none;
+            text-align: left;
+        }
+
+        .option-btn:hover:not([disabled]) {
+            background: #e1e5ea;
+            border-color: var(--primary);
+        }
+
+        .correct {
+            background-color: var(--success) !important;
+            color: white !important;
+            border-color: #27ae60 !important;
+        }
+
+        .wrong {
+            background-color: var(--danger) !important;
+            color: white !important;
+            border-color: #c0392b !important;
+        }
+
+        .results {
+            display: none;
+        }
+
+        #next-btn {
+            margin-top: 20px;
+            padding: 10px 25px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .score-display {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--text);
+        }
+
+        .progress-bar {
+            height: 5px;
+            background-color: #eee;
+            border-radius: 2px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.5s;
+        }
+
+        .start-selector {
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 2px solid var(--primary);
+            background: white;
+            color: var(--text);
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .start-selector:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container" id="quiz">
+    <div class="header">
+        <span><span id="q-num">1</span>/<span id="total-questions">275</span></span>
+        <select class="start-selector" id="start-selector" onchange="changeStartQuestion()">
+            <!-- Options will be populated by JavaScript -->
+        </select>
+    </div>
+    <div class="progress-bar">
+        <div class="progress" id="progress-bar"></div>
+    </div>
+    <div class="question" id="question-text">Loading question...</div>
+    <div class="options" id="options-container"></div>
+    <div class="score-display">Score: <span id="current-score">0</span>/<span id="total-score">275</span></div>
+    <button id="next-btn" onclick="nextQuestion()">Next Question</button>
+
+    <div class="results" id="results">
+        <h2>Quiz Complete!</h2>
+        <p>Your Final Score: <span id="score">0</span>/<span id="final-total">275</span></p>
+        <p id="performance-message"></p>
+        <button onclick="location.reload()" style="padding: 10px 20px; cursor: pointer; margin-top: 15px;">Restart Quiz</button>
+    </div>
+</div>
+
+<script>
+    // Reduced quiz data for testing
+    const quizData = [
+    {
+        q: "Operations research analysts do not",
+        o: ["Predict future operations", "Build more than one model", "Collect relevant data", "Recommend decision and accept"],
+        a: 3
+    },
+    {
+        q: "Decision variables are",
+        o: ["Controllable", "Uncontrollable", "Parameters", "None of the above"],
+        a: 0
+    },
+    {
+        q: "A model is",
+        o: ["An essence of reality", "An approximation", "An idealization'", "All of the above"],
+        a: 3
+    },
+    {
+        q: "A physical model is an example of",
+        o: ["An iconic model", "An analogue model", "A verbal model", "A mathematical model"],
+        a: 0
+    },
+    {
+        q: "Every mathematical model",
+        o: ["Must be deterministic", "Requires computer aid for solution.", "Represents data in numerical form", "All of the above"],
+        a: 2
+    },
+    {
+        q: "Operations research approach is",
+        o: ["Multi disciplinary", "Scientific", "Intuitive", "All of the above"],
+        a: 3
+    },
+    {
+        q: "An optimization model",
+        o: ["Mathematically provides best decision", "Provides decision with limited context", "Helps in evaluating various alternatives constantly", "All of the above"],
+        a: 3
+    },
+    {
+        q: "OR provides solution only if the elements are",
+        o: ["Quantified", "Qualified", "Feasible", "Optimal"],
+        a: 0
+    },
+    {
+        q: "The name management science is preferred by",
+        o: ["Americans", "English", "French", "Latin"],
+        a: 0
+    },
+    {
+        q: "Operations research is applied",
+        o: ["Military", "Business", "Administration'", "All of the above"],
+        a: 3
+    },
+    {
+        q: "The application of OR techniques involves.................... approach",
+        o: ["Individual", "Team", "Critical", "None of the above"],
+        a: 1
+    },
+    {
+        q: "OR techniques helps to find ................ solution",
+        o: ["Feasible", "Non feasible", "Optimal", "Non optimal"],
+        a: 2
+    },
+    {
+        q: "Modern scientific management research originated during ……",
+        o: ["World war II", "World war I", "1990", "1993"],
+        a: 0
+    },
+    {
+        q: "……… helps management to evaluate alternative course of action for selecting the best course of action",
+        o: ["Operations research", "Quantitative technique", "Management research", "None of the above"],
+        a: 0
+    },
+    {
+        q: "……… Theory is an important operations research technique to analyze the queuing behaviour.",
+        o: ["Waiting line", "Net work", "Decision", "Simulation"],
+        a: 0
+    },
+    {
+        q: "……….. is an important Operations research technique to be used for determining optimal allocation of limited resources to meet the given objectives.",
+        o: ["Waiting line theory", "Net work analysis", "Decision analysis", "Linear programming"],
+        a: 3
+    },
+    {
+        q: "……….model involves all forms of diagrams",
+        o: ["iconic", "mathematical", "analogue", "schematic"],
+        a: 2
+    },
+    {
+        q: "An organization chart is an example of",
+        o: ["Iconic", "Mathematical", "Analogue", "None of the above"],
+        a: 2
+    },
+    {
+        q: "………Is known as symbolic model",
+        o: ["Iconic", "Mathematical", "Analogue", "None of the above"],
+        a: 1
+    },
+    {
+        q: "A map indicates roads, highways, towns and the interrelationship is an ……model",
+        o: ["Iconic", "mathematical", "analogue", "none of the above"],
+        a: 2
+    },
+    {
+        q: "……..models in which the input and output variables follow a probability distribution.",
+        o: ["Iconic", "mathematical", "analogue", "Deterministic model"],
+        a: 2
+    },
+    {
+        q: "Example of probabilistic model",
+        o: ["Game theory", "Charts", "Graphs", "All the above"],
+        a: 0
+    },
+    {
+        q: "_____________ is a method of analyzing the current movement of the same variable in an effort to predict the future movement of the same variable.",
+        o: ["Goal programming", "Markov analysis", "Replacement theory", "Queuing theory"],
+        a: 1
+    },
+    {
+        q: "Constraints in an LP model represent",
+        o: ["Limitations", "Requirements", "Balancing limitation", "all of the above"],
+        a: 3
+    },
+    {
+        q: "Linear programming is a",
+        o: ["Constraint optimization technique", "Technique for economic allocation of limited resources.", "Mathematical technique", "all of the above"],
+        a: 3
+    },
+    {
+        q: "A constraint in an LP model restricts",
+        o: ["Value of objective function", "Value of decision variable", "Use of available resource", "all of the above"],
+        a: 3
+    },
+    {
+        q: "The best use of linear programming technique is to find an optimal use of",
+        o: ["Money", "Man power", "Machine", "all of the above"],
+        a: 3
+    },
+    {
+        q: "Which of the following as an assumption of an LP model",
+        o: ["Divisibility", "Proportionality", "Additively", "all of the above"],
+        a: 3
+    },
+    {
+        q: "Most of the constraints in the linear programming problem are expressed as ……….",
+        o: ["Equality", "Inequality", "Uncertain", "all of the above"],
+        a: 1
+    },
+    {
+        q: "The graphical method of LP problem uses",
+        o: ["Objective function equation", "Constraint equation", "Linear equations", "All the above"],
+        a: 3
+    },
+    {
+        q: "A feasible solution to a linear programming problem",
+        o: ["Must satisfy all problem constraints simultaneously", "Need not satisfy all constraints", "Must be a corner point of the feasible region", "Must optimize the value of the objective function"],
+        a: 0
+    },
+    {
+        q: "While plotting constraints on a graph paper, terminal points on both axes are connected by a straight line because",
+        o: ["The resources are limited in supply", "The objective function is a linear function", "The constraints are linear equations or in equalities", "all of the above"],
+        a: 2
+    },
+    {
+        q: "Constraints in LP problem are called active if they",
+        o: ["Represent optimal solution", "At optimality do not consume all the available resources", "Both of (a) and (b)", "None of the above"],
+        a: 3
+    },
+    {
+        q: "The solution space of a LP problem is unbounded due to",
+        o: ["An incorrect formulation of the LP model", "Objective function is unbounded", "Neither (a) nor (b)", "Both (a) and (b)"],
+        a: 1
+    },
+    {
+        q: "While solving LP problem graphically, the area bounded by the constraints is called",
+        o: ["Feasible region", "Infeasible region", "Unbounded solution", "None of the above"],
+        a: 0
+    },
+    {
+        q: "Which of the following is not a category of linear programming problems?",
+        o: ["Resource allocation problem", "Cost benefit trade off problem", "Distribution network problem", "All of the above are categories of linear programming problems."],
+        a: 3
+    },
+    {
+        q: "A linear programming model does not contain which of the following components?",
+        o: ["Data", "Decisions", "Constraints", "A spread sheet"],
+        a: 3
+    },
+    {
+        q: "Which of the following may not be in a linear programming formulation?",
+        o: ["<=", ">", "=", "All the above"],
+        a: 1
+    },
+    {
+        q: "While solving an LP problem infeasibility may be removed by",
+        o: ["Adding another constraint", "Adding another variable", "Removing a constraint", "Removing a variable"],
+        a: 2
+    },
+    {
+        q: "Straight lines shown in a linear programming graph indicates",
+        o: ["Objective function", "Constraints", "Points", "All the above"],
+        a: 1
+    },
+    {
+        q: "All negative constraints must be written as",
+        o: ["Equality", "Non equality", "Greater than or equal to", "Less than or equal to"],
+        a: 3
+    },
+    {
+        q: "In linear programming problem if all constraints are less than or equal to, then the feasible region is",
+        o: ["Above lines", "Below the lines", "Unbounded", "None of the above"],
+        a: 1
+    },
+    {
+        q: "................is a series of related activities which result in some product or services.",
+        o: ["Network", "transportation model", "assignment", "none of these"],
+        a: 0
+    },
+    {
+        q: "Any activity which does not consume either any resource or time is called ………..activity.",
+        o: ["Predecessor", "Successor", "Dummy", "End"],
+        a: 2
+    },
+    {
+        q: "An activity which must be completed before one or more other activities start is known as _____________ activity.",
+        o: ["Predecessor", "Successor", "Dummy", "End"],
+        a: 0
+    },
+    {
+        q: "Activities that cannot be started until one or more of the other activities are completed, but immediately succeed them are called ……activities",
+        o: ["Predecessor", "Successor", "Dummy", "End"],
+        a: 1
+    },
+    {
+        q: "An event which represents the beginning of more than one activity is known as ………..event.",
+        o: ["Merge", "Net", "Burst", "None of the above"],
+        a: 2
+    },
+    {
+        q: "If two constraints do not intersect in the positive quadrant of the graph, then",
+        o: ["The problem is infeasible", "The solution is unbounded", "One of the constraints is redundant", "None of the above"],
+        a: 2
+    },
+    {
+        q: "Constraint in LP problem are called active if they",
+        o: ["Represent optimal solution", "At optimality do not consume all the available resources", "Both of (a) and (b)", "None of the above"],
+        a: 3
+    },
+    {
+        q: "Alternative solutions exists of an LP model when",
+        o: ["One of the constraints is redundant.", "Objective function equation is parallel to one of the constraints", "Two constraints are parallel.", "all of the above"],
+        a: 1
+    },
+    {
+        q: "While solving an LP problem, infeasibility may be removed by",
+        o: ["Adding another constraint", "Adding another variable", "Removing a constraint", "Removing a variable"],
+        a: 2
+    },
+    {
+        q: "............... is that sequence of activities which determines the total project time.",
+        o: ["Net work", "Critical path", "Critical activities", "None of the above"],
+        a: 1
+    },
+    {
+        q: "Activities lying on the critical path are called………….",
+        o: ["Net work", "Critical path", "Critical activities", "None of the above"],
+        a: 2
+    },
+    {
+        q: "It...................at which an activity can start.",
+        o: ["EST", "EFT", "LST", "LFT"],
+        a: 0
+    },
+    {
+        q: "...................is the earliest starting time plus activity time.",
+        o: ["EST", "EFT", "LST", "LFT"],
+        a: 1
+    },
+    {
+        q: "……… is the latest time by which an activity can be started without delaying the completion of the project.",
+        o: ["EST", "EFT", "LST", "LFT"],
+        a: 2
+    },
+    {
+        q: "………is the latest time by which an activity can be finished without delaying the completion of the project.",
+        o: ["EST", "EFT", "LST", "LFT"],
+        a: 3
+    },
+    {
+        q: "……………is the duration by which an activity can be delayed without delaying the project",
+        o: ["Slack", "Total float", "Free float", "Independent float"],
+        a: 1
+    },
+    {
+        q: "……… is the time by which the completion of an activity can be delayed beyond its earliest finish time without affecting the earliest start time of a succeeding activity",
+        o: ["Slack", "Total float", "Free float", "Independent float"],
+        a: 2
+    },
+    {
+        q: "_____________is activity oriented.",
+        o: ["CPM", "PERT", "LP", "None of the above"],
+        a: 0
+    },
+    {
+        q: "_____________is event oriented.",
+        o: ["CPM", "PERT", "LP", "None of the above"],
+        a: 1
+    },
+    {
+        q: "PERT emphasis on ………..",
+        o: ["Time", "Activity", "a) and b)", "None of the above"],
+        a: 0
+    },
+    {
+        q: "Full form of PERT is",
+        o: ["Performance evaluation review technique", "Programme Evaluation Review technique", "Programme Evaluation Research Technique", "None of these."],
+        a: 1
+    },
+    {
+        q: "_____________is a scheme or design of something intended or device.",
+        o: ["Programme", "Project", "Network", "Float"],
+        a: 0
+    },
+    {
+        q: "An activity which must be completed before one or more other activities start is known as _____________ activity.",
+        o: ["Dummy", "Predecessor", "Successor", "None of these"],
+        a: 1
+    },
+    {
+        q: "The event is commonly represented by …… in network diagram",
+        o: ["Nodes", "Arrow", "Triangle", "None of these"],
+        a: 0
+    },
+    {
+        q: "_____________is the disconnection of an activity before the completion of activities in a project network diagram.",
+        o: ["Dangling", "Looping", "Dummy", "None of the above"],
+        a: 0
+    },
+    {
+        q: ".................... is an activity oriented diagram.",
+        o: ["CPM", "PERT", "Histogram", "None of the above"],
+        a: 0
+    },
+    {
+        q: "………… is the duration by which an activity can be delayed without delaying the project.",
+        o: ["Total float", "Slack", "Earliest event time", "None of these"],
+        a: 0
+    },
+    {
+        q: "………is the shortest possible time in which an activity can be delayed without delaying the project.",
+        o: ["Pessimistic time estimate", "Optimistic time estimate", "Most likely time estimate", "None of these"],
+        a: 1
+    },
+    {
+        q: "Which of the following is not a part of decision tree problem specification?",
+        o: ["a list of alternatives", "A list of possible state of nature", "EVPI", "Pay off associated with alternative/ state of nature combination."],
+        a: 2
+    },
+    {
+        q: "If a decision theory problem has 3 decision alternatives and 4 states of nature, the number of payoffs in that problem will be",
+        o: ["3", "4", "12", "64"],
+        a: 2
+    },
+    {
+        q: "In a decision theory problem under complete uncertainty, which one of the following approaches will not be possible?",
+        o: ["Expected monetary value", "Maxmin", "Minimax", "Hurwicz"],
+        a: 0
+    },
+    {
+        q: "For decision making under uncertainty, identify the decision rule that is appropriate for the optimist.",
+        o: ["Laplace", "Maximax", "Minimax regret", "Maxmin"],
+        a: 1
+    },
+    {
+        q: "What decision-making condition must exist for the decision tree to be a valuable tool?",
+        o: ["Certainty", "Uncertainty", "Risk", "It does not matter, the tool is appropriate in all environments"],
+        a: 2
+    },
+    {
+        q: "Which of the following is (are) types of decision-making environments?",
+        o: ["Decision making under uncertainty", "Decision making under certainty", "Decision making under risk", "None of the above"],
+        a: 2
+    },
+    {
+        q: "A good decision always implies that",
+        o: ["Will obtain the best final results", "Have used appropriate quantitative analysis.", "Have considered all alternatives", "Have followed a logical process."],
+        a: 3
+    },
+    {
+        q: "All of the following are steps in the decision-making process EXCEPT",
+        o: ["Define the problem", "List alternatives", "Identify the possible outcomes", "Compute the posterior probabilities."],
+        a: 3
+    },
+    {
+        q: "The equally likely decision criteria is also known as",
+        o: ["Bayes", "Laplace", "Minimax", "Hurwicz"],
+        a: 1
+    },
+    {
+        q: "Opportunity loss refers to",
+        o: ["The expected value of a bad decision", "The expected loss from a bad decision", "The difference between actual pay off and the optimal pay off", "The regret from not having made a decision"],
+        a: 2
+    },
+    {
+        q: "The criteria of expected monetary value is used for making decisions under",
+        o: ["Certainty", "Uncertainty", "Risk", "all of the above"],
+        a: 2
+    },
+    {
+        q: "The maximax criteria is……..",
+        o: ["Optimistic", "Neutral", "Pessimistic", "Can be any one of the above"],
+        a: 0
+    },
+    {
+        q: "Which of the following might be viewed as an optimistic decision criterion?",
+        o: ["Hurwicz criterion", "Maximin", "Maximax", "Minimax"],
+        a: 2
+    },
+    {
+        q: "The minimum EOL will always result in the same decision as",
+        o: ["Minimax", "Maximin", "Maximum EMV", "Maximax"],
+        a: 2
+    },
+    {
+        q: "Decision theory is concerned with",
+        o: ["Methods of arriving at an optimal decision", "Selecting optimal decision in sequential manner", "Analysis of information that is available", "All of the above"],
+        a: 3
+    },
+    {
+        q: "Which of the following criterion is not used for decision making under uncertainty?",
+        o: ["Maximin", "Maximax", "Minimax", "Minimize expected loss"],
+        a: 3
+    },
+    {
+        q: "The minimum expected opportunity loss is",
+        o: ["Equal to EVPI", "Minimum regret", "Equal to EMV", "Both (a) and (b)"],
+        a: 3
+    },
+    {
+        q: "The expected value of perfect information is equal to",
+        o: ["EPPI – Minimum EMV", "EPPI + Maximum EMV", "Maximum EOL", "None of the above"],
+        a: 0
+    },
+    {
+        q: "The value of the coefficient of optimism is needed while using the criterion of",
+        o: ["Equally likely", "Maximin", "Realism", "Maximin"],
+        a: 2
+    },
+    {
+        q: "while using Hurwicz criterion, the coefficient of realism",
+        o: ["Represents the degree of optimism", "Represents the degree of pessimism", "Is the probability of state of nature", "None of the above"],
+        a: 0
+    },
+    {
+        q: "The decision making criteria that should be used to achieve maximum long term pay off is",
+        o: ["EOL", "EMV", "Hurwicz", "Maximax"],
+        a: 1
+    },
+    {
+        q: "Game theory models are classified by the",
+        o: ["Number of players", "Sum of all payoff", "Number of strategies", "All of the above"],
+        a: 3
+    },
+    {
+        q: "The objective of network analysis is to",
+        o: ["Minimize total project duration", "Minimize total project cost", "Minimize production delays, interruption and conflicts", "All of the above"],
+        a: 3
+    },
+    {
+        q: "The initial solution of a transportation problem can be obtained by applying any known method. But the only condition is",
+        o: ["The solution be optimal", "The rim conditions are satisfied", "The solution not be degenerate", "All of the above"],
+        a: 1
+    },
+    {
+        q: "When total supply is equal to total demand in a transportation problem , the problem is said to be",
+        o: ["Balanced", "Unbalanced", "Degenerate", "None of the above"],
+        a: 0
+    }
+   ];
+
+    let currentIdx = 0;
+    let score = 0;
+    const totalQuestions = quizData.length;
+
+    const qText = document.getElementById('question-text');
+    const optionsCont = document.getElementById('options-container');
+    const qNum = document.getElementById('q-num');
+    const totalQuestionsEl = document.getElementById('total-questions');
+    const nextBtn = document.getElementById('next-btn');
+    const currentScore = document.getElementById('current-score');
+    const totalScore = document.getElementById('total-score');
+    const finalTotal = document.getElementById('final-total');
+    const progressBar = document.getElementById('progress-bar');
+    const startSelector = document.getElementById('start-selector');
+
+    // Populate the dropdown with question numbers
+    function populateStartSelector() {
+        startSelector.innerHTML = '';
+        for (let i = 1; i <= totalQuestions; i++) {
+            const option = document.createElement('option');
+            option.value = i - 1; // zero-based index
+            option.textContent = i;
+            startSelector.appendChild(option);
+        }
+        startSelector.value = 0; // Default to first question
+    }
+
+    // Change starting question
+    function changeStartQuestion() {
+        const newStart = parseInt(startSelector.value);
+        if (newStart >= 0 && newStart < totalQuestions) {
+            currentIdx = newStart;
+            score = 0;
+            currentScore.textContent = score;
+            loadQuestion();
+        }
+    }
+
+    function updateProgressBar() {
+        const progress = ((currentIdx + 1) / totalQuestions) * 100;
+        progressBar.style.width = `${progress}%`;
+    }
+
+    function loadQuestion() {
+        const data = quizData[currentIdx];
+        qText.innerText = data.q;
+        qNum.innerText = currentIdx + 1;
+        optionsCont.innerHTML = '';
+        nextBtn.style.display = 'none';
+        updateProgressBar();
+
+        // Update selector to current question
+        startSelector.value = currentIdx;
+
+        data.o.forEach((opt, i) => {
+            const btn = document.createElement('button');
+            btn.innerText = `${String.fromCharCode(97 + i)}. ${opt}`;
+            btn.classList.add('option-btn');
+            btn.onclick = () => revealAnswer(i);
+            optionsCont.appendChild(btn);
+        });
+    }
+
+    function revealAnswer(selectedIdx) {
+        const correctIdx = quizData[currentIdx].a;
+        const buttons = optionsCont.getElementsByClassName('option-btn');
+
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].disabled = true;
+            if (i === correctIdx) {
+                buttons[i].classList.add('correct');
+            }
+            if (i === selectedIdx && selectedIdx !== correctIdx) {
+                buttons[i].classList.add('wrong');
+            }
+        }
+
+        if (selectedIdx === correctIdx) {
+            score++;
+            currentScore.textContent = score;
+        }
+        nextBtn.style.display = 'inline-block';
+    }
+
+    function nextQuestion() {
+        currentIdx++;
+        if (currentIdx < totalQuestions) {
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        document.getElementById('question-text').style.display = 'none';
+        optionsCont.style.display = 'none';
+        document.querySelector('.header').style.display = 'none';
+        document.querySelector('.score-display').style.display = 'none';
+        nextBtn.style.display = 'none';
+        progressBar.style.display = 'none';
+        
+        const res = document.getElementById('results');
+        res.style.display = 'block';
+        document.getElementById('score').innerText = score;
+        document.getElementById('final-total').innerText = totalQuestions;
+        
+        const performanceMsg = document.getElementById('performance-message');
+        const percentage = (score / totalQuestions) * 100;
+        
+        if (percentage >= 90) {
+            performanceMsg.textContent = "Outstanding! You have mastered Organizational Behavior concepts.";
+            performanceMsg.style.color = "var(--success)";
+        } else if (percentage >= 75) {
+            performanceMsg.textContent = "Excellent! You have a comprehensive understanding of OB concepts.";
+            performanceMsg.style.color = "#4a90e2";
+        } else if (percentage >= 60) {
+            performanceMsg.textContent = "Good job! You have a solid foundation in Organizational Behavior.";
+            performanceMsg.style.color = "#f39c12";
+        } else if (percentage >= 50) {
+            performanceMsg.textContent = "Fair. Review the topics you missed to strengthen your knowledge.";
+            performanceMsg.style.color = "#e67e22";
+        } else {
+            performanceMsg.textContent = "Keep studying! Review all OB concepts and try again.";
+            performanceMsg.style.color = "var(--danger)";
+        }
+    }
+
+    // Initialize
+    totalQuestionsEl.textContent = totalQuestions;
+    totalScore.textContent = totalQuestions;
+    finalTotal.textContent = totalQuestions;
+    populateStartSelector();
+    loadQuestion();
+</script>
+</body>
+</html>
