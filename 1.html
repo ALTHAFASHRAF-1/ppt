@@ -1,0 +1,1411 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OB Exam Prep Quiz</title>
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --secondary: #f5f7fa;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --text: #2c3e50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--secondary);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .quiz-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .question {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            min-height: 80px;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: var(--secondary);
+            border: 2px solid #ddd;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            outline: none;
+            text-align: left;
+        }
+
+        .option-btn:hover:not([disabled]) {
+            background: #e1e5ea;
+            border-color: var(--primary);
+        }
+
+        .correct {
+            background-color: var(--success) !important;
+            color: white !important;
+            border-color: #27ae60 !important;
+        }
+
+        .wrong {
+            background-color: var(--danger) !important;
+            color: white !important;
+            border-color: #c0392b !important;
+        }
+
+        .results {
+            display: none;
+        }
+
+        #next-btn {
+            margin-top: 20px;
+            padding: 10px 25px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .score-display {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--text);
+        }
+
+        .progress-bar {
+            height: 5px;
+            background-color: #eee;
+            border-radius: 2px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.5s;
+        }
+
+        .start-selector {
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 2px solid var(--primary);
+            background: white;
+            color: var(--text);
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .start-selector:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container" id="quiz">
+    <div class="header">
+        <span><span id="q-num">1</span>/<span id="total-questions">275</span></span>
+        <select class="start-selector" id="start-selector" onchange="changeStartQuestion()">
+            <!-- Options will be populated by JavaScript -->
+        </select>
+    </div>
+    <div class="progress-bar">
+        <div class="progress" id="progress-bar"></div>
+    </div>
+    <div class="question" id="question-text">Loading question...</div>
+    <div class="options" id="options-container"></div>
+    <div class="score-display">Score: <span id="current-score">0</span>/<span id="total-score">275</span></div>
+    <button id="next-btn" onclick="nextQuestion()">Next Question</button>
+
+    <div class="results" id="results">
+        <h2>Quiz Complete!</h2>
+        <p>Your Final Score: <span id="score">0</span>/<span id="final-total">275</span></p>
+        <p id="performance-message"></p>
+        <button onclick="location.reload()" style="padding: 10px 20px; cursor: pointer; margin-top: 15px;">Restart Quiz</button>
+    </div>
+</div>
+
+<script>
+    // Reduced quiz data for testing
+    const quizData = [
+        {
+q: "------------are social inventions for accomplishing goals through group efforts",
+o: ["Management", "Organization", "Leadership", "Behavior"],
+a: 1
+},
+{
+q: "Which of the following is/are the key features of organization",
+o: ["Social invention", "Accomplishing goals", "Group efforts", "All of these"],
+a: 3
+},
+{
+q: "A study of human behavior in organizational settings is",
+o: ["Individual behavior", "Group behavior", "Organizational behavior", "none of these"],
+a: 2
+},
+{
+q: "A group of people working with common objective is known as",
+o: ["Team", "Team work", "Club", "Group"],
+a: 0
+},
+{
+q: "Which of the following is not a benefit of team work?",
+o: ["Improved solution to quality problems", "Improved ownership of solutions", "Improved communication", "Decline in integration"],
+a: 3
+},
+{
+q: "“Hawthrone experiment” which was a real beginning of applied research in OB was conducted by",
+o: ["Elton Mayo", "Henry Fayol", "F.W. Taylor", "Max Weber"],
+a: 0
+},
+{
+q: "Work attitudes can be reflected in an organisation throgh…",
+o: ["Job satisfaction", "Organisational commitment", "Both A and B", "None"],
+a: 2
+},
+{
+q: "Whose concept states that interpersonal and human relations may lead to productivity",
+o: ["Elton Mayo", "Henry Fayol", "F.W. Taylor", "Max Weber"],
+a: 0
+},
+{
+q: "Today’s organization are",
+o: ["Open system", "Closed system", "Open as well as closed", "None of these"],
+a: 0
+    },
+    {
+        q: "The model (s) of organisational behaviour is (are)",
+        o: ["Autocratic", "Custodial", "Supportive", "All of the above"],
+        a: 3
+    },
+    {
+        q: "Organization Behavior is",
+        o: ["An interdisciplinary approach", "A humanistic approach", "Total system approach", "All of these"],
+        a: 3
+    },
+    {
+        q: "Organization Behavior is not a /an",
+        o: ["A separate field of study", "Applied science", "Normative science", "Pessimistic approach"],
+        a: 3
+    },
+    {
+        q: "“Cognitive theory” of learning was given by",
+        o: ["Skinner", "Pavlov", "Tolman", "Piajet"],
+        a: 2
+    },
+    {
+        q: "Extension of behavior modification into organization is called",
+        o: ["Enrichment", "Enlargement", "OB Mod", "OB Ext"],
+        a: 2
+    },
+    {
+        q: "---------------is a relatively permanent change in behavior that occurs as a result of experience",
+        o: ["Behavior modification", "Learning", "Motivation", "Skills"],
+        a: 1
+    },
+    {
+        q: "which of the following is / are included as structure of human mind",
+        o: ["Id", "Ego", "Super ego", "All the above"],
+        a: 3
+    },
+    {
+        q: "is largely childish, irrational, never satisfied, demanding and destructive of others",
+        o: ["Ego", "Super ego", "Negative ego", "Id"],
+        a: 3
+    },
+    {
+        q: "…represent noblest thoughts, ideals etc.",
+        o: ["Ego", "Super ego", "Negative ego", "Id"],
+        a: 1
+    },
+    {
+        q: "….is reality and practical oriented part of thinking",
+        o: ["Ego", "Super ego", "Negative ego", "Id"],
+        a: 0
+    },
+    {
+        q: "Thematic Apperception Test (TAT) is designed to understand",
+        o: ["Perception of individual", "Personality of individual", "Learning of individual", "None of these"],
+        a: 1
+    },
+    {
+        q: "----------------- is “the reactions of individuals to new or threatening factors in their work environments”",
+        o: ["Attitude", "Stress", "Dissonance", "Disappointment"],
+        a: 1
+    },
+    {
+        q: "Which of the following is/are not job related source of stress",
+        o: ["Role ambiguity", "Role overload", "Ethical dilemmas", "Career concerns"],
+        a: 2
+    },
+    {
+        q: "Which of the following is/are not organizational factors causing stress",
+        o: ["Task demand", "Role demand", "Role conflict", "Satisfaction"],
+        a: 3
+    },
+    {
+        q: "Which of the following is / are method of managing stress",
+        o: ["Job relocation", "Career counseling", "Recreational facility", "All the above"],
+        a: 3
+    },
+    {
+        q: "Which of the following is / are not a method of managing stress",
+        o: ["Time management", "Supervisor training", "Role Analysis techniques (RAT)", "Rorschach test"],
+        a: 3
+    },
+    {
+        q: "---------------- refers to the negotiation or an agreement between two groups",
+        o: ["Contracting", "Co-opting", "Pressure tactics", "None of these"],
+        a: 0
+    },
+    {
+        q: "Which of the following methods is/are used to solve intergroup conflicts indirectly",
+        o: ["Avoidance", "Encouragement", "Bargaining", "All of these"],
+        a: 2
+    },
+    {
+        q: "Which of the following is / are not direct method to solve intergroup conflicts",
+        o: ["Problem solving", "Domination by the management", "Removing key figures in conflict", "Persuasion"],
+        a: 3
+    },
+    {
+        q: "A technique to bring changes in the entire organization, rather man focusing attention on individuals to bring changes easily.",
+        o: ["Organizational development", "Organizational change", "Organizational culture", "Organizational conflicts"],
+        a: 0
+    },
+    {
+        q: "Which of the following is/are OD intervention techniques",
+        o: ["Sensitivity training", "MBO", "Quality of work life", "All the above"],
+        a: 3
+    },
+    {
+        q: "Which of the following is NOT an important issue relating to goal-setting theory?",
+        o: ["Goal specificity", "Equity among workers", "Feedback", "Defining the goal"],
+        a: 1
+    },
+    {
+        q: "Behaviour, power, and conflict are central areas of study for _____________.",
+        o: ["sociologist", "Anthropologists", "Social psychologists", "Operations analysts"],
+        a: 2
+    },
+    {
+        q: "When a bank robber points a gun at a bank employee, his base of power is:",
+        o: ["Coercive", "Punitive", "Positional", "Authoritative"],
+        a: 0
+    },
+    {
+        q: "The managers of a multinational company are located in France, India, Brazil, and the United States. Which decision-making technique seems most reasonable for this organization?",
+        o: ["A postal service interaction", "A brainstorming session", "A nominal discussion", "An electronic meeting"],
+        a: 3
+    },
+    {
+        q: "What do we call it when we judge someone on the basis of our perception?",
+        o: ["Stereotyping", "Categorizing", "Halo effect", "Prototyping"],
+        a: 0
+    },
+    {
+        q: "Sobha is an honest and straightforward person. She believes her employees are all similarly honest and straightforward, ignoring signs that they may be manipulating her. What perceptual shortcut is Sobha most likely using?",
+        o: ["Contrast effect", "Halo effect", "Stereotyping", "Projection"],
+        a: 3
+    },
+    {
+        q: "Sathish has a low absenteeism rate. He takes responsibility for his health and has good health habits. He is likely to have a(an):",
+        o: ["Internal locus of control", "External locus of control", "Core locus of control", "High emotional stability level"],
+        a: 0
+    },
+    {
+        q: "Raju believes that men perform better in oral presentations than women. What shortcut has been used in this case?",
+        o: ["The halo effect", "The contrast effect", "Projection", "Stereotyping"],
+        a: 3
+    },
+    {
+        q: "Mr. Manoj, Manager ABC Company found that skills of workers and machinery used by them as compared to the competitors in the market are obsolete within a year, which type of challenge ABC Company is facing?",
+        o: ["High Quality and Low Quality", "Globalization and Culture", "Rapid Pace of Change", "Multiple Stakeholders"],
+        a: 2
+    },
+    {
+        q: "According to Robert Katz, when managers have the mental ability to analyze and diagnose complex situations, they possess _____________ skills.",
+        o: ["Technical", "Leadership", "Problem-solving", "Conceptual"],
+        a: 3
+    },
+    {
+        q: "At the norming stage, the team is involved in defining….",
+        o: ["Goals", "Roles", "Relations", "None of the above"],
+        a: 1
+    },
+    {
+        q: "Today's managers understand that the success of any effort at improving quality and productivity must include _____________.",
+        o: ["Quality management programs", "Customer service improvements", "Employee's participation", "Manufacturing simplification"],
+        a: 2
+    },
+    {
+        q: "Which of the following would be least likely to pose a barrier to cross-cultural communications?",
+        o: ["Tone difference", "Word connotations", "Political correctness", "Differences among perceptions"],
+        a: 2
+    },
+    {
+        q: "Forces affecting organisational behaviour are..",
+        o: ["People", "technology", "environment", "all of these"],
+        a: 3
+    },
+    {
+        q: "Concept of MBO was introduced by:",
+        o: ["Peter. F.Drucker", "Mary Parker", "Henry Fayol", "Philip Kotler"],
+        a: 0
+    },
+    {
+        q: "Mr. Sunil's one-day salary was deducted because of his uninformed leave, as he was already warned about this behaviour. It is an example of which method of shaping behaviours?",
+        o: ["Reinforcement", "Positive Reinforcement", "punishment", "Negative Reinforcement"],
+        a: 2
+    },
+    {
+        q: "While managing political behaviours in organization, the manager requires discouraging:",
+        o: ["Negotiation", "Relationships", "Self interest", "Dialogue"],
+        a: 2
+    },
+    {
+        q: "People with which type of personality trait commonly make poor decisions because they make them too fast?",
+        o: ["Type As", "Type Bs", "Self-monitors", "Extroverts"],
+        a: 0
+    },
+    {
+        q: "Which of the following is an environmental force that shapes personality?",
+        o: ["Gender", "Height", "Experience", "Brain size"],
+        a: 2
+    },
+    {
+        q: "Factors other than satisfaction that impact one's decision to leave a current job include all of the following EXCEPT:",
+        o: ["Labour market conditions", "Length of tenure with the organization", "Organizational citizenship behavior", "Expectations about alternative job opportunities"],
+        a: 2
+    },
+    {
+        q: "Praveen is dissatisfied with his job but believes that his supervisor is a good man who will do the right thing. Praveen has decided that if he just waits, conditions will improve. Praveen's approach to this problem is termed as:",
+        o: ["Exit", "Voice", "Loyalty", "Neglect"],
+        a: 2
+    },
+    {
+        q: "Which of the following leadership behaviours are identified by the path-goal theory?",
+        o: ["Supportive, employee-oriented, laissez-faire and participative", "Achievement-oriented, supportive, humanistic, and directive", "Participative, achievement-oriented, directive, and supportive", "Directive, participative, supportive, and laissez-faire"],
+        a: 2
+    },
+    {
+        q: "Which of the following is not a trait dimension in Big 5 personality trait?",
+        o: ["Extroversion", "Agreeableness", "Ego", "Culture"],
+        a: 2
+    },
+    {
+        q: "In which stage of the conflict process does conflict become visible?",
+        o: ["Illumination", "Intentions", "Behaviour", "Cognition"],
+        a: 2
+    },
+    {
+        q: "Which dimension of Big 5 personality traits represents artistically sensitive, refined etc.",
+        o: ["Culture", "Emotional stability", "Conscientiousness", "Extroversion"],
+        a: 0
+    },
+    {
+        q: "_____________ refers to the network of personal and social relations that is developed spontaneously between people associated with each other.",
+        o: ["Formal organization", "Informal organization", "Business organization", "Government organization"],
+        a: 1
+    },
+    {
+        q: "The cognitive process through which an individual selects, organizes but misinterprets environmental stimuli is known as",
+        o: ["Perception", "Projection", "Selective Perception", "Mis-Perception"],
+        a: 2
+    },
+    {
+        q: "The more consistent behaviour, the more the observer is inclined to _____________.",
+        o: ["Attribute it to interpretation", "Attribute it to internal causes", "Attribute it to consensus", "Attribute it to external causes"],
+        a: 1
+    },
+    {
+        q: "Which of the following is one of the relationships proposed in expectancy theory?",
+        o: ["Reward-satisfaction relationship", "Satisfaction-performance relationship", "Rewards-personal goals relationship", "Effort-satisfaction relationship"],
+        a: 2
+    },
+    {
+        q: "In Maslow's hierarchy needs which of the following pair of needs is ranked as \"lower order needs\"?",
+        o: ["Physiological and safety needs", "Physiological and social need", "Self actualization and safety needs", "Social and esteem needs"],
+        a: 0
+    },
+    {
+        q: "Maslow grouped the five needs into two categories",
+        o: ["Higher-order needs and Lower-order needs.", "Supreme needs and local needs", "Self needs and others needs", "Luxurious needs and comfort needs"],
+        a: 0
+    },
+    {
+        q: "If everyone who is faced with a similar situation responds in the same way, attribution theory states that the behaviour shows _____________.",
+        o: ["Consensus", "Similarity", "Reliability", "Consistency"],
+        a: 0
+    },
+    {
+        q: "Your boss never gives you the benefit of the doubt. When you were late back from lunch, he assumed that you had simply taken too much time. He never considered that the elevators were out and you had to walk up 10 flights of stairs. Your boss is guilty of _____________.",
+        o: ["Self-serving bias", "Selective perception", "Fundamental attribution error", "Inconsistency"],
+        a: 2
+    },
+    {
+        q: "Mr.Sajeev rated Mr. Rajiv high in his job evaluation because both belong to same area and graduated from the same University. It is an example of:",
+        o: ["Central Tendency", "Halo effect", "Similar-to-me effect", "Misperception"],
+        a: 2
+    },
+    {
+        q: "All the following are dimensions of Intellectual ability EXCEPT:",
+        o: ["Inductive reasoning", "Dynamic strength", "Deductive reasoning", "Number aptitude"],
+        a: 1
+    },
+    {
+        q: "What sort of actions is most likely to be attributed to external causes?",
+        o: ["Actions that have high distinctiveness, high consensus and high consistency", "Actions that have high distinctiveness, high consensus and low consistency", "Actions that have high distinctiveness, low consensus and low consistency", "Actions that have low distinctiveness, low consistency and high consensus"],
+        a: 1
+    },
+    {
+        q: "In the present context challenges of OB are…",
+        o: ["Employee expectation", "Workforce diversibility", "Globalisation", "All of these"],
+        a: 3
+    },
+    {
+        q: "Which of the following departmentalization can be considered necessary in an organization where the company's products fall into several categories with very different production methods for each category?",
+        o: ["Customer", "Production", "Process", "Matrix"],
+        a: 2
+    },
+    {
+        q: "Mr.Dirash has a job which pays an excellent salary. He has a good relationship with his peers and his supervisors. He also likes the fact that the company policy fits well with what he personally believes, and that he has received considerable recognition for his achievements at the company. Which of these factors is 'MOST likely' responsible for the fact that Dirash loves his job?",
+        o: ["High compensation", "Good nature of peer relationships", "Good nature of supervisor relationships", "Recognition for his achievements"],
+        a: 3
+    },
+    {
+        q: "Job appraisal is the part of _____________",
+        o: ["Sociology", "Anthropology", "Psychology", "Political science"],
+        a: 2
+    },
+    {
+        q: "Over the past two decades, business schools have added required courses on people skills to many of their curricula. Why have they done this?",
+        o: ["Managers no longer need technical skills in subjects such as economics and accounting to succeed.", "There is an increased emphasis in controlling employee behavior in the workplace.", "Managers need to understand human behavior if they are to be effective.", "These skills enable managers to effectively lead human resources departments."],
+        a: 2
+    },
+    {
+        q: "Which of the following is most likely to be a belief held by a successful manager?",
+        o: ["Technical knowledge is all that is needed for success.", "It is not essential to have sound interpersonal skills.", "Technical skills are necessary, but insufficient alone for success.", "Effectiveness is not impacted by human behavior."],
+        a: 2
+    },
+    {
+        q: "What term is used for the extent to which an individual displays different behaviours in different situations?",
+        o: ["continuity", "integrity", "flexibility", "distinctiveness"],
+        a: 3
+    },
+    {
+        q: "What does consensus refer to in attribution theory?",
+        o: ["There is general agreement about a perception.", "Different people respond the same way in the same situation.", "There is general agreement about how people desire to respond to the same situation.", "Different people perceive a situation similarly."],
+        a: 1
+    },
+    {
+        q: "If everyone who is faced with a similar situation responds in the same way, attribution theory states that the behaviour shows _____________.",
+        o: ["consensus", "similarity", "reliability", "consistency"],
+        a: 0
+    },
+    {
+        q: "Which of the following is not one of the four primary management functions?",
+        o: ["Controlling", "Planning", "Staffing", "organizing"],
+        a: 2
+    },
+    {
+        q: "Determining how tasks are to be grouped is part of which management function?",
+        o: ["Planning", "Leading", "Controlling", "organizing"],
+        a: 3
+    },
+    {
+        q: "Mintzberg concluded that managers perform 10 different, highly interrelated roles. Which of the following is one of the broad categories into which these roles could be grouped?",
+        o: ["Intrapersonal", "Institutional", "Decisional", "affective"],
+        a: 2
+    },
+    {
+        q: "As a manager, one of James's duties is to present awards to outstanding employees within his department. Which Mintzberg managerial role is James acting in when he does this?",
+        o: ["leadership role", "liaison role", "monitor role", "figurehead role"],
+        a: 3
+    },
+    {
+        q: "According to Mintzberg, one of management's interpersonal roles is _____________.",
+        o: ["spokesperson", "leader", "Negotiator", "monitor"],
+        a: 1
+    },
+    {
+        q: "“Leadership motivates the people to work and not the power of money”, this concept is related to..",
+        o: ["Autocratic model", "Custodial model", "Supportive model", "Collegial model"],
+        a: 2
+    },
+    {
+        q: "Organisatioal Behaviour is …",
+        o: ["A science", "An art", "A science as well as an art", "None of them"],
+        a: 2
+    },
+    {
+        q: "“Might is right” is the motto of...",
+        o: ["Autocratic model", "Custodial model", "Supportive model", "Collegial model"],
+        a: 0
+    },
+    {
+        q: "……is solely responsible for managing individual career.",
+        o: ["Individual", "Team", "organisation", "HR manger"],
+        a: 0
+    },
+    {
+        q: "Stress can affect not only you health but also other aspects of your life. What else can be affected by stress?",
+        o: ["Family relationships", "Work performance", "Your attention to safety", "All of theses"],
+        a: 3
+    },
+    {
+        q: "According to Fred Luthans and his associates, which of the following is considered a part of traditional management?",
+        o: ["Disciplining", "decision making", "exchanging routine information", "acquiring resources"],
+        a: 1
+    },
+    {
+        q: "The ……leadership style is an expression of the leader's trust in the abilities of his subordinates.",
+        o: ["Participative", "Delegative", "Both a and B", "None of them"],
+        a: 1
+    },
+    {
+        q: "According to Herzberg, which of the following is a maintenance factor?",
+        o: ["Salary", "Work itself", "Responsibility", "Recognition"],
+        a: 0
+    },
+    {
+        q: "An OB study would be least likely to be used to focus on which of the following problems?",
+        o: ["an increase in absenteeism at a certain company", "a fall in productivity in one shift of a manufacturing plant", "a decrease in sales due to growing foreign competition", "an increase in theft by employees at a retail store"],
+        a: 2
+    },
+    {
+        q: "If a person responds the same way over time, attribution theory states that the behaviour shows _____________.",
+        o: ["Distinctiveness", "Consensus", "Consistency", "continuity"],
+        a: 2
+    },
+    {
+        q: "The problem solving process begins with….",
+        o: ["Clarification of situation.", "Establishment of alternatives", "Identification of the difficulty", "Isolation of the cause"],
+        a: 2
+    },
+    {
+        q: "Which of the following is a reason that the study of organizational behaviour is useful?",
+        o: ["Human behavior does not vary a great deal between individuals and situations.", "Human behavior is not random.", "Human behavior is not consistent.", "Human behavior is rarely predictable."],
+        a: 1
+    },
+    {
+        q: "Psychology's major contributions to the field of organizational behavior have been primarily at what level of analysis?",
+        o: ["the level of the group", "the level of the individual", "the level of the organization", "the level of the culture"],
+        a: 1
+    },
+    {
+        q: "Which behavioural science discipline is most focused on understanding individual behaviour?",
+        o: ["Sociology", "social psychology", "Psychology", "anthropology"],
+        a: 2
+    },
+    {
+        q: "The science that seeks to measure, explain, and sometimes change the behaviour of humans and other animals is known as _____________.",
+        o: ["Psychiatry", "Psychology", "Sociology", "organizational behavior"],
+        a: 1
+    },
+    {
+        q: "….blends concepts from psychology and sociology.",
+        o: ["Corporate strategy", "Anthropology", "Political science.", "Social psychology"],
+        a: 3
+    },
+    {
+        q: "The science that focuses on the influence people have on one another is _____________.",
+        o: ["Psychology", "Anthropology", "political science", "social psychology"],
+        a: 3
+    },
+    {
+        q: "Which of the following fields has most helped us understand differences in fundamental values, attitudes, and behaviour among people in different countries?",
+        o: ["Anthropology", "Psychology", "political science", "operations research"],
+        a: 0
+    },
+    {
+        q: "The subject of organizational culture has been most influenced by which behavioural science discipline?",
+        o: ["Anthropology", "Psychology", "social psychology", "political science"],
+        a: 0
+    },
+    {
+        q: "Which of the following OB topics is not central to managing employees' fears about terrorism?",
+        o: ["Emotion", "Motivation", "Communication", "work design"],
+        a: 3
+    },
+    {
+        q: "which of the following forms the basis for the autocratic model of OB.",
+        o: ["Obedience", "Authority", "Power", "Dependence on boss"],
+        a: 2
+    },
+    {
+        q: "Today's managers understand that the success of any effort at improving quality and productivity must include.",
+        o: ["process reengineering", "quality management programs", "customer service improvements", "employees"],
+        a: 3
+    },
+    {
+        q: "Most valuable asset in an organization is",
+        o: ["Land and building", "Cash and bank balances", "Human being", "technology"],
+        a: 2
+    },
+    {
+        q: "What term is used to describe voluntary and involuntary permanent withdrawal from an organization?",
+        o: ["Absenteeism", "Turnover", "Downsizing", "truancy"],
+        a: 1
+    },
+    {
+        q: "_____________ is discretionary behaviour that is not part of an employee's formal job requirement, but that promotes the effective functioning of the organization.",
+        o: ["Productivity", "Motivation", "Organizational citizenship", "Organizational behavior"],
+        a: 2
+    },
+    {
+        q: "Individual-level independent variables include all of the following except.",
+        o: ["Leadership", "Learning", "Perception", "motivation"],
+        a: 0
+    },
+    {
+        q: "Which of the following statements is true about the term \"ability\", as it is used in the field of organizational behaviour?",
+        o: ["It refers to an individual's willingness to perform various tasks.", "It is a current assessment of what an individual can do.", "It refers exclusively to intellectual skills.", "It refers exclusively to physical skills"],
+        a: 1
+    },
+    {
+        q: "Which of the following is not a biographical characteristic?",
+        o: ["political affiliation", "age", "Sex", "tenure"],
+        a: 0
+    },
+    {
+        q: "Experiments performed by Ivan Pavlov led to what theory?",
+        o: ["classical conditioning", "operant conditioning", "social learning", "behavior shaping"],
+        a: 0
+    },
+    {
+        q: "What role did the meat play in Pavlov's experiment with dogs?",
+        o: ["an unconditioned response", "a conditioned stimulus", "a conditioned response", "an unconditioned stimulus"],
+        a: 3
+    },
+    {
+        q: "In Pavlov's experiment, the bell was a/an _____________.",
+        o: ["unconditioned stimulus", "unconditioned response", "conditioned stimulus", "conditioned response"],
+        a: 2
+    },
+    {
+        q: "Which of the following is not true of classical conditioning?",
+        o: ["Classical conditioning is passive.", "Classical conditioning can explain simple reflexive behaviors.", "Learning a conditioned response involves building an association between a conditioned stimulus and an unconditioned stimulus.", "A neutral stimulus takes on the properties of a conditioned stimulus."],
+        a: 2
+    },
+    {
+        q: "Operant conditioning argues that _____________.",
+        o: ["behavior is reflexive", "behavior is unlearned", "behavior is a function of its consequences", "the tendency to repeat a behavior is very strong"],
+        a: 2
+    },
+    {
+        q: "Which of the following researchers thought that reinforcement was the central factor involved in behavioural change?",
+        o: ["Pavlov", "Fayol", "Skinner", "Deming"],
+        a: 2
+    },
+    {
+        q: "According to operant conditioning, when behaviour is not reinforced, what happens to the probability of that behaviour occurring again?",
+        o: ["It increases.", "It declines.", "It remains unchanged.", "It becomes zero."],
+        a: 1
+    },
+    {
+        q: "What do we call the view that we can learn both through observation and direct experience?",
+        o: ["situational learning theory", "classical learning", "social learning theory", "the Pavlov principle"],
+        a: 2
+    },
+    {
+        q: "Four processes have been found to determine the influence that a model will have on an individual. Which of the following is not one of those processes?",
+        o: ["attention processes", "retention processes", "motor reproduction processes", "consequential processes"],
+        a: 3
+    },
+    {
+        q: "Which of the following processes deals with how well an individual remembers a model's action after it is no longer readily available?",
+        o: ["Attitudinal", "Retention", "motor reproduction", "reinforcement"],
+        a: 1
+    },
+    {
+        q: "What do we call the practice of reinforcing closer and closer approximations of a desired behaviour?",
+        o: ["Modeling", "Shaping", "classical conditioning", "social learning"],
+        a: 1
+    },
+    {
+        q: "Suspending an employee for dishonest behaviour is an example of which method of shaping behaviour?",
+        o: ["Extinction", "negative reinforcement", "punishment", "reaction"],
+        a: 2
+    },
+    {
+        q: "The application of reinforcement concepts to individuals in the work setting is referred to as",
+        o: ["classical conditioning", "self-management", "Reengineering", "OB Mod"],
+        a: 3
+    },
+    {
+        q: "Which of theses suggestions is an effective way to deal with stress?",
+        o: ["Mediation", "Exercise", "Talking with others", "All of these"],
+        a: 3
+    },
+    {
+        q: "Syam is always late coming to work and the manager cut his increment. This is an example of.",
+        o: ["positive reinforcement", "negative reinforcement", "Punishment", "extinction"],
+        a: 2
+    },
+    {
+        q: "What is the process by which individuals organize and interpret their sensory impressions in order to give meaning to their environment?",
+        o: ["Interpretation", "environmental analysis", "Outlook", "perception"],
+        a: 3
+    },
+    {
+        q: "Two people see the same thing at the same time yet interpret it differently. Where do the factors that operate to shape their dissimilar perceptions reside?",
+        o: ["the perceivers", "the target", "the timing", "the context"],
+        a: 0
+    },
+    {
+        q: "What is the most relevant application of perception concepts to OB?",
+        o: ["the perceptions people form about each other", "the perceptions people form about their employer", "the perceptions people form about their culture", "the perceptions people form about society"],
+        a: 0
+    },
+    {
+        q: "What is the name of the theory that deals with how we explain behaviour differently depending on the meaning we assign to the actor?",
+        o: ["behavioral theory", "judgment theory", "selective perception theory", "attribution theory"],
+        a: 3
+    },
+    {
+        q: "In attribution theory, what is distinctiveness?",
+        o: ["whether an individual displays consistent behaviors in different situations", "whether an individual displays different behaviors in different situations", "whether an individual displays consistent behaviors in similar situations", "whether an individual displays different behaviors in similar situations"],
+        a: 1
+    },
+    {
+        q: "_____________ is once view of reality",
+        o: ["Attitude", "Perception", "Outlook", "Personality"],
+        a: 1
+    },
+    {
+        q: "_____________ is the dynamic organization within the individual that determine his unique adjustment to the environment",
+        o: ["Perception", "Attitude", "Behavior", "personality"],
+        a: 3
+    },
+    {
+        q: "Which is also known as a non- reinforcement",
+        o: ["Punishment", "Negative reinforcement", "Extinction", "all the above"],
+        a: 2
+    },
+    {
+        q: "Most of the learning that takes place in the Class room is",
+        o: ["Classical conditioning", "Operant conditioning", "Cognitive learning", "Social learning"],
+        a: 2
+    },
+    {
+        q: "……are those factors that exists in the environment as perceived by the individual",
+        o: ["Physiological drive", "Psychological drive", "Cue stimuli", "Reinforcement"],
+        a: 2
+    },
+    {
+        q: "…….is the process of screening out information that we are uncomfortable with or that contradict to our beliefs",
+        o: ["Perceptual context", "Selective perception", "Halo effect", "Stereotyping"],
+        a: 1
+    },
+    {
+        q: "The extent to which individuals consistently regard themselves as capable, worthy, successful etc. is",
+        o: ["Self esteem", "Authoritarianism", "Tolerance for ambiguity", "Workhollism"],
+        a: 0
+    },
+    {
+        q: "A learned pre-disposition to respond in a consistently favourable or unfavourable manner with respect to a given object",
+        o: ["Perception", "Attitude", "Behavior", "personality"],
+        a: 1
+    },
+    {
+        q: "\"I don't like that company\"- is ………components of attitude.",
+        o: ["Affective component", "Cognitive component", "Intentional component", "None of these"],
+        a: 0
+    },
+    {
+        q: "\"They are the worst firm I have ever dealt with\" is ………components of attitude.",
+        o: ["Affective component", "Cognitive component", "Intentional component", "None of these"],
+        a: 0
+    },
+    {
+        q: "\"I will never do business with them again\" is ………components of attitude.",
+        o: ["Affective component", "Cognitive component", "Intentional component", "None of these"],
+        a: 2
+    },
+    {
+        q: "Which of the following is a method of measuring attitude?",
+        o: ["Opinion survey", "Interview", "Scaling techniques", "All the above"],
+        a: 3
+    },
+    {
+        q: "Basis of \"Autocratic Model of OB is",
+        o: ["Economic resources", "Power", "Leadership", "Partnership"],
+        a: 1
+    },
+    {
+        q: "Basis of \"Custodial Model of OB is",
+        o: ["Economic resources", "Power", "Leadership", "Partnership"],
+        a: 0
+    },
+    {
+        q: "Basis of \"Supportive Model of OB is",
+        o: ["Economic resources", "Power", "Leadership", "Partnership"],
+        a: 2
+    },
+    {
+        q: "Basis of \"Collegial Model of OB is",
+        o: ["Economic resources", "Power", "Leadership", "Partnership"],
+        a: 3
+    },
+    {
+        q: "Managerial orientation of \"Autocratic Model\" of OB is",
+        o: ["Authority", "Money", "Support", "Teamwork"],
+        a: 0
+    },
+    {
+        q: "Managerial orientation of \"Supportive Model\" of OB is",
+        o: ["Authority", "Money", "Support", "Teamwork"],
+        a: 2
+    },
+    {
+        q: "Managerial orientation of \"Custodial model\" of OB is",
+        o: ["Authority", "Money", "Support", "Teamwork"],
+        a: 1
+    },
+    {
+        q: "Managerial orientation of \"Collegial Model\" of OB is",
+        o: ["Authority", "Money", "Support", "Teamwork"],
+        a: 3
+    },
+    {
+        q: "Employees needs met by Autocratic Model is",
+        o: ["Subsistence", "Security", "Status and Recognition", "Self-actualization"],
+        a: 0
+    },
+    {
+        q: "Employees needs met by Custodial Model is",
+        o: ["Subsistence", "Security", "Status and Recognition", "Self-actualization"],
+        a: 1
+    },
+    {
+        q: "Employees needs met by Supportive Model is",
+        o: ["Subsistence", "Security", "Status and Recognition", "Self-actualization"],
+        a: 2
+    },
+    {
+        q: "Employees needs met by Collegial Model is",
+        o: ["Subsistence", "Security", "Status and Recognition", "Self-actualization"],
+        a: 3
+    },
+    {
+        q: "\"Person-Job fit\" means",
+        o: ["Persons physical fitness match with the job", "Persons skills match with the job", "Persons contributions match with the incentives offered by the organization", "Persons education match with the job"],
+        a: 2
+    },
+    {
+        q: "Which of the following is not an attribute of psychological individual difference?",
+        o: ["Motivation", "Learning", "Personality", "Complexion"],
+        a: 3
+    },
+    {
+        q: "Which of the following is not an attribute of physiological individual difference?",
+        o: ["Appearance", "Complexion", "Attitude", "Body shape"],
+        a: 2
+    },
+    {
+        q: "_____________ is a person's belief about his chances of successfully accomplishing a specific task",
+        o: ["Self esteem", "Job satisfaction", "Self efficacy", "Self appraisal"],
+        a: 2
+    },
+    {
+        q: "Select the correct hierarchical order of qualities of an individual",
+        o: ["Ability-Skills- Aptitude- Competency", "Aptitude-Ability- Skills- Competency", "Skills- Aptitude- Competency- Ability", "Competency-Ability-Skills- Aptitude"],
+        a: 1
+    },
+    {
+        q: "As per Stimulus-Response Model, input for behaviour process is",
+        o: ["Drive", "Organism", "Stimuli", "Response"],
+        a: 2
+    },
+    {
+        q: "S-O- B-A Model combines the S-R Model and",
+        o: ["Stimuli", "Response", "Human being", "drive"],
+        a: 2
+    },
+    {
+        q: "An enduring attribute of a person that appears constantly in a variety of situation is",
+        o: ["behavior", "trait", "attitude", "culture"],
+        a: 1
+    },
+    {
+        q: "Sociable, talkative, assertive etc. are features of",
+        o: ["introversion", "agreeableness", "extroversion", "conscientiousness"],
+        a: 2
+    },
+    {
+        q: "Good natured, cooperative and trusting are the features of",
+        o: ["introversion", "agreeableness", "extroversion", "conscientiousness"],
+        a: 1
+    },
+    {
+        q: "Responsible, dependable, persistent and achievement oriented are features of",
+        o: ["introversion", "agreeableness", "extroversion", "conscientiousness"],
+        a: 3
+    },
+    {
+        q: "Imaginative, artistically sensitive etc. are features of",
+        o: ["Openness", "agreeableness", "extroversion", "conscientiousness"],
+        a: 0
+    },
+    {
+        q: "Tensed, insecurity and nervousness are features of",
+        o: ["emotional instability", "agreeableness", "extroversion", "conscientiousness"],
+        a: 0
+    },
+    {
+        q: "Some people strongly believe that each person have control of his own life. This is",
+        o: ["extroversion", "conscientiousness", "internal locus of control", "external locus of control"],
+        a: 2
+    },
+    {
+        q: "Some people think that what happens to them is a result of fate, chance, luck etc. this is",
+        o: ["extroversion", "conscientiousness", "internal locus of control", "external locus of control"],
+        a: 3
+    },
+    {
+        q: "….is the tendency of individual, which directs them to be inward and process ideas and thoughts within themselves",
+        o: ["extroversion", "Introversion", "internal locus of control", "external locus of control"],
+        a: 1
+    },
+    {
+        q: "….persons are likely to be most successful in the field of advertisement, sales department, public relation etc",
+        o: ["extroversion", "conscientiousness", "internal locus of control", "external locus of control"],
+        a: 0
+    },
+    {
+        q: "….persons are likely to be most successful in the field of research and work based on abstract idea.",
+        o: ["extroversion", "introversion", "internal locus of control", "external locus of control"],
+        a: 1
+    },
+    {
+        q: "-----------indicates the level of uncertainty that people can tolerate to work efficiently without experiencing undue stress",
+        o: ["Risk propensity", "Authoritarianism", "Tolerance for ambiguity", "Workahollism"],
+        a: 2
+    },
+    {
+        q: "The extent to which individual believes in importance of power, status difference in organization",
+        o: ["Self esteem", "Authoritarianism", "Tolerance for ambiguity", "Workahollism"],
+        a: 1
+    },
+    {
+        q: "…..is the extent of rigidity of a person's belief",
+        o: ["Authoritarianism", "Dogmatism", "Risk propensity", "Tolerance for ambiguity"],
+        a: 1
+    },
+    {
+        q: "…..is the degree to which an individual is willing to take chances and risky decisions",
+        o: ["Authoritarianism", "Dogmatism", "Risk propensity", "Tolerance for ambiguity"],
+        a: 2
+    },
+    {
+        q: "…..is manipulating and influencing others as a primary way of achieving one's goal",
+        o: ["Authoritarianism", "Dogmatism", "Risk propensity", "Machiavellianism"],
+        a: 3
+    },
+    {
+        q: "…….explains internal processes of choice among behavoiur",
+        o: ["Equity theory", "Goal attain theory", "Expectancy theory", "Goal setting theory"],
+        a: 2
+    },
+    {
+        q: "……focuses on how to set goals for people to reach",
+        o: ["Equity theory", "Goal attain theory", "Expectancy theory", "Goal setting theory"],
+        a: 3
+    },
+    {
+        q: "…..is an attitude reflects the extent to which an individual is gratified or fulfilled by his work",
+        o: ["Motivation", "Job satisfaction", "Contribution", "Cognitive dissonance"],
+        a: 1
+    },
+    {
+        q: "Maslow's \"basic needs\" are also known as",
+        o: ["Social needs", "Esteem needs", "Safety needs", "Physiological needs"],
+        a: 3
+    },
+    {
+        q: "In Maslow's Need hierarchy which needs are shown between Esteem needs and Safety needs",
+        o: ["Social needs", "Esteem needs", "Security needs", "Basic need"],
+        a: 0
+    },
+    {
+        q: "ERG theory of motivation was proposed by",
+        o: ["Maslow", "F. Herzberg", "Alderfer", "Mc Gregor"],
+        a: 2
+    },
+    {
+        q: "Under ERG theory, \"R\" stands for---------",
+        o: ["Rationality", "Responsibility", "Remuneration", "Relatedness"],
+        a: 3
+    },
+    {
+        q: "Dual structure approach of motivation is developed by",
+        o: ["Maslow", "F. Herzberg", "Alderfer", "Mc Gregor"],
+        a: 1
+    },
+    {
+        q: "Under Herzberg's theory, factors causing dissatisfaction is called",
+        o: ["Demotivators", "Negative stimuli", "Hygiene factors", "Defectors"],
+        a: 2
+    },
+    {
+        q: "Hygiene factors are",
+        o: ["Satisfiers", "Maintenance factors", "Defectors", "All of these"],
+        a: 1
+    },
+    {
+        q: "In Two Factor theory, \"Salary\" coming under -------------",
+        o: ["Satisfiers", "Maintenance factors", "Both of these", "None of above a and b"],
+        a: 1
+    },
+    {
+        q: "Who propounded X and Y theory of motivation",
+        o: ["Maslow", "F. Herzberg", "Alderfer", "Mc Gregor"],
+        a: 3
+    },
+    {
+        q: "--------------- theory believes that employees dislike work",
+        o: ["X theory", "Y theory", "Z theory", "None of these"],
+        a: 0
+    },
+    {
+        q: "According to---------- employees love work as play or rest",
+        o: ["X theory", "Y theory", "Z theory", "None of these"],
+        a: 1
+    },
+    {
+        q: "Z theory is a Japanese approach of motivation developed by",
+        o: ["Mc Clelland", "William Ouchi", "Alderfer", "Mc Gregor"],
+        a: 1
+    },
+    {
+        q: "According to-----------the managers and workers should work together as partners and of equal importance for the organizations success",
+        o: ["X theory", "Y theory", "Z theory", "2 Factor theory"],
+        a: 2
+    },
+    {
+        q: "Which one of the following need is not coming under Mc Clelland theory of motivation?",
+        o: ["Need for power", "Need for achievement", "Need for affiliation", "Need for actualization"],
+        a: 3
+    },
+    {
+        q: "Which one is not a Need Based Theory of motivation?",
+        o: ["Maslow's Theory", "F. Herzberg's theory", "Alderfer's theory", "Vroom's theory"],
+        a: 3
+    },
+    {
+        q: "Which one is not a Process Based Theory of motivation?",
+        o: ["Porter Lawler theory", "Mc Clelland's theory", "Stacy Adams theory", "Vroom's theory"],
+        a: 1
+    },
+    {
+        q: "Who developed Equity theory of motivation?",
+        o: ["Porter Lawler", "Mc Clelland", "Stacy Adams", "Vroom"],
+        a: 2
+    },
+    {
+        q: "Porter Lawler Model is an extension of",
+        o: ["Maslow's theory", "Mc Clelland's theory", "Stacy Adams theory", "Vroom's theory"],
+        a: 3
+    },
+    {
+        q: "Cognitive Evaluation Theory of motivation is introduced by",
+        o: ["Stacy Adams", "Charms", "Ouchy", "F W Taylor"],
+        a: 1
+    },
+    {
+        q: "Goal setting theory is pioneered by",
+        o: ["Stacy Adams", "Charms", "Edwin Locke", "F W Taylor"],
+        a: 2
+    },
+    {
+        q: "The group formed by an organization to accomplish narrow range of purposes within a specified time",
+        o: ["Formal Group", "Task Group", "Interest Group", "Functional Group"],
+        a: 1
+    },
+    {
+        q: "----------is the attractiveness of the members towards the group or resistance to leave it",
+        o: ["Group norms", "Group behavior", "Group cohesiveness", "Group structure"],
+        a: 2
+    },
+    {
+        q: "Believes, attitudes, traditions and expectations which are shared by group members is called",
+        o: ["Group norms", "Group communication", "Group cohesiveness", "Group structure"],
+        a: 0
+    },
+    {
+        q: "-------------- is the ability of influencing people to strive willingly for mutual objectives",
+        o: ["Motivation", "Control", "Leadership", "Supervision"],
+        a: 2
+    },
+    {
+        q: "In--------------leadership, there is a complete centralization of authority in the leader",
+        o: ["Democratic", "Autocratic", "Free rein", "Bureaucratic"],
+        a: 1
+    },
+    {
+        q: "In----------in fact \"No leadership at all\"",
+        o: ["Democratic", "Autocratic", "Free rein", "Bureaucratic"],
+        a: 2
+    },
+    {
+        q: "Free rein leadership is also known as",
+        o: ["Democratic", "Autocratic", "Laissez-faire", "Bureaucratic"],
+        a: 2
+    },
+    {
+        q: "_____________ leadership emphasize on rules and regulation in an organization",
+        o: ["Democratic", "Autocratic", "Laissez-faire", "Bureaucratic"],
+        a: 3
+    },
+    {
+        q: "……leader is self confident and can attract followers by his great influence",
+        o: ["Charismatic", "Autocratic", "Laissez-faire", "Bureaucratic"],
+        a: 0
+    },
+    {
+        q: "…….is the force of action or motivation",
+        o: ["Behaviour", "Stimulus", "Perception", "Attitude"],
+        a: 1
+    },
+    {
+        q: "Grid Organisation Development was developed by",
+        o: ["Blake and Mounton", "Elton Mayo", "F W Taylor", "Max weber"],
+        a: 0
+    },
+    {
+        q: "------------ refers to the basic changes in the content and responsibilities of job so as to satisfy higher motivational needs",
+        o: ["Job enrichment", "Job enlargement", "Work relocation", "Process consultation"],
+        a: 0
+    },
+    {
+        q: "------------is a set of values that states what an organisation stands for",
+        o: ["Organization behavior", "Organizational culture", "Organizational spirit", "Organizational effectiveness"],
+        a: 1
+    },
+    {
+        q: "An extent to which an organisation achieves its predetermined objectives within given resources and without undue strain to its members",
+        o: ["Organization behavior", "Organizational culture", "Organizational spirit", "Organizational effectiveness"],
+        a: 3
+    },
+    {
+        q: "Which one of the following is/are leadership theories?",
+        o: ["Trait theory", "Behavior theory", "Contingency theory", "All of these"],
+        a: 3
+    },
+    {
+        q: "……..is the behaviour for a stimulus",
+        o: ["Stimulus", "Response", "Perception", "Attitude"],
+        a: 1
+    },
+    {
+        q: "Path-goal model of Leadership was introduced by",
+        o: ["Martin Evans & Robert House", "Fred Fielder", "Whetton", "Cameron"],
+        a: 0
+    },
+    {
+        q: "Which of the following is not a contingency theory of leadership",
+        o: ["LPC theory", "Path Goal theory", "Vroom-Yetton-Jago theory", "Job centered Leadership"],
+        a: 3
+    },
+    {
+        q: "…..is an attempt through a formal program to integrate employees' needs and wellbeing with the intention of improved productivity, better involvement and satisfaction",
+        o: ["Quality of Work life", "Quality Circle", "Alternative Work schedule", "Job Redesign"],
+        a: 0
+    },
+    {
+        q: "…..is small groups of workers who meet regularly with their supervisor to solve work related problem",
+        o: ["Quality of Work life", "Quality Circle", "Alternative Work schedule", "Job Redesign"],
+        a: 1
+    },
+    {
+        q: "The concept of Work-Week is related with",
+        o: ["Quality of Work life", "Quality Circle", "Alternative Work schedule", "Job Redesign"],
+        a: 2
+    },
+    {
+        q: "When a group gives some of its leadership positions to the members of other group, it is",
+        o: ["Contracting", "Co-opting", "Co-alition", "Competition"],
+        a: 1
+    },
+    {
+        q: "--------------refers to the combination of two or more individuals, groups or organisation for a common goal with a minimum common programme",
+        o: ["Contracting", "Co-opting", "Co-alition", "Competition"],
+        a: 2
+    }
+    ];
+
+    let currentIdx = 0;
+    let score = 0;
+    const totalQuestions = quizData.length;
+
+    const qText = document.getElementById('question-text');
+    const optionsCont = document.getElementById('options-container');
+    const qNum = document.getElementById('q-num');
+    const totalQuestionsEl = document.getElementById('total-questions');
+    const nextBtn = document.getElementById('next-btn');
+    const currentScore = document.getElementById('current-score');
+    const totalScore = document.getElementById('total-score');
+    const finalTotal = document.getElementById('final-total');
+    const progressBar = document.getElementById('progress-bar');
+    const startSelector = document.getElementById('start-selector');
+
+    // Populate the dropdown with question numbers
+    function populateStartSelector() {
+        startSelector.innerHTML = '';
+        for (let i = 1; i <= totalQuestions; i++) {
+            const option = document.createElement('option');
+            option.value = i - 1; // zero-based index
+            option.textContent = i;
+            startSelector.appendChild(option);
+        }
+        startSelector.value = 0; // Default to first question
+    }
+
+    // Change starting question
+    function changeStartQuestion() {
+        const newStart = parseInt(startSelector.value);
+        if (newStart >= 0 && newStart < totalQuestions) {
+            currentIdx = newStart;
+            score = 0;
+            currentScore.textContent = score;
+            loadQuestion();
+        }
+    }
+
+    function updateProgressBar() {
+        const progress = ((currentIdx + 1) / totalQuestions) * 100;
+        progressBar.style.width = `${progress}%`;
+    }
+
+    function loadQuestion() {
+        const data = quizData[currentIdx];
+        qText.innerText = data.q;
+        qNum.innerText = currentIdx + 1;
+        optionsCont.innerHTML = '';
+        nextBtn.style.display = 'none';
+        updateProgressBar();
+
+        // Update selector to current question
+        startSelector.value = currentIdx;
+
+        data.o.forEach((opt, i) => {
+            const btn = document.createElement('button');
+            btn.innerText = `${String.fromCharCode(97 + i)}. ${opt}`;
+            btn.classList.add('option-btn');
+            btn.onclick = () => revealAnswer(i);
+            optionsCont.appendChild(btn);
+        });
+    }
+
+    function revealAnswer(selectedIdx) {
+        const correctIdx = quizData[currentIdx].a;
+        const buttons = optionsCont.getElementsByClassName('option-btn');
+
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].disabled = true;
+            if (i === correctIdx) {
+                buttons[i].classList.add('correct');
+            }
+            if (i === selectedIdx && selectedIdx !== correctIdx) {
+                buttons[i].classList.add('wrong');
+            }
+        }
+
+        if (selectedIdx === correctIdx) {
+            score++;
+            currentScore.textContent = score;
+        }
+        nextBtn.style.display = 'inline-block';
+    }
+
+    function nextQuestion() {
+        currentIdx++;
+        if (currentIdx < totalQuestions) {
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        document.getElementById('question-text').style.display = 'none';
+        optionsCont.style.display = 'none';
+        document.querySelector('.header').style.display = 'none';
+        document.querySelector('.score-display').style.display = 'none';
+        nextBtn.style.display = 'none';
+        progressBar.style.display = 'none';
+        
+        const res = document.getElementById('results');
+        res.style.display = 'block';
+        document.getElementById('score').innerText = score;
+        document.getElementById('final-total').innerText = totalQuestions;
+        
+        const performanceMsg = document.getElementById('performance-message');
+        const percentage = (score / totalQuestions) * 100;
+        
+        if (percentage >= 90) {
+            performanceMsg.textContent = "Outstanding! You have mastered Organizational Behavior concepts.";
+            performanceMsg.style.color = "var(--success)";
+        } else if (percentage >= 75) {
+            performanceMsg.textContent = "Excellent! You have a comprehensive understanding of OB concepts.";
+            performanceMsg.style.color = "#4a90e2";
+        } else if (percentage >= 60) {
+            performanceMsg.textContent = "Good job! You have a solid foundation in Organizational Behavior.";
+            performanceMsg.style.color = "#f39c12";
+        } else if (percentage >= 50) {
+            performanceMsg.textContent = "Fair. Review the topics you missed to strengthen your knowledge.";
+            performanceMsg.style.color = "#e67e22";
+        } else {
+            performanceMsg.textContent = "Keep studying! Review all OB concepts and try again.";
+            performanceMsg.style.color = "var(--danger)";
+        }
+    }
+
+    // Initialize
+    totalQuestionsEl.textContent = totalQuestions;
+    totalScore.textContent = totalQuestions;
+    finalTotal.textContent = totalQuestions;
+    populateStartSelector();
+    loadQuestion();
+</script>
+</body>
+</html>
