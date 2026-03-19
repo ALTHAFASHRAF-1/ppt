@@ -1,0 +1,706 @@
+ <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OB Exam Prep Quiz</title>
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --secondary: #f5f7fa;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --text: #2c3e50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--secondary);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .quiz-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .question {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            min-height: 80px;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: var(--secondary);
+            border: 2px solid #ddd;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            outline: none;
+            text-align: left;
+        }
+
+        .option-btn:hover:not([disabled]) {
+            background: #e1e5ea;
+            border-color: var(--primary);
+        }
+
+        .correct {
+            background-color: var(--success) !important;
+            color: white !important;
+            border-color: #27ae60 !important;
+        }
+
+        .wrong {
+            background-color: var(--danger) !important;
+            color: white !important;
+            border-color: #c0392b !important;
+        }
+
+        .results {
+            display: none;
+        }
+
+        #next-btn {
+            margin-top: 20px;
+            padding: 10px 25px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .score-display {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--text);
+        }
+
+        .progress-bar {
+            height: 5px;
+            background-color: #eee;
+            border-radius: 2px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.5s;
+        }
+
+        .start-selector {
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 2px solid var(--primary);
+            background: white;
+            color: var(--text);
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .start-selector:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container" id="quiz">
+    <div class="header">
+        <span><span id="q-num">1</span>/<span id="total-questions">275</span></span>
+        <select class="start-selector" id="start-selector" onchange="changeStartQuestion()">
+            <!-- Options will be populated by JavaScript -->
+        </select>
+    </div>
+    <div class="progress-bar">
+        <div class="progress" id="progress-bar"></div>
+    </div>
+    <div class="question" id="question-text">Loading question...</div>
+    <div class="options" id="options-container"></div>
+    <div class="score-display">Score: <span id="current-score">0</span>/<span id="total-score">275</span></div>
+    <button id="next-btn" onclick="nextQuestion()">Next Question</button>
+
+    <div class="results" id="results">
+        <h2>Quiz Complete!</h2>
+        <p>Your Final Score: <span id="score">0</span>/<span id="final-total">275</span></p>
+        <p id="performance-message"></p>
+        <button onclick="location.reload()" style="padding: 10px 20px; cursor: pointer; margin-top: 15px;">Restart Quiz</button>
+    </div>
+</div>
+
+<script>
+    // Reduced quiz data for testing
+    const quizData = [
+    {
+        q: "The basic nature of a project is a/an _____ one.",
+        o: ["permanent", "temporary", "a or b", "Both a & b"],
+        a: 1
+    },
+    {
+        q: "A process that involves continuously improving and detailing a plan as more detail become available is termed as",
+        o: ["project analysis", "project enhancing", "progressive deliberation", "progressive elaboration"],
+        a: 3
+    },
+    {
+        q: "A program is usually a group of",
+        o: ["plans", "people and work", "related projects", "unrelated projects"],
+        a: 2
+    },
+    {
+        q: "The process each manager follows during the life of a project known as",
+        o: ["Project management", "Manager life cycle", "Project management life cycle", "All of the above"],
+        a: 2
+    },
+    {
+        q: "Which of the following is not a goal of project management.",
+        o: ["Keeping overall costs within budget", "Delivering the software to the customer at the agrees time", "Marinating a happy and well-functioning development team", "Avoiding customer complaints"],
+        a: 3
+    },
+    {
+        q: "Project performance consists of",
+        o: ["Time", "Cost", "Quality", "All of these"],
+        a: 3
+    },
+    {
+        q: "Following is (are) the responsibility (ies) of the project manager.",
+        o: ["Budgeting and cost control", "Allocating resources", "Tracking project expenditure", "All of these"],
+        a: 3
+    },
+    {
+        q: "A ____ is a set of activities which are networked in an order and aimed towards achieving the goals of a project.",
+        o: ["Project", "Process", "Project management", "Project cycle"],
+        a: 0
+    },
+    {
+        q: "In which of the following stages are project objectives established, teams formed, and major responsibilities assigned?",
+        o: ["Conceptualizing", "Defining", "Planning", "Executing"],
+        a: 1
+    },
+    {
+        q: "In which of the following stages is a major portion of the physical and mental project work performed?",
+        o: ["Conceptualizing", "Defining", "Planning", "Executing"],
+        a: 3
+    },
+    {
+        q: "Which of the following choices is not one of the stages of a project life cycle?",
+        o: ["Conceptualizing", "Defining", "Planning", "Executing"],
+        a: 0
+    },
+    {
+        q: "Two dimensions within the project management process are",
+        o: ["Technical and sociocultural", "Cost and time", "Planned and unexpected", "Established and new"],
+        a: 0
+    },
+    {
+        q: "The payback period for a project",
+        o: ["is the initial fixed investment in the project divided by the estimated annual net cash inflows from the project.", "is the discounted cash flow method determines the net present value of all cash flows by discounting them by the required rate of return.", "also known as the benefit–cost ratio.", "the internal rate of return is the discount rate that equates the present values of the two sets of flows."],
+        a: 0
+    },
+    {
+        q: "Expand SCBA",
+        o: ["Social Cost Benefit Analysis", "Social Cost Beneficiary Analysis", "Society Cost Benefit Analysis", "Social Cost Benefit Amount"],
+        a: 0
+    },
+    {
+        q: "A project would normally be undertaken if its Net Present Value (NPV) is",
+        o: ["Exactly the same as the NPV of the existing project", "negative", "positive", "zero"],
+        a: 2
+    },
+    {
+        q: "Advantage of Profitability model is",
+        o: ["Models that do not include discounting ignore the timing of the cash flows and the time–value of money.", "Payback-type models ignore cash flows beyond the payback period.", "All use readily available accounting data to determine the cash flows.", "All are sensitive to errors in the input data for the early years of the project."],
+        a: 2
+    },
+    {
+        q: "Expand IRR",
+        o: ["Internal Rate of Return", "Internal Risk & Return", "Interim Rate of Return", "Integral Rate of Return"],
+        a: 0
+    },
+    {
+        q: "Expand NPV",
+        o: ["Net Present Value", "National Present Value", "Net Present Volume", "Net Prime Value"],
+        a: 0
+    },
+    {
+        q: "Which of the following method is not a traditional method of project appraisal?",
+        o: ["NPV", "ARR", "Payback period", "Urgency method"],
+        a: 0
+    },
+    {
+        q: "Which of the following is not a modern method of project appraisal?",
+        o: ["NPV", "IRR", "Payback period", "PI method"],
+        a: 2
+    },
+    {
+        q: "Average Rate of Return method is also called as",
+        o: ["Accounting Rate of Return Method", "Return on Investment Method", "Unadjusted Rate of Return Method", "All of these"],
+        a: 3
+    },
+    {
+        q: "ARR method of project appraisal is a __________ method",
+        o: ["Modern", "Traditional", "Both of these", "None of these"],
+        a: 1
+    },
+    {
+        q: "PI method is also called",
+        o: ["Benefit Cost Ratio", "Return on Investment Method", "Unadjusted Rate of Return Method", "None of these"],
+        a: 0
+    },
+    {
+        q: "Modern method of Project appraisal are also called as",
+        o: ["Discounting Techniques", "Non Discounting techniques", "Unadjusted Rate of Return Method", "None of these"],
+        a: 0
+    },
+    {
+        q: "Traditional methods of Project appraisal are also called as",
+        o: ["Discounting Techniques", "Non Discounting Techniques", "Unadjusted Rate of Return Method", "None of these"],
+        a: 1
+    },
+    {
+        q: "The process of determining whether the project idea is a viable foundation for creating a successful business is known as a:",
+        o: ["feasibility analysis", "business plan", "strategic analysis", "industry analysis"],
+        a: 0
+    },
+    {
+        q: "Which of the following is included in feasibility study?",
+        o: ["Financial Feasibility", "Physical Feasibility", "Demographic Feasibility", "Resources Feasibility"],
+        a: 0
+    },
+    {
+        q: "Which of the following among is the aspects of technical feasibility study?",
+        o: ["Demand", "Location", "Security", "Instruction"],
+        a: 1
+    },
+    {
+        q: "The accounting rate of return is measured as follows:",
+        o: ["Average annual profit expressed as a percentage of the total funds invested in the project", "Average annual profit expressed as a percentage of the average funds invested in the project.", "Total profits expressed as a percentage of the average funds invested in the project.", "Total profits expressed as a percentage of the total funds invested in the project."],
+        a: 1
+    },
+    {
+        q: "Which of the following statements concerning the NPV is not true?",
+        o: ["The NPV technique takes account of the time value of money", "The NPV of a project is the sum of all the discounted cash flows associated with a project.", "The NPV technique takes account of all the cash flows associated with a project", "If two competing projects are being considered, the one expected to yield the lowest NPV should be selected."],
+        a: 3
+    },
+    {
+        q: "What should be done by the project manager to ensure that all the work in the project is included?",
+        o: ["Create a contingency plan", "Create a risk management plan", "Create a WBS", "Create a statement of work"],
+        a: 2
+    },
+    {
+        q: "A good project management system provides for defining the interface between the project team and the organization in all the following areas except",
+        o: ["Authority", "Allocation of resources", "Development of project team members", "Integration of the project into the organization"],
+        a: 2
+    },
+    {
+        q: "The method used to collect information to use through all phases of the project life cycle is called",
+        o: ["Responsibility matrix", "Organization breakdown structure", "Work breakdown structure", "Priority matrix"],
+        a: 2
+    },
+    {
+        q: "The first step in creating the necessary information to manage a project is to",
+        o: ["Establish project priorities", "Define the project scope", "Verify the budget available", "Assign team members to work on the project"],
+        a: 1
+    },
+    {
+        q: "The tendency for the project deliverables to expand over time-usually by changing requirements, specifications, and priorities-is called:",
+        o: ["Scope erosion", "Scope creep", "Project bloat", "Project add-ons"],
+        a: 1
+    },
+    {
+        q: "The process of forecasting or approximating the time and cost of completing project deliverables is called",
+        o: ["Budgeting", "Predicting", "Estimating", "Planning"],
+        a: 2
+    },
+    {
+        q: "Which of the following is NOT an input to the initiating process group?",
+        o: ["Company processes", "The company culture", "Historical WBSs", "Project scope statement"],
+        a: 3
+    },
+    {
+        q: "A person who is involved in or may be affected by the activities or anyone who has something to gain or lose by the activity of the project is called a:",
+        o: ["Team member", "Customer", "Stakeholder", "Supporter"],
+        a: 2
+    },
+    {
+        q: "Which of the following is an advantage of including the project manager in the project evaluation process?",
+        o: ["It enables the project manager to have an understanding of the selection criteria that can be used when making decisions about the project during later phases.", "It may indicate a need for project manager skills and experiences that are different from the project manager who is involved in the evaluation.", "It allows the parent organization to select a project manager whose abilities match the complexity profile of the project.", "It helps achieve greater buy-in from the top management of the parent organization."],
+        a: 0
+    },
+    {
+        q: "__________ offers their owners preferences over ordinary shareholders.",
+        o: ["Equity Shares", "Preference Shares", "Debentures", "None of these"],
+        a: 1
+    },
+    {
+        q: "Who are the true owners of the Company?",
+        o: ["Equity Shares", "Preference Shares", "Debentures", "None of these"],
+        a: 0
+    },
+    {
+        q: "Which is the cheapest equity source of capital?",
+        o: ["Preference Share Capital", "Working Capital", "Retained Earnings", "Both a and b"],
+        a: 2
+    },
+    {
+        q: "SIDCs stands for",
+        o: ["State Infrastructural Development Corporation", "State Industrial Development Corporation", "State Investment Development Corporation", "None of the above"],
+        a: 1
+    },
+    {
+        q: "Pre-requisite to project finance includes:",
+        o: ["Sustainable Economics", "Accessible Financing", "Political Stability", "All of these"],
+        a: 3
+    },
+    {
+        q: "The expenses that are incurred during the commencement of commercial production are referred to as __________.",
+        o: ["Preliminary expenses", "Pre-operative expenses", "Miscellaneous expenses", "Capital issue expenses"],
+        a: 1
+    },
+    {
+        q: "When the banks or financial institutions are asked to participate in the scheme of finance, the promoters should bring _________ % of the project cost into the equity share capital of the company.",
+        o: ["10 to 25", "25 to 30", "30 to 50", "100"],
+        a: 0
+    },
+    {
+        q: "The capital provided by outside inventors for financing of new, innovative or struggling business are termed as ________.",
+        o: ["Equity capital financing", "Preference capital financing", "Venture capital financing", "None of these"],
+        a: 2
+    },
+    {
+        q: "The agreement between lesser and lessee is called",
+        o: ["Hire purchase", "Leasing", "Venture capital financing", "Debt financing"],
+        a: 1
+    },
+    {
+        q: "Which is the very ancient source of financing short term funds?",
+        o: ["Trade credit", "Hundies", "Factoring", "Commercial Papers"],
+        a: 1
+    },
+    {
+        q: "Preliminary expenses includes the expenses incurred for",
+        o: ["Identifying the project", "Conducting the market survey", "Preparing the feasibility report", "All of these"],
+        a: 3
+    },
+    {
+        q: "Sources of equity financing includes:",
+        o: ["Retained Earnings", "Preference Shares", "Equity Shares", "All of these"],
+        a: 3
+    },
+    {
+        q: "Execution phase includes:",
+        o: ["Performing required tasks for project", "Monitoring and Control the performance", "Both a and b", "None of the above"],
+        a: 2
+    },
+    {
+        q: "MIGA stands for",
+        o: ["Multilateral Investment Guarantee Agency", "Multilateral Investment Guarantee Act", "Multilateral Industrial Guarantee Agency", "Multilateral Industrial Guarantee Act"],
+        a: 0
+    },
+    {
+        q: "_________ involves collecting, processing and communicating information to key stakeholders, regarding the performance of the project.",
+        o: ["Progress Reporting", "Program Reporting", "Progress Control", "Performance Reporting"],
+        a: 3
+    },
+    {
+        q: "Progress Report is a document prepared by",
+        o: ["Project Team Members", "Equity Share Holders", "Preference Share Holders", "Top Management"],
+        a: 0
+    },
+    {
+        q: "Project Synopsis includes:",
+        o: ["Duration", "Project activities", "Project Goals and objectives", "All of these"],
+        a: 3
+    },
+    {
+        q: "Approaches in project implementation does not includes:",
+        o: ["Parallel", "Phased", "Pilot", "Diagonal"],
+        a: 3
+    },
+    {
+        q: "Commercial Papers are",
+        o: ["Long term source for Working Capital", "Short term source for Working Capital", "Not a source for Working Capital", "Neither a or b"],
+        a: 1
+    },
+    {
+        q: "________ holders have voting rights and right on all the remainder profit after paying interest to preferential dividends.",
+        o: ["Equity Share Holders", "Preference Share Holders", "Debenture holders", "Both a and b"],
+        a: 0
+    },
+    {
+        q: "Syndicated loan is a form of lending in which _________.",
+        o: ["A group of lenders collectively extend a loan to a single borrower", "A lender extend a loan to group of borrowers", "A loan made by a single lender to a single borrower", "A group of lenders collectively extend a loan to group of borrowers"],
+        a: 0
+    },
+    {
+        q: "You're working with your project to examine the work packages of the WBS and subdivide these elements into the project activities. What term is given to this technique?",
+        o: ["Synergy", "Decomposition", "Activity definition linking", "Control account plans"],
+        a: 1
+    },
+    {
+        q: "Risks will be identified during which risk management process (es)?",
+        o: ["Perform Quantitative Risk Analysis and Identify Risks", "Identify Risks and Control Risks", "Perform Qualitative Risk Analysis and Control Risks", "Identify Risks"],
+        a: 3
+    },
+    {
+        q: "Who is ultimately responsible for quality management on the project?",
+        o: ["Project engineer", "Project manager", "Quality manager", "Team member"],
+        a: 1
+    },
+    {
+        q: "The project life cycle consists of",
+        o: ["Understanding the scope of the project", "Objectives of the project", "Formulation and planning various activities", "All of these"],
+        a: 3
+    },
+    {
+        q: "The entire process of a project may be considered to be made up on number of sub process placed in different stage called the",
+        o: ["Technical key resources", "Work key structure", "Work Breakdown Structure (WBS)", "None of these"],
+        a: 2
+    },
+    {
+        q: "Following is (are) the component(s) of risk management",
+        o: ["Risk Assessment", "Risk Control", "Risk Ranking", "All of these"],
+        a: 3
+    },
+    {
+        q: "Controlling the changes in the project may affect",
+        o: ["The progress of the project", "Stage cost", "Project scope", "All of these"],
+        a: 3
+    },
+    {
+        q: "In project management, the term quality is best defined as:",
+        o: ["inspection, testing and measurement", "reviews and audits", "fitness for purpose of deliverables", "professionally-bound project reports"],
+        a: 2
+    },
+    {
+        q: "Which one of the following is not considered in resource management?",
+        o: ["Identifying resources", "Influencing resources", "Assigning resources to activities", "Matching resources to the schedule"],
+        a: 1
+    },
+    {
+        q: "The __________ approach, produces the changeover from old system to the new system instantly.",
+        o: ["Direct Cutover", "Parallel", "Pilot", "Phased"],
+        a: 0
+    },
+    {
+        q: "___________ approach, is the method in which both the new system and the old system will operate at the same time, for a specified period of time, in order to check the new system for complexities.",
+        o: ["Direct Cutover", "Parallel", "Pilot", "Phased"],
+        a: 1
+    },
+    {
+        q: "________ approach involves implementing the new system at a selected location like a branch office, one department in a company, etc. and the old system continues to operate for the entire organization.",
+        o: ["Direct Cutover", "Parallel", "Pilot", "Phased"],
+        a: 2
+    },
+    {
+        q: "___________ approach allows implementing the new system in phases or modules or stages in different parts of the organization incrementally.",
+        o: ["Direct Cutover", "Parallel", "Pilot", "Phased"],
+        a: 3
+    },
+    {
+        q: "_____________ might be used as legal evidence if there is a dispute about the outcome of the project such as a cost overrun.",
+        o: ["Project Data", "Project Diary", "Project Statement", "Project Idea"],
+        a: 1
+    },
+    {
+        q: "The process by which projects are defined, planned, monitored, controlled and delivered so that agreed benefits are realised called it as ________.",
+        o: ["Project", "Budget", "Scheduling", "Production"],
+        a: 0
+    },
+    {
+        q: "The management of a combination of numerous individual processes, many of which relate to the subsidiary discipline of project control called it as _______.",
+        o: ["Project Finance", "Project Management", "Project Viability", "Project Tool"],
+        a: 1
+    },
+    {
+        q: "___________ is the process of monitoring the status of the project to update the project schedule and managing changes to the schedule baseline.",
+        o: ["Process Schedule", "Planning Schedule", "Control Schedule", "Forecasting Schedule"],
+        a: 2
+    },
+    {
+        q: "Which of the following is not a main source of changes?",
+        o: ["Organisational", "Environmental", "Technical", "Political"],
+        a: 3
+    },
+    {
+        q: "____________ refers to a lending process wherein a borrower approaches a bank for a loan amount that is comparatively heavy and also involves international transactions and different currencies.",
+        o: ["Lead Bank", "Internal Financing", "Loan Syndication", "None of these"],
+        a: 2
+    },
+    {
+        q: "A ____________ is successful where it is not possible for a single bank to finance the loan amount to the borrower; simply the loan amount is too large or risky for a single lender to provide.",
+        o: ["Consortium", "Loan Syndication", "Lead Bank", "None of these"],
+        a: 0
+    }
+   ];
+
+    let currentIdx = 0;
+    let score = 0;
+    const totalQuestions = quizData.length;
+
+    const qText = document.getElementById('question-text');
+    const optionsCont = document.getElementById('options-container');
+    const qNum = document.getElementById('q-num');
+    const totalQuestionsEl = document.getElementById('total-questions');
+    const nextBtn = document.getElementById('next-btn');
+    const currentScore = document.getElementById('current-score');
+    const totalScore = document.getElementById('total-score');
+    const finalTotal = document.getElementById('final-total');
+    const progressBar = document.getElementById('progress-bar');
+    const startSelector = document.getElementById('start-selector');
+
+    // Populate the dropdown with question numbers
+    function populateStartSelector() {
+        startSelector.innerHTML = '';
+        for (let i = 1; i <= totalQuestions; i++) {
+            const option = document.createElement('option');
+            option.value = i - 1; // zero-based index
+            option.textContent = i;
+            startSelector.appendChild(option);
+        }
+        startSelector.value = 0; // Default to first question
+    }
+
+    // Change starting question
+    function changeStartQuestion() {
+        const newStart = parseInt(startSelector.value);
+        if (newStart >= 0 && newStart < totalQuestions) {
+            currentIdx = newStart;
+            score = 0;
+            currentScore.textContent = score;
+            loadQuestion();
+        }
+    }
+
+    function updateProgressBar() {
+        const progress = ((currentIdx + 1) / totalQuestions) * 100;
+        progressBar.style.width = `${progress}%`;
+    }
+
+    function loadQuestion() {
+        const data = quizData[currentIdx];
+        qText.innerText = data.q;
+        qNum.innerText = currentIdx + 1;
+        optionsCont.innerHTML = '';
+        nextBtn.style.display = 'none';
+        updateProgressBar();
+
+        // Update selector to current question
+        startSelector.value = currentIdx;
+
+        data.o.forEach((opt, i) => {
+            const btn = document.createElement('button');
+            btn.innerText = `${String.fromCharCode(97 + i)}. ${opt}`;
+            btn.classList.add('option-btn');
+            btn.onclick = () => revealAnswer(i);
+            optionsCont.appendChild(btn);
+        });
+    }
+
+    function revealAnswer(selectedIdx) {
+        const correctIdx = quizData[currentIdx].a;
+        const buttons = optionsCont.getElementsByClassName('option-btn');
+
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].disabled = true;
+            if (i === correctIdx) {
+                buttons[i].classList.add('correct');
+            }
+            if (i === selectedIdx && selectedIdx !== correctIdx) {
+                buttons[i].classList.add('wrong');
+            }
+        }
+
+        if (selectedIdx === correctIdx) {
+            score++;
+            currentScore.textContent = score;
+        }
+        nextBtn.style.display = 'inline-block';
+    }
+
+    function nextQuestion() {
+        currentIdx++;
+        if (currentIdx < totalQuestions) {
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        document.getElementById('question-text').style.display = 'none';
+        optionsCont.style.display = 'none';
+        document.querySelector('.header').style.display = 'none';
+        document.querySelector('.score-display').style.display = 'none';
+        nextBtn.style.display = 'none';
+        progressBar.style.display = 'none';
+        
+        const res = document.getElementById('results');
+        res.style.display = 'block';
+        document.getElementById('score').innerText = score;
+        document.getElementById('final-total').innerText = totalQuestions;
+        
+        const performanceMsg = document.getElementById('performance-message');
+        const percentage = (score / totalQuestions) * 100;
+        
+        if (percentage >= 90) {
+            performanceMsg.textContent = "Outstanding! You have mastered Organizational Behavior concepts.";
+            performanceMsg.style.color = "var(--success)";
+        } else if (percentage >= 75) {
+            performanceMsg.textContent = "Excellent! You have a comprehensive understanding of OB concepts.";
+            performanceMsg.style.color = "#4a90e2";
+        } else if (percentage >= 60) {
+            performanceMsg.textContent = "Good job! You have a solid foundation in Organizational Behavior.";
+            performanceMsg.style.color = "#f39c12";
+        } else if (percentage >= 50) {
+            performanceMsg.textContent = "Fair. Review the topics you missed to strengthen your knowledge.";
+            performanceMsg.style.color = "#e67e22";
+        } else {
+            performanceMsg.textContent = "Keep studying! Review all OB concepts and try again.";
+            performanceMsg.style.color = "var(--danger)";
+        }
+    }
+
+    // Initialize
+    totalQuestionsEl.textContent = totalQuestions;
+    totalScore.textContent = totalQuestions;
+    finalTotal.textContent = totalQuestions;
+    populateStartSelector();
+    loadQuestion();
+</script>
+</body>
+</html>

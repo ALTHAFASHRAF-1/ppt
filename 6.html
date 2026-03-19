@@ -1,0 +1,806 @@
+ <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OB Exam Prep Quiz</title>
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --secondary: #f5f7fa;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --text: #2c3e50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--secondary);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .quiz-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .question {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            min-height: 80px;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: var(--secondary);
+            border: 2px solid #ddd;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            outline: none;
+            text-align: left;
+        }
+
+        .option-btn:hover:not([disabled]) {
+            background: #e1e5ea;
+            border-color: var(--primary);
+        }
+
+        .correct {
+            background-color: var(--success) !important;
+            color: white !important;
+            border-color: #27ae60 !important;
+        }
+
+        .wrong {
+            background-color: var(--danger) !important;
+            color: white !important;
+            border-color: #c0392b !important;
+        }
+
+        .results {
+            display: none;
+        }
+
+        #next-btn {
+            margin-top: 20px;
+            padding: 10px 25px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .score-display {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--text);
+        }
+
+        .progress-bar {
+            height: 5px;
+            background-color: #eee;
+            border-radius: 2px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.5s;
+        }
+
+        .start-selector {
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 2px solid var(--primary);
+            background: white;
+            color: var(--text);
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .start-selector:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container" id="quiz">
+    <div class="header">
+        <span><span id="q-num">1</span>/<span id="total-questions">275</span></span>
+        <select class="start-selector" id="start-selector" onchange="changeStartQuestion()">
+            <!-- Options will be populated by JavaScript -->
+        </select>
+    </div>
+    <div class="progress-bar">
+        <div class="progress" id="progress-bar"></div>
+    </div>
+    <div class="question" id="question-text">Loading question...</div>
+    <div class="options" id="options-container"></div>
+    <div class="score-display">Score: <span id="current-score">0</span>/<span id="total-score">275</span></div>
+    <button id="next-btn" onclick="nextQuestion()">Next Question</button>
+
+    <div class="results" id="results">
+        <h2>Quiz Complete!</h2>
+        <p>Your Final Score: <span id="score">0</span>/<span id="final-total">275</span></p>
+        <p id="performance-message"></p>
+        <button onclick="location.reload()" style="padding: 10px 20px; cursor: pointer; margin-top: 15px;">Restart Quiz</button>
+    </div>
+</div>
+
+<script>
+    // Reduced quiz data for testing
+    const quizData = [
+    {
+        q: "Random sampling is helpful as it is __________.",
+        o: ["Reasonably accurate", "Free from personal biased", "An economical method of data collection", "All the above"],
+        a: 3
+    },
+    {
+        q: "_________ is a preferred sampling method for the population with finite size.",
+        o: ["Systematic sampling", "Purposive sampling", "Cluster sampling", "Area sampling"],
+        a: 0
+    },
+    {
+        q: "The data of research is ______",
+        o: ["Qualitative only", "Quantitative only", "Both (a) and (b)", "Neither (a) nor (b)"],
+        a: 2
+    },
+    {
+        q: "The longitudinal approach of research deals with _________.",
+        o: ["Short-term researches", "Long-term researches", "Horizontal researches", "None of the above"],
+        a: 1
+    },
+    {
+        q: "Survey research studies _________",
+        o: ["Events", "Processes", "Populations", "Circumstances"],
+        a: 2
+    },
+    {
+        q: "Evaluation research is concerned with ___________",
+        o: ["Why are we doing?", "What are we doing?", "How well are we doing?", "None of the above"],
+        a: 2
+    },
+    {
+        q: "Which of the following is NOT the characteristic of a research?",
+        o: ["Research is systematic", "Research is not passive", "Research is not a process", "Research is problem oriented"],
+        a: 2
+    },
+    {
+        q: "One of the following is not a quality of researcher:",
+        o: ["Keenness in enquiry", "He must be of alert mind", "His assertion to outstrip the evidence", "Unison with that of which he is in search"],
+        a: 2
+    },
+    {
+        q: "Books and records are the primary sources of data in:",
+        o: ["clinical research", "historical research", "laboratory research", "participatory research"],
+        a: 1
+    },
+    {
+        q: "The depth of any research can be judged by:",
+        o: ["title of the research", "duration of the research", "objectives of the research", "total expenditure on the research"],
+        a: 2
+    },
+    {
+        q: "Research can be classified as:",
+        o: ["Basic, Applied and Action Research", "Quantitative and Qualitative Research", "Philosophical, Historical, Survey and Experimental Research", "All the above"],
+        a: 3
+    },
+    {
+        q: "Bibliography given in a research report:",
+        o: ["has no relevance to research", "shows vast knowledge of the researcher", "helps those interested in further research", "all the above"],
+        a: 2
+    },
+    {
+        q: "fundamental research reflects the ability to:",
+        o: ["Expound new principles", "Synthesize new ideals", "Evaluate the existing material concerning research", "Study the existing literature regarding various topics"],
+        a: 0
+    },
+    {
+        q: "The study in which the investigators attempt to trace an effect is known as:",
+        o: ["Survey Research", "Historical Research", "Summative Research", "'Ex-post Facto' Research"],
+        a: 3
+    },
+    {
+        q: "The main characteristic of scientific research is:",
+        o: ["empirical", "theoretical", "experimental", "all of the above"],
+        a: 3
+    },
+    {
+        q: "Authenticity of a research finding is its:",
+        o: ["Validity", "Objectivity", "Originality", "All of the above"],
+        a: 0
+    },
+    {
+        q: "Which one is called non-probability sampling?",
+        o: ["Quota sampling", "Cluster sampling", "Systematic sampling", "Stratified random sampling"],
+        a: 0
+    },
+    {
+        q: "Formulation of hypothesis may NOT be required in:",
+        o: ["Survey method", "Historical studies", "Normative studies", "Experimental studies"],
+        a: 1
+    },
+    {
+        q: "Field-work based research is classified as:",
+        o: ["Historical", "Empirical", "Biographical", "Experimental"],
+        a: 1
+    },
+    {
+        q: "A statistical measure based upon the entire population is called parameter while measure based upon a sample is known as:",
+        o: ["Inference", "Statistics", "Sample parameter", "None of these"],
+        a: 1
+    },
+    {
+        q: "Which one of the following is the most comprehensive source of population data?",
+        o: ["Census", "National Sample Surveys", "Demographic Health Surveys", "National Family Health Surveys"],
+        a: 0
+    },
+    {
+        q: "The research that applies the laws at the time of field study to draw more and more clear ideas about the problem is:",
+        o: ["Experimental research", "Applied research", "Action research", "None of these"],
+        a: 1
+    },
+    {
+        q: "When a research problem is related to heterogeneous population, the most suitable sampling method is",
+        o: ["Lottery Method", "Cluster Sampling", "Stratified Sampling", "Convenient Sampling"],
+        a: 2
+    },
+    {
+        q: "Action-research is:",
+        o: ["An applied research", "A longitudinal research", "A research carried out to solve immediate problems", "All the above"],
+        a: 2
+    },
+    {
+        q: "Which of the following is the first step in starting the research process?",
+        o: ["Searching sources of information to locate problem.", "Survey of related literature", "Identification of problem", "Searching for solutions to the problem"],
+        a: 2
+    },
+    {
+        q: "A research paper is a brief report of research work based on",
+        o: ["Primary Data only", "Secondary Data only", "Both Primary and Secondary Data", "None of the above"],
+        a: 2
+    },
+    {
+        q: "All cause non sampling errors except",
+        o: ["Faulty tools of measurement", "Defect in data collection", "Non response", "Inadequate sample"],
+        a: 3
+    },
+    {
+        q: "In order to augment the accuracy of the study a researcher",
+        o: ["should be honest and unbiased", "Should increase the size of the sample", "should keep the variance high", "All of these"],
+        a: 3
+    },
+    {
+        q: "The word research is related with",
+        o: ["Discovery of new idea", "solution of a problem", "Investigation of a problem", "All of the above"],
+        a: 3
+    },
+    {
+        q: "Basic research is also called",
+        o: ["Applied research", "Fundamental research", "Descriptive research", "analytical research"],
+        a: 1
+    },
+    {
+        q: "The last stage of research process is __",
+        o: ["Review of literature", "Report writing", "Research design", "None of these"],
+        a: 1
+    },
+    {
+        q: "The research that is especially carried out to test and validate the study hypotheses is termed",
+        o: ["Fundamental research", "Applied research", "Conclusive research", "Exploratory research"],
+        a: 2
+    },
+    {
+        q: "The research studies that explore the effect of one thing on another and more specifically, the effect of one variable on another are known as",
+        o: ["Causal research", "Applied research", "Conclusive research", "Exploratory research"],
+        a: 0
+    },
+    {
+        q: "Which of these is not a step in the problem identification process?",
+        o: ["Discussion with subject experts", "Review of existing literature", "Theoretical foundation and model building", "Management decision making"],
+        a: 3
+    },
+    {
+        q: "The Publication Manual of the American Psychological Association (2001) and the Chicago Manual of Style (1993) are:",
+        o: ["Well known works on research", "Referencing style guides in management", "Publishing journals", "Management journals"],
+        a: 1
+    },
+    {
+        q: "A formal document that presents the research objectives, design of achieving these objectives, and the expected outcomes/deliverables of the study is called",
+        o: ["Research design", "Research proposal", "Research hypothesis", "Research report"],
+        a: 1
+    },
+    {
+        q: "The format of thesis writing is the same as in",
+        o: ["Writing of Seminar representation", "Preparation of research paper/article", "A research dissertation", "Presenting a workshop/conference paper"],
+        a: 2
+    },
+    {
+        q: "Sampling is advantageous as it __",
+        o: ["Saves time", "Helps in capital saving", "Both a and b", "increases accuracy"],
+        a: 2
+    },
+    {
+        q: "Random sampling is helpful as it is ___",
+        o: ["Reasonably accurate", "Free from personal bias", "an economical method of data collection", "All of the above"],
+        a: 3
+    },
+    {
+        q: "Tippet table refers to _____",
+        o: ["Table of random digits", "Table used in sampling methods", "Table used in statistical investigations", "None of the above"],
+        a: 0
+    },
+    {
+        q: "What is a research design",
+        o: ["A way of conducting research that is not grounded in theory", "The choice between using qualitative and quantitative methods", "a framework for every stage of the collection and analysis of data", "None of the above"],
+        a: 2
+    },
+    {
+        q: "What is the name of the conceptual framework in which the research is carried out?",
+        o: ["Research hypothesis", "Synopsis of Research", "Research paradigm", "Research design"],
+        a: 3
+    },
+    {
+        q: "How is random sampling helpful?",
+        o: ["Reasonably accurate", "An economical method of data collection", "Free from personal biases", "All of the above"],
+        a: 3
+    },
+    {
+        q: "Probability sampling is otherwise called",
+        o: ["Multiple choice", "Uni-variate Analysis", "Random Sampling", "Bi-variate Analysis"],
+        a: 2
+    },
+    {
+        q: "Questions in which only two alternatives are possible is called",
+        o: ["Multiple choice questions", "Dichotomous questions", "Open ended questions", "Structured questions"],
+        a: 1
+    },
+    {
+        q: "Questions which allow only a few alternative way of answering is called ………..",
+        o: ["Open ended questions", "Unstructured questions", "Structural questions", "Dichotomous questions"],
+        a: 2
+    },
+    {
+        q: "In an experimental design , the dependent variable is…..",
+        o: ["The one that is not manipulated and in which any changes are observed", "The one that is manipulated in order to observe any effects on the other", "A measure of the extent to which personal values affect research", "An ambiguous concept whose meaning depends on how it is defined"],
+        a: 0
+    },
+    {
+        q: "Why do you need to review the existing literature",
+        o: ["To make sure you have a long list of references", "Because without it you could never reach the required word count", "To find what is already known about your area of interest", "To help in your general studying"],
+        a: 2
+    },
+    {
+        q: "To read critically means",
+        o: ["taking an opposing point of view to the ideas and opinions expressed", "Skimming through the material because most of it is just padding", "Evaluating what you read in terms of your own research questions", "Being negative about something before you read it"],
+        a: 2
+    },
+    {
+        q: "The importance of measurement in quantitative research is that",
+        o: ["it allows us to delineate fine differences between people or cases", "It provides consistent device or yardstick", "It allows for precise estimates of the degree of relationship between concepts", "All of these"],
+        a: 3
+    },
+    {
+        q: "Expand APA",
+        o: ["American Psychological Association", "American Philosophical Association", "Asian Psychological Association", "American Psychological Agency"],
+        a: 0
+    },
+    {
+        q: "Expand MLA",
+        o: ["Modern Language Association", "Mexican Language Association", "Modern Language Agency", "Modern Linguistics Association"],
+        a: 0
+    },
+    {
+        q: "A simple random sample is one in which",
+        o: ["from a random starting point , every nth unit from the sampling frame is selected", "A non probability strategy is used, making the results difficult to generalise", "The researcher has a certain quota of respondents to fill for various social groups", "Every unit of the population has an equal chance of being selected"],
+        a: 3
+    },
+    {
+        q: "Which of the following is not a type of non probability sampling",
+        o: ["Snowball sampling", "Stratified random sampling", "Quota sampling", "Convenience sampling"],
+        a: 1
+    },
+    {
+        q: "Generalised conclusion on the basis of a sample is technically known as",
+        o: ["Statistical inference of external validity of the research", "Parameter inference", "Data analysis and interpretation", "All of the above"],
+        a: 0
+    },
+    {
+        q: "Research is based up on",
+        o: ["Rating scale", "Experiments", "General principals", "scientific method"],
+        a: 3
+    },
+    {
+        q: "The main condition which should be followed by research is",
+        o: ["Honest exploration", "Knowledge of facts and principles", "Standardised findings and conclusions", "All of the above"],
+        a: 3
+    },
+    {
+        q: "Reliability is the fundamental quality of a research which also reflects",
+        o: ["superiority", "Purity of data", "verifiability", "validity"],
+        a: 2
+    },
+    {
+        q: "The research is always",
+        o: ["Exploring new knowledge", "Verifying the old knowledge", "filling the gap between the knowledge", "All of the above"],
+        a: 3
+    },
+    {
+        q: "Generally the data of the research is",
+        o: ["quantitative only", "Qualitative only", "Both of the above", "None of the above"],
+        a: 2
+    },
+    {
+        q: "while writing research report a researcher",
+        o: ["Must arrange in logical , topical and chronological order", "Must not use the numerical figures in numbers in the beginning of sentences", "must compare his results with those of other studies", "All of the above"],
+        a: 3
+    },
+    {
+        q: "Field study is related to",
+        o: ["real life situations", "Laboratory situations", "Experimental situations", "None of these"],
+        a: 0
+    },
+    {
+        q: "The method by which a sample is chosen",
+        o: ["Unit", "design", "Random", "Census"],
+        a: 1
+    },
+    {
+        q: "The essential qualities of a researcher are",
+        o: ["Spirit of free enquiry", "Reliance on observation and evidence", "Systematization or theorizing of knowledge", "All the above"],
+        a: 3
+    },
+    {
+        q: "In a research report figures and tables are included in ……..",
+        o: ["The appendix", "A separate chapter", "the concluding chapter", "along with the text itself"],
+        a: 0
+    },
+    {
+        q: "In a research report certificate and declaration are included in ……..",
+        o: ["Introduction part", "Main body", "End matter", "None of these"],
+        a: 0
+    },
+    {
+        q: "In a research report , bibliography is included in ___",
+        o: ["Introduction part", "Main body", "End matter", "None of these"],
+        a: 2
+    },
+    {
+        q: "In sampling , the lottery method is used for",
+        o: ["Interpretation", "Theoritisation", "Conceptualisation", "Randomisation"],
+        a: 3
+    },
+    {
+        q: "Which is the main objective of research",
+        o: ["To review the literature", "To summarise what is already known", "To get an academic degree", "To discover new facts or to make fresh interpretation of known facts"],
+        a: 3
+    },
+    {
+        q: "Which of the following is a research tool",
+        o: ["Graph", "Illustration", "Questionnaire", "Diagram"],
+        a: 2
+    },
+    {
+        q: "Which scale is the simplest form of measurement",
+        o: ["Ordinal", "Interval", "Ratio", "Nominal"],
+        a: 3
+    },
+    {
+        q: "absolute zero exists in ___",
+        o: ["Nominal scale", "Interval scale", "Ordinal scale", "ratio scale"],
+        a: 3
+    },
+    {
+        q: "assignment of numerals to the objects to represent their attributes is known as…….",
+        o: ["Nominal data", "Ordinal data", "Interval data", "Ratio data"],
+        a: 0
+    },
+    {
+        q: "abilities , attitudes and interest can be measured by___",
+        o: ["Rating scales", "Objective tests", "Self analysis", "Observational methods"],
+        a: 0
+    },
+    {
+        q: "A method of sampling that ensures proportional representation of all sections of the population is termed as",
+        o: ["Simple Random Sampling", "Stratified Sampling", "Purposive Sampling", "Systematic Sampling"],
+        a: 1
+    },
+    {
+        q: "The first page of the research report is___",
+        o: ["Appendix", "Bibligraphy", "Index", "Title page"],
+        a: 3
+    },
+    {
+        q: "The last page of the research report is……",
+        o: ["Appendix", "Bibligarphy", "Index", "Title page"],
+        a: 0
+    },
+    {
+        q: "Bibliography means…..",
+        o: ["foot note", "Quotations", "List of book referred", "Biography"],
+        a: 2
+    },
+    {
+        q: "An abstract is a___",
+        o: ["synopsis", "Quotations", "Glossary", "Bibliography"],
+        a: 0
+    },
+    {
+        q: "The last stage of research process is __",
+        o: ["Review of literature", "Report writing", "Research design", "Analysis of data"],
+        a: 1
+    },
+    {
+        q: "In Which of the following , reporting format is formally prescribed",
+        o: ["Doctoral level thesis", "Confernce of reserchers", "Symbosia", "Workshops and seminars"],
+        a: 0
+    },
+    {
+        q: "Which of the following is an optional supplement of a research paper",
+        o: ["Foot note", "Appendix", "Glossary", "Bibligraphy"],
+        a: 1
+    },
+    {
+        q: "A written format of a research work is known as___",
+        o: ["research paper", "Monograph", "Project report", "Research report"],
+        a: 3
+    },
+    {
+        q: "which of the following is a method of collecting primary data",
+        o: ["Observation method", "Interview method", "Questionnaires and schedules", "All of the above"],
+        a: 3
+    },
+    {
+        q: "Primary data can be collected through",
+        o: ["experiment", "Survey", "Both of these", "None of these"],
+        a: 2
+    },
+    {
+        q: "A schedule is generally filled up by __",
+        o: ["Researcher", "Informants", "Government", "Educational institutions"],
+        a: 0
+    },
+    {
+        q: "which of the following is an example of secondary data",
+        o: ["RBI Bulletin", "Government publication", "Committees and Commissions report", "All of these"],
+        a: 3
+    },
+    {
+        q: "The data which are collected from the place of origin is known as",
+        o: ["Primary data", "Secondary data", "Both primary and secondary", "None of these"],
+        a: 0
+    },
+    {
+        q: "Source of data collected and compiled by others is called",
+        o: ["Primary data", "Secondary data", "Both primary and secondary", "None of these"],
+        a: 1
+    },
+    {
+        q: "If the researcher is not familiar with the research problem , then which study is conducted to acquire knowledge of the subject",
+        o: ["pre testing", "pilot study", "Detailed study", "analytical study"],
+        a: 1
+    },
+    {
+        q: "Controlled group condition is applied in",
+        o: ["survey research", "historical research", "experimental research", "Descriptive research"],
+        a: 2
+    },
+    {
+        q: "The aggregate of all the units pertaining to a study is called",
+        o: ["Population and universe", "Unit", "sample", "Frame"],
+        a: 0
+    },
+    {
+        q: "a member of the population is called",
+        o: ["element", "data", "family", "group"],
+        a: 0
+    },
+    {
+        q: "The population to be sampled is divided in to units which are known as",
+        o: ["sampling frame", "sampling error", "sampling gap", "sampling units"],
+        a: 3
+    },
+    {
+        q: "Population value is called",
+        o: ["parameter", "statistic", "Variable", "Data"],
+        a: 0
+    },
+    {
+        q: "Sample value is called",
+        o: ["parameter", "statistic", "Variable", "Data"],
+        a: 1
+    },
+    {
+        q: "A complete survey of population is called",
+        o: ["Census", "sample", "report", "None of these"],
+        a: 0
+    },
+    {
+        q: "Judgemental sampling is also called as",
+        o: ["purposive sampling", "Convenience sampling", "extensive sampling", "cluster sampling"],
+        a: 0
+    },
+    {
+        q: "Stratified sampling is used when the population is….",
+        o: ["heterogenous", "homogeneous", "very large", "too small"],
+        a: 0
+    },
+    {
+        q: "sampling error is present only in",
+        o: ["census survey", "sample survey", "both of these", "None of these"],
+        a: 1
+    }
+   ];
+
+    let currentIdx = 0;
+    let score = 0;
+    const totalQuestions = quizData.length;
+
+    const qText = document.getElementById('question-text');
+    const optionsCont = document.getElementById('options-container');
+    const qNum = document.getElementById('q-num');
+    const totalQuestionsEl = document.getElementById('total-questions');
+    const nextBtn = document.getElementById('next-btn');
+    const currentScore = document.getElementById('current-score');
+    const totalScore = document.getElementById('total-score');
+    const finalTotal = document.getElementById('final-total');
+    const progressBar = document.getElementById('progress-bar');
+    const startSelector = document.getElementById('start-selector');
+
+    // Populate the dropdown with question numbers
+    function populateStartSelector() {
+        startSelector.innerHTML = '';
+        for (let i = 1; i <= totalQuestions; i++) {
+            const option = document.createElement('option');
+            option.value = i - 1; // zero-based index
+            option.textContent = i;
+            startSelector.appendChild(option);
+        }
+        startSelector.value = 0; // Default to first question
+    }
+
+    // Change starting question
+    function changeStartQuestion() {
+        const newStart = parseInt(startSelector.value);
+        if (newStart >= 0 && newStart < totalQuestions) {
+            currentIdx = newStart;
+            score = 0;
+            currentScore.textContent = score;
+            loadQuestion();
+        }
+    }
+
+    function updateProgressBar() {
+        const progress = ((currentIdx + 1) / totalQuestions) * 100;
+        progressBar.style.width = `${progress}%`;
+    }
+
+    function loadQuestion() {
+        const data = quizData[currentIdx];
+        qText.innerText = data.q;
+        qNum.innerText = currentIdx + 1;
+        optionsCont.innerHTML = '';
+        nextBtn.style.display = 'none';
+        updateProgressBar();
+
+        // Update selector to current question
+        startSelector.value = currentIdx;
+
+        data.o.forEach((opt, i) => {
+            const btn = document.createElement('button');
+            btn.innerText = `${String.fromCharCode(97 + i)}. ${opt}`;
+            btn.classList.add('option-btn');
+            btn.onclick = () => revealAnswer(i);
+            optionsCont.appendChild(btn);
+        });
+    }
+
+    function revealAnswer(selectedIdx) {
+        const correctIdx = quizData[currentIdx].a;
+        const buttons = optionsCont.getElementsByClassName('option-btn');
+
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].disabled = true;
+            if (i === correctIdx) {
+                buttons[i].classList.add('correct');
+            }
+            if (i === selectedIdx && selectedIdx !== correctIdx) {
+                buttons[i].classList.add('wrong');
+            }
+        }
+
+        if (selectedIdx === correctIdx) {
+            score++;
+            currentScore.textContent = score;
+        }
+        nextBtn.style.display = 'inline-block';
+    }
+
+    function nextQuestion() {
+        currentIdx++;
+        if (currentIdx < totalQuestions) {
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        document.getElementById('question-text').style.display = 'none';
+        optionsCont.style.display = 'none';
+        document.querySelector('.header').style.display = 'none';
+        document.querySelector('.score-display').style.display = 'none';
+        nextBtn.style.display = 'none';
+        progressBar.style.display = 'none';
+        
+        const res = document.getElementById('results');
+        res.style.display = 'block';
+        document.getElementById('score').innerText = score;
+        document.getElementById('final-total').innerText = totalQuestions;
+        
+        const performanceMsg = document.getElementById('performance-message');
+        const percentage = (score / totalQuestions) * 100;
+        
+        if (percentage >= 90) {
+            performanceMsg.textContent = "Outstanding! You have mastered Organizational Behavior concepts.";
+            performanceMsg.style.color = "var(--success)";
+        } else if (percentage >= 75) {
+            performanceMsg.textContent = "Excellent! You have a comprehensive understanding of OB concepts.";
+            performanceMsg.style.color = "#4a90e2";
+        } else if (percentage >= 60) {
+            performanceMsg.textContent = "Good job! You have a solid foundation in Organizational Behavior.";
+            performanceMsg.style.color = "#f39c12";
+        } else if (percentage >= 50) {
+            performanceMsg.textContent = "Fair. Review the topics you missed to strengthen your knowledge.";
+            performanceMsg.style.color = "#e67e22";
+        } else {
+            performanceMsg.textContent = "Keep studying! Review all OB concepts and try again.";
+            performanceMsg.style.color = "var(--danger)";
+        }
+    }
+
+    // Initialize
+    totalQuestionsEl.textContent = totalQuestions;
+    totalScore.textContent = totalQuestions;
+    finalTotal.textContent = totalQuestions;
+    populateStartSelector();
+    loadQuestion();
+</script>
+</body>
+</html>

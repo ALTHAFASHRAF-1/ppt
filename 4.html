@@ -1,0 +1,811 @@
+ <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OB Exam Prep Quiz</title>
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --secondary: #f5f7fa;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --text: #2c3e50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--secondary);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .quiz-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .question {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            min-height: 80px;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: var(--secondary);
+            border: 2px solid #ddd;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            outline: none;
+            text-align: left;
+        }
+
+        .option-btn:hover:not([disabled]) {
+            background: #e1e5ea;
+            border-color: var(--primary);
+        }
+
+        .correct {
+            background-color: var(--success) !important;
+            color: white !important;
+            border-color: #27ae60 !important;
+        }
+
+        .wrong {
+            background-color: var(--danger) !important;
+            color: white !important;
+            border-color: #c0392b !important;
+        }
+
+        .results {
+            display: none;
+        }
+
+        #next-btn {
+            margin-top: 20px;
+            padding: 10px 25px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .score-display {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--text);
+        }
+
+        .progress-bar {
+            height: 5px;
+            background-color: #eee;
+            border-radius: 2px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.5s;
+        }
+
+        .start-selector {
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 2px solid var(--primary);
+            background: white;
+            color: var(--text);
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .start-selector:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container" id="quiz">
+    <div class="header">
+        <span><span id="q-num">1</span>/<span id="total-questions">275</span></span>
+        <select class="start-selector" id="start-selector" onchange="changeStartQuestion()">
+            <!-- Options will be populated by JavaScript -->
+        </select>
+    </div>
+    <div class="progress-bar">
+        <div class="progress" id="progress-bar"></div>
+    </div>
+    <div class="question" id="question-text">Loading question...</div>
+    <div class="options" id="options-container"></div>
+    <div class="score-display">Score: <span id="current-score">0</span>/<span id="total-score">275</span></div>
+    <button id="next-btn" onclick="nextQuestion()">Next Question</button>
+
+    <div class="results" id="results">
+        <h2>Quiz Complete!</h2>
+        <p>Your Final Score: <span id="score">0</span>/<span id="final-total">275</span></p>
+        <p id="performance-message"></p>
+        <button onclick="location.reload()" style="padding: 10px 20px; cursor: pointer; margin-top: 15px;">Restart Quiz</button>
+    </div>
+</div>
+
+<script>
+    // Reduced quiz data for testing
+    const quizData = [
+    {
+        q: "___ is any paid form of non-personal presentation and promotion of ideas or products by an identified sponsor.",
+        o: ["Marketing", "Promotions", "Advertising", "Publicity"],
+        a: 2
+    },
+    {
+        q: "Developing ___ involves a series of decisions for planning, creating, delivering, and evaluating an advertising effort.",
+        o: ["Marketing plan", "Advertising message", "Advertising campaigns", "None of these"],
+        a: 2
+    },
+    {
+        q: "The following is the biggest limitation of advertising.",
+        o: ["It forces the consumer to buy the things he does not need", "It sells gloss and dreams too and dreams to prospective buyers", "It tells consumers about the arrival of new products in the market", "All of the above"],
+        a: 0
+    },
+    {
+        q: "Advertising contributes to _____.",
+        o: ["Economic growth of society or country", "National Capital", "Power of marketing Firms", "Chaos in the already congested marketplace"],
+        a: 0
+    },
+    {
+        q: "Do you believe that advertising can bring about socio-economic change?",
+        o: ["Certainly", "Only if media have their footprints and audience are willing and able to buy the content", "Only if a country or society is effluent", "Certainly not"],
+        a: 0
+    },
+    {
+        q: "The last step in the process followed under the AIDA model is _____.",
+        o: ["Intention", "Attention", "Desire", "None of the above"],
+        a: 2
+    },
+    {
+        q: "The client of an advertising agency is called",
+        o: ["Customer", "Major", "Corporate", "Account"],
+        a: 3
+    },
+    {
+        q: "Which media has the highest value of reach in the Indian context?",
+        o: ["TV", "Newspaper", "Radio", "Magazines"],
+        a: 0
+    },
+    {
+        q: "Media timing is concerned with",
+        o: ["Message Context", "Time and Period during which an advertising campaign is to be run", "Frequency of exposure", "Budget of the entire media mix"],
+        a: 1
+    },
+    {
+        q: "Reach refers to the percentage of",
+        o: ["Customers in a targeted market", "The population that advertisers consider", "Customers in the targeted market who are exposed to an advertising campaign", "Customers contacted (in person) in an advertising campaign"],
+        a: 2
+    },
+    {
+        q: "Which one of the following is not a budgeting method in the context of advertising?",
+        o: ["All available funds method", "Fixed Percentage Method", "Competitive Parity Method", "Objective and Task Method"],
+        a: 0
+    },
+    {
+        q: "The unit sale method of advertising budgeting",
+        o: ["Involves the allocation of all available funds for advertising purposes", "Focuses on external market trends", "Takes the cost of advertising as an individual item and multiplies it by the number of units the advertiser wished to sell", "None of the above"],
+        a: 2
+    },
+    {
+        q: "Advertising budget emanates from",
+        o: ["Advertising Tenets", "Advertising objectives", "Market plans", "Firm's overall objectives"],
+        a: 1
+    },
+    {
+        q: "If we launch a new product, we combine advertising with",
+        o: ["Publicity", "Sales promotion", "Personal selling", "None of the above"],
+        a: 1
+    },
+    {
+        q: "Who is responsible for the overall output, viz production, quality, manufacturing, etc. of an advertisement?",
+        o: ["Copywriter", "Artist", "Cameraman", "Creative Director"],
+        a: 3
+    },
+    {
+        q: "Magazines are ___ and ___ media that also build the brand image of a product or business firm",
+        o: ["Colourful, informative", "Informative, powerful", "Creative, colourful", "Powerful, Mass"],
+        a: 0
+    },
+    {
+        q: "A newspaper is ___ cost but ___ valid media",
+        o: ["High Frequently", "Current, never", "Low, Presently", "Log, Highly"],
+        a: 2
+    },
+    {
+        q: "A ___ writes the text of an advertisement whereas a director designs the advertisement.",
+        o: ["Writer, Intuitive", "Copywriter, outsider", "Copywriter, art", "Copy-composer, editorial"],
+        a: 2
+    },
+    {
+        q: "The three basic ingredients of any advertising copy are ___ style and ___.",
+        o: ["Content, clarity", "Clarity, Presentation", "Presentation, content", "Content, colours"],
+        a: 2
+    },
+    {
+        q: "___ and ___ help lock in key phrases that are a brand image.",
+        o: ["Pop-ups, Jingles", "Displays, SlogAns:", "SlogAns:, Jingles", "Jingles, Displays"],
+        a: 2
+    },
+    {
+        q: "In ___ advertising, products that are forbidden from being advertised are promoted through another product of the same brand, using the brand image.",
+        o: ["Stealth", "Surrogate", "Ethical", "None of these"],
+        a: 1
+    },
+    {
+        q: "Which is the oldest largest advertisement agency in India?",
+        o: ["Lowas Lintas", "Ogilvy & Mather", "Hindustan Thompson Associates Ltd", "None of these"],
+        a: 2
+    },
+    {
+        q: "Production is a part of which department?",
+        o: ["Creative", "Media", "Client Servicing", "Marketing Research"],
+        a: 0
+    },
+    {
+        q: "___ are the wordsmiths who do the wording of an advertisement.",
+        o: ["Creative director", "Accounts Executive", "Copy chief", "Copywriters"],
+        a: 3
+    },
+    {
+        q: "___ is the process by which an individual selects, organizes, and interprets information inputs to create a meaningful picture of the world.",
+        o: ["Decoding", "Perception", "Perceptual mapping", "Mind filters"],
+        a: 1
+    },
+    {
+        q: "The ___ is considered to be the most important part of a print copy that is supposed to convey the main message in an advertisement.",
+        o: ["Copy", "Pictures", "Jingle", "Headline"],
+        a: 3
+    },
+    {
+        q: "What is the term used for determining an advertisement's effectiveness based on consumer responses, feedback, and behaviour?",
+        o: ["Pre-Testing", "Copy- Testing", "Both A & B", "None of these"],
+        a: 1
+    },
+    {
+        q: "Who among the following is responsible to keep updates with media trends, obtain media costs, discover market trends and understand the motivations of consumers?",
+        o: ["Client Service executive", "Media Planner", "Media Buyer", "Advertising Agency"],
+        a: 1
+    },
+    {
+        q: "What factors should be considered while setting the advertising budget?",
+        o: ["Competition", "Market situation", "Sales decay rate", "All of the above"],
+        a: 3
+    },
+    {
+        q: "The All- you- can- afford method is used in which of the below?",
+        o: ["Market Research", "Budgeting", "Media Planning", "Media Buying"],
+        a: 1
+    },
+    {
+        q: "___ is the watchdog organization that lays down ethical standards for the advertising industry.",
+        o: ["IRDA", "ASCI", "DMA", "TRAI"],
+        a: 1
+    },
+    {
+        q: "Misleading advertisements are covered by the ___ Protection Act of 1986.",
+        o: ["Company", "Customer", "Agency", "None of these"],
+        a: 1
+    },
+    {
+        q: "Misleading Advertising, Unethical Product Endorsements, Stereotyping are some of the advertising ___.",
+        o: ["Strategies", "Malpractices", "Practices", "Drawbacks"],
+        a: 1
+    },
+    {
+        q: "The fundamental objective of media with reference to advertising is to deliver the right message to the right ___ at the right time.",
+        o: ["Client", "Person", "Place", "Medium"],
+        a: 1
+    },
+    {
+        q: "Sales promotion is particularly effective in triggering ___ trials and unplanned impulse purchases.",
+        o: ["Product", "Pre-purchase", "Purchase", "None of these"],
+        a: 2
+    },
+    {
+        q: "Mail-in coupons, Contest forms, etc., are examples of _______.",
+        o: ["Publicity", "Public relations", "Sales promotion", "All of the above"],
+        a: 2
+    },
+    {
+        q: "The purpose of ___ is to induce the consumer to try the product immediately.",
+        o: ["Price Discounts", "Discount Coupons", "Free Offers", "Refunds"],
+        a: 2
+    },
+    {
+        q: "___ target resellers the wholesalers and retailers who distribute manufacturers' products to the end-users.",
+        o: ["Sales Promotions", "Trade promotions", "Sweepstakes", "Premiums"],
+        a: 1
+    },
+    {
+        q: "Expand P-O-P.",
+        o: ["Price of purchase", "Place of purchase", "Point of Purchase", "Product of purchase"],
+        a: 2
+    },
+    {
+        q: "Which among the following is a Pull Strategy?",
+        o: ["Trade promotion", "Consumer promotion", "promotion", "None of these"],
+        a: 1
+    },
+    {
+        q: "If a company gives false message to the customers, it is known as ______.",
+        o: ["obscene ads", "subliminal ads", "deception", "none of these"],
+        a: 2
+    },
+    {
+        q: "Which of the following is more of personal medium of advertisement?",
+        o: ["internet advertisement", "broadcast media", "direct mail advertising", "print media"],
+        a: 2
+    },
+    {
+        q: "A _____ is a promotion strategy that calls for using the sales force and trade promotion to move the product through channels.",
+        o: ["push strategy", "pull strategy", "blocking strategy", "integrated strategy"],
+        a: 0
+    },
+    {
+        q: "________is a departments within a company that is responsible for producing some or all of that company's marketing communication.",
+        o: ["full-service agency", "in-house agency", "marketing agency", "PR-agency"],
+        a: 1
+    },
+    {
+        q: "_______ is a clever phrase that serves as a reminder of a brand, company image, or campaign theme.",
+        o: ["caption", "body copy", "display copy", "slogan"],
+        a: 3
+    },
+    {
+        q: "___________ are verbal explanations of visuals.",
+        o: ["captions", "call-outs", "tag-line", "signature"],
+        a: 0
+    },
+    {
+        q: "What is AIDA?",
+        o: ["Advertisement, Interest, Demand, Acquire", "Action, Interest, Desire, Attention", "Attraction, Interest, Desire, Attention", "Attention, Interest, Desire, Action"],
+        a: 3
+    },
+    {
+        q: "Which of the following is NOT a requirement for setting advertising objectives?",
+        o: ["objectives must specify the amount of change.", "objectives must be realistic.", "objectives must be stated in terms of profits.", "objectives must be clear and in writing."],
+        a: 2
+    },
+    {
+        q: "The creative point in advertising where the search for a \"big idea\" takes pace is known as",
+        o: ["ideation", "conceptualisation", "visualisation", "promotion"],
+        a: 1
+    },
+    {
+        q: "Lintas and Mudra communications, started as ______________of Hindustan Unilever Ltd., and Reliance, respectively.",
+        o: ["full service", "house agencies", "a la carte agencies", "medium agency"],
+        a: 1
+    },
+    {
+        q: "Which of the following are agency personnel who undertake investigate to support a campaign?",
+        o: ["research manager", "account manager", "media director", "account planner"],
+        a: 3
+    },
+    {
+        q: "An agency can also handle overall advertising and ________ strategy and sales promotions for its customers.",
+        o: ["brand management", "brand", "product placement", "advertising"],
+        a: 0
+    },
+    {
+        q: "________ agencies specialize in endorsement of brands in the various social media platforms like blogs, social network sites, Q&A sites, discussion forums, micro blogs etc.",
+        o: ["social media", "user-generated contented", "friend feed", "social network service"],
+        a: 0
+    },
+    {
+        q: "_______ use many kinds of headlines and copy styles, using various appeals keeping in view the product attributes and consumer profile.",
+        o: ["illustrators", "copy writers", "artists", "animators"],
+        a: 1
+    },
+    {
+        q: "Majority of the ads appearing online are",
+        o: ["banner advertisements.", "pop- up advertising.", "display advertising.", "corner ads."],
+        a: 0
+    },
+    {
+        q: "Misleading ads are prohibited in India under the _____ Act.",
+        o: ["ASCI", "IPR", "Copyright", "MRTP"],
+        a: 3
+    },
+    {
+        q: "______refers to a situation when an advertiser withdraws the product advertised and substitutes it with a different quality product.",
+        o: ["surrogate advertising", "disparagement", "bait-and-switch", "remediation"],
+        a: 2
+    },
+    {
+        q: "Testing with a potential group of focussed users is",
+        o: ["pre-testing", "post- testing", "concurrent testing", "validation"],
+        a: 0
+    },
+    {
+        q: "The first ad agency was set up by____________.",
+        o: ["Gutenberg", "Volney Palmer", "Kuleshov", "E. S. Porter"],
+        a: 1
+    },
+    {
+        q: "All marketing activities that attempt to stimulate quick buyer action or immediate sales of a product are known as __________.",
+        o: ["sales promotion", "sponsorship", "advertising", "publicity"],
+        a: 0
+    },
+    {
+        q: "The complete analysis and execution of the media component of a campaign is _______.",
+        o: ["media planners", "media strategy", "product promotion", "brand identity"],
+        a: 1
+    },
+    {
+        q: "The group that composes the present and potential prospects for a product or service is _________.",
+        o: ["media planners", "media buyers", "target audience", "media executives"],
+        a: 2
+    },
+    {
+        q: "Promotion mix includes Sales Promotion, Personal Selling, Advertising and",
+        o: ["Marketing", "Sales", "Publicity", "None of these"],
+        a: 2
+    },
+    {
+        q: "Copy testing is also known as",
+        o: ["Pre Testing", "Copy writing", "Concurrent testing", "Preview"],
+        a: 0
+    },
+    {
+        q: "Which among the following is an example of Trade promotion?",
+        o: ["Coupons", "Samples", "Push Money", "None of these"],
+        a: 2
+    },
+    {
+        q: "The strategy that encourages dealers and distributors to sell a product is known as ____.",
+        o: ["Push", "Pull", "Combination", "Marketing"],
+        a: 0
+    },
+    {
+        q: "The process of purchasing space in a media is",
+        o: ["Media Spacing", "Media Scheduling", "Media Purchasing", "Media Buying"],
+        a: 3
+    },
+    {
+        q: "Series of advertisement messages that share a single idea or theme is",
+        o: ["Advertisement Campaign", "Advertisement Group", "Advertisement Cluster", "Advertisement Series"],
+        a: 0
+    },
+    {
+        q: "The specific carrier within a medium is called",
+        o: ["Media Carrier", "Media Bus", "Media Van", "Media Vehicle"],
+        a: 3
+    },
+    {
+        q: "The combination of media used for advertising in a target market is",
+        o: ["Media Mix", "Market-Media Match", "Media Advertising", "Media Option"],
+        a: 0
+    },
+    {
+        q: "Selection of most appropriate cost-effective medium in advertisement is",
+        o: ["Media Buying", "Media Scheduling", "Media Purchasing", "Media Selection"],
+        a: 3
+    },
+    {
+        q: "Independent organization of creative people for advertisement and promotional tools are called",
+        o: ["Advertisement Makers", "Advertisement Creators", "Advertisement Developers", "Advertisement Agency"],
+        a: 3
+    },
+    {
+        q: "Which of the following promotional forms is often described as being too impersonal and only a one-way communication form?",
+        o: ["Advertising", "Personal Selling", "Public Relations", "Sales Promotion"],
+        a: 0
+    },
+    {
+        q: "A specific communication task to be accomplished with a specific target audience during a specific period of time is called an:",
+        o: ["Advertising campaign", "Advertising objective", "Advertising criterion", "Advertising evaluation"],
+        a: 1
+    },
+    {
+        q: "Determining the promotion budget on the basis of financial availability of capital is characteristic of which of the following budget methods?",
+        o: ["Affordable method", "Percentage of Sales Method", "Competitive Parity Method", "Objective End Task Method"],
+        a: 0
+    },
+    {
+        q: "Setting the promotion budget so as to match the budgets of the competitors is characteristic of which of the following budget methods?",
+        o: ["Affordable method", "Percentage of Sales Method", "Competitive Parity Method", "Objective End Task Method"],
+        a: 2
+    },
+    {
+        q: "_____ are vehicles or channels through which the advertising messages are transmitted to target consumers so that the desired action may be induced at the consumer level.",
+        o: ["Advertisement media", "Advertisement copy", "Advertising layout", "Teaser advertisements"],
+        a: 0
+    },
+    {
+        q: "_____ is a plan of presenting the message in a more specific and compact form within the advertising space available to the target consumers.",
+        o: ["Advertisement media", "Advertisement copy", "Advertising layout", "Teaser advertisements"],
+        a: 1
+    },
+    {
+        q: "The central theme of an advertisement that motivates the consumer to make a purchase decision is?",
+        o: ["Advertising appeal", "Advertisement script", "Slogan", "Headline"],
+        a: 0
+    },
+    {
+        q: "The content and context of a message contained in an advertisement is called?",
+        o: ["Ad Copy", "Script", "Body", "Advertising Appeal"],
+        a: 0
+    },
+    {
+        q: "Which among the following is the right sequence of copywriting process?",
+        o: ["planning, research, organisation, writing, checking, proof reading, editing, revision", "research, planning, organisation, writing, checking, proof reading, editing, revision", "planning, research, organisation, writing, checking, editing, proof reading, revision", "research, planning, organisation, writing, checking, editing, proof reading, revision"],
+        a: 3
+    },
+    {
+        q: "Which among the following is not a function of ad agency?",
+        o: ["Conduct market analysis", "Develop advertising plans", "Develop media strategy", "Collect feedback from target audience"],
+        a: 3
+    },
+    {
+        q: "_____ is a self-regulatory voluntary organization of the advertising industry.",
+        o: ["Securities and Exchange Board of India", "Reserve Bank of India (RBI)", "Medical Council of India", "Advertising Standards Council of India (ASCI)"],
+        a: 3
+    },
+    {
+        q: "The basic objective of push strategy is to encourage the ___________.",
+        o: ["Consumer", "Middlemen", "Producer", "Public"],
+        a: 1
+    },
+    {
+        q: "A pull sales promotion strategy concentrates on the __________.",
+        o: ["Consumer", "Middlemen", "Producer", "Public"],
+        a: 0
+    },
+    {
+        q: "_____________advertising may be formative, persuasive or reminder oriented in character.",
+        o: ["Institutional", "Product", "Consumer", "Local"],
+        a: 0
+    },
+    {
+        q: "_____________ advertisements are new Windows that appear in front of the website content.",
+        o: ["Display Ads", "Pop Up", "Banner Ads", "Tv Ads"],
+        a: 1
+    },
+    {
+        q: "________ is a method of establishing and overall promotional budget relies on previous budget in the allocation of fund.",
+        o: ["Incremental Method", "Percentage of Sales Method", "All You Can Afford Method", "Competitive Parity Method"],
+        a: 0
+    },
+    {
+        q: "Merchandise allowance is a __________ technique.",
+        o: ["Consumer promotion Techniques", "Trader Promotion Techniques", "Sales Force Promotion Technique", "Pull Promotion Technique"],
+        a: 1
+    },
+    {
+        q: "Advertising is affected by ________ forces",
+        o: ["Economic", "Social", "Ethical", "All the above"],
+        a: 3
+    },
+    {
+        q: "A__________ is in charge for selecting media for advertisement assignment on behalf of their customers.",
+        o: ["Media Planner", "Media Buying", "Space Seller", "Copywriter"],
+        a: 0
+    },
+    {
+        q: "A personal ad is an item or notice conventionally in the ________, similar to a classified ad but personal in life.",
+        o: ["Defamation", "Newspaper", "Media Bias", "News Media"],
+        a: 1
+    },
+    {
+        q: "A system of broadcasting television whereby programs are first tuned in by a community antenna and then distributed to individual homes is______________.",
+        o: ["Cable TV", "CCA", "CATV", "Car Card"],
+        a: 2
+    },
+    {
+        q: "Evaluation, length of promotion, size of incentive, deciding how to promote and distribute the promotion program itself is the part of __________.",
+        o: ["Tools", "Objectives", "Developing sales promotion program", "Rapid growth of sales promotion"],
+        a: 2
+    },
+    {
+        q: "Increasing short term sales, getting retailers to carry new products and advertise more, reinforce brand position are _____ of Sales promotion.",
+        o: ["Tools", "Developing programs", "Overviews", "Objectives"],
+        a: 3
+    },
+    {
+        q: "In advertisements we generally see a warning for cigarettes that \"Smoking is Injurious to health\". It's an example of",
+        o: ["Advertising", "Monopoly in market", "Legal environment", "Entertainment"],
+        a: 2
+    },
+    {
+        q: "A short and striking or memorable phrase used in advertising is called",
+        o: ["Logo", "Slogan", "Brand Image", "Sign"],
+        a: 1
+    },
+    {
+        q: "________ is helpful in promotion the businesses people and big industrialists are promoting their goods and services through networking sites like Facebook, Twitter etc.",
+        o: ["Social Media", "Email", "Radio", "TV"],
+        a: 0
+    },
+    {
+        q: "Which of the following is the most popular print media available to advertiser?",
+        o: ["Magazine", "Pamphlet", "Emails", "Newspaper"],
+        a: 3
+    },
+    {
+        q: "The advertisement of newspaper has a very short life span of",
+        o: ["One Day", "One Week", "One Month", "One Year"],
+        a: 0
+    },
+    {
+        q: "Which one among the following Acts does not contain provisions that regulate advertising in India?",
+        o: ["The Consumer Protection Act, 1986", "Motor Vehicles Act, 1988", "The Company Secretaries, Act", "Prize Competition Act, 1955"],
+        a: 2
+    }
+   ];
+
+    let currentIdx = 0;
+    let score = 0;
+    const totalQuestions = quizData.length;
+
+    const qText = document.getElementById('question-text');
+    const optionsCont = document.getElementById('options-container');
+    const qNum = document.getElementById('q-num');
+    const totalQuestionsEl = document.getElementById('total-questions');
+    const nextBtn = document.getElementById('next-btn');
+    const currentScore = document.getElementById('current-score');
+    const totalScore = document.getElementById('total-score');
+    const finalTotal = document.getElementById('final-total');
+    const progressBar = document.getElementById('progress-bar');
+    const startSelector = document.getElementById('start-selector');
+
+    // Populate the dropdown with question numbers
+    function populateStartSelector() {
+        startSelector.innerHTML = '';
+        for (let i = 1; i <= totalQuestions; i++) {
+            const option = document.createElement('option');
+            option.value = i - 1; // zero-based index
+            option.textContent = i;
+            startSelector.appendChild(option);
+        }
+        startSelector.value = 0; // Default to first question
+    }
+
+    // Change starting question
+    function changeStartQuestion() {
+        const newStart = parseInt(startSelector.value);
+        if (newStart >= 0 && newStart < totalQuestions) {
+            currentIdx = newStart;
+            score = 0;
+            currentScore.textContent = score;
+            loadQuestion();
+        }
+    }
+
+    function updateProgressBar() {
+        const progress = ((currentIdx + 1) / totalQuestions) * 100;
+        progressBar.style.width = `${progress}%`;
+    }
+
+    function loadQuestion() {
+        const data = quizData[currentIdx];
+        qText.innerText = data.q;
+        qNum.innerText = currentIdx + 1;
+        optionsCont.innerHTML = '';
+        nextBtn.style.display = 'none';
+        updateProgressBar();
+
+        // Update selector to current question
+        startSelector.value = currentIdx;
+
+        data.o.forEach((opt, i) => {
+            const btn = document.createElement('button');
+            btn.innerText = `${String.fromCharCode(97 + i)}. ${opt}`;
+            btn.classList.add('option-btn');
+            btn.onclick = () => revealAnswer(i);
+            optionsCont.appendChild(btn);
+        });
+    }
+
+    function revealAnswer(selectedIdx) {
+        const correctIdx = quizData[currentIdx].a;
+        const buttons = optionsCont.getElementsByClassName('option-btn');
+
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].disabled = true;
+            if (i === correctIdx) {
+                buttons[i].classList.add('correct');
+            }
+            if (i === selectedIdx && selectedIdx !== correctIdx) {
+                buttons[i].classList.add('wrong');
+            }
+        }
+
+        if (selectedIdx === correctIdx) {
+            score++;
+            currentScore.textContent = score;
+        }
+        nextBtn.style.display = 'inline-block';
+    }
+
+    function nextQuestion() {
+        currentIdx++;
+        if (currentIdx < totalQuestions) {
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        document.getElementById('question-text').style.display = 'none';
+        optionsCont.style.display = 'none';
+        document.querySelector('.header').style.display = 'none';
+        document.querySelector('.score-display').style.display = 'none';
+        nextBtn.style.display = 'none';
+        progressBar.style.display = 'none';
+        
+        const res = document.getElementById('results');
+        res.style.display = 'block';
+        document.getElementById('score').innerText = score;
+        document.getElementById('final-total').innerText = totalQuestions;
+        
+        const performanceMsg = document.getElementById('performance-message');
+        const percentage = (score / totalQuestions) * 100;
+        
+        if (percentage >= 90) {
+            performanceMsg.textContent = "Outstanding! You have mastered Organizational Behavior concepts.";
+            performanceMsg.style.color = "var(--success)";
+        } else if (percentage >= 75) {
+            performanceMsg.textContent = "Excellent! You have a comprehensive understanding of OB concepts.";
+            performanceMsg.style.color = "#4a90e2";
+        } else if (percentage >= 60) {
+            performanceMsg.textContent = "Good job! You have a solid foundation in Organizational Behavior.";
+            performanceMsg.style.color = "#f39c12";
+        } else if (percentage >= 50) {
+            performanceMsg.textContent = "Fair. Review the topics you missed to strengthen your knowledge.";
+            performanceMsg.style.color = "#e67e22";
+        } else {
+            performanceMsg.textContent = "Keep studying! Review all OB concepts and try again.";
+            performanceMsg.style.color = "var(--danger)";
+        }
+    }
+
+    // Initialize
+    totalQuestionsEl.textContent = totalQuestions;
+    totalScore.textContent = totalQuestions;
+    finalTotal.textContent = totalQuestions;
+    populateStartSelector();
+    loadQuestion();
+</script>
+</body>
+</html>

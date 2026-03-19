@@ -1,0 +1,606 @@
+ <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OB Exam Prep Quiz</title>
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --secondary: #f5f7fa;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --text: #2c3e50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--secondary);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .quiz-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .question {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            min-height: 80px;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: var(--secondary);
+            border: 2px solid #ddd;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            outline: none;
+            text-align: left;
+        }
+
+        .option-btn:hover:not([disabled]) {
+            background: #e1e5ea;
+            border-color: var(--primary);
+        }
+
+        .correct {
+            background-color: var(--success) !important;
+            color: white !important;
+            border-color: #27ae60 !important;
+        }
+
+        .wrong {
+            background-color: var(--danger) !important;
+            color: white !important;
+            border-color: #c0392b !important;
+        }
+
+        .results {
+            display: none;
+        }
+
+        #next-btn {
+            margin-top: 20px;
+            padding: 10px 25px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .score-display {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--text);
+        }
+
+        .progress-bar {
+            height: 5px;
+            background-color: #eee;
+            border-radius: 2px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.5s;
+        }
+
+        .start-selector {
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 2px solid var(--primary);
+            background: white;
+            color: var(--text);
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .start-selector:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container" id="quiz">
+    <div class="header">
+        <span><span id="q-num">1</span>/<span id="total-questions">275</span></span>
+        <select class="start-selector" id="start-selector" onchange="changeStartQuestion()">
+            <!-- Options will be populated by JavaScript -->
+        </select>
+    </div>
+    <div class="progress-bar">
+        <div class="progress" id="progress-bar"></div>
+    </div>
+    <div class="question" id="question-text">Loading question...</div>
+    <div class="options" id="options-container"></div>
+    <div class="score-display">Score: <span id="current-score">0</span>/<span id="total-score">275</span></div>
+    <button id="next-btn" onclick="nextQuestion()">Next Question</button>
+
+    <div class="results" id="results">
+        <h2>Quiz Complete!</h2>
+        <p>Your Final Score: <span id="score">0</span>/<span id="final-total">275</span></p>
+        <p id="performance-message"></p>
+        <button onclick="location.reload()" style="padding: 10px 20px; cursor: pointer; margin-top: 15px;">Restart Quiz</button>
+    </div>
+</div>
+
+<script>
+    // Reduced quiz data for testing
+    const quizData = [
+    {
+        q: "The purpose of supply chain management is…………….",
+        o: ["provide customer satisfaction", "improve quality of a product", "Integrating supply and demand management", "increase production"],
+        a: 2
+    },
+    {
+        q: "Logistics is the part of supply chain involved with the forward and reverse flow of",
+        o: ["goods", "services", "cash", "all of the above"],
+        a: 3
+    },
+    {
+        q: "VMI stands for",
+        o: ["Vendor Material Inventory", "Vendor Managed Inventory", "Variable Material Inventory", "Valuable Material Inventory"],
+        a: 1
+    },
+    {
+        q: "The major decision areas in supply chain management are",
+        o: ["planning, production ,distribution, inventory", "Location, production, scheduling ,inventory", "location ,production ,inventory", "location ,production, distribution, marketing"],
+        a: 1
+    },
+    {
+        q: "Distribution requirements planning is a system for",
+        o: ["inventory management", "distribution planning", "both 'a' and 'b'", "none of the above"],
+        a: 2
+    },
+    {
+        q: "Reverse logistics is required because",
+        o: ["goods are defective", "goods are unsold", "the customer simply change their minds", "all of the above"],
+        a: 3
+    },
+    {
+        q: "3 PL stands for",
+        o: ["three points logistics", "third party logistics", "three points location", "none of the above"],
+        a: 1
+    },
+    {
+        q: "What are the elements of logistics system ?",
+        o: ["transportation", "warehousing", "inventory management", "all of the above"],
+        a: 3
+    },
+    {
+        q: "Logistics system are made up of 3 main activities.",
+        o: ["order processing", "inventory management", "both 'a' and 'b'", "none of these"],
+        a: 2
+    },
+    {
+        q: "E-logistics features :",
+        o: ["every modification is logged", "advanced search capabilities", "both 'a' and 'b'", "none of these above"],
+        a: 2
+    },
+    {
+        q: "Which is not a part of basic systems of codification?",
+        o: ["alphabetical system", "numerical system", "colour coding system", "none of these above"],
+        a: 2
+    },
+    {
+        q: "_____________ and physical distribution are the two major operations of logistics .",
+        o: ["supply chain management", "material management", "logistics management", "all of the above"],
+        a: 1
+    },
+    {
+        q: "Which of the following is not a component of 4 PL?",
+        o: ["control room", "resource providers", "information", "recycling"],
+        a: 3
+    },
+    {
+        q: "Which of the following is not a part of supply chain management system?",
+        o: ["supplier", "manufacturer", "information flow", "competitor"],
+        a: 3
+    },
+    {
+        q: "DRP stands for",
+        o: ["distribution requirement planning", "dividend requirement planning", "distribution resource planning", "distribution reverse planning"],
+        a: 0
+    },
+    {
+        q: "_____________ can be defined by having the right item in the right quantity at the right time at the right place for the right price and is the science of process and incorporates all industry sectors",
+        o: ["Logistics", "SCM", "Transportation", "Shipment"],
+        a: 0
+    },
+    {
+        q: "At ___ level, the decisions are made with long-term objectives.",
+        o: ["Performance", "Strategic", "Tactical", "Operational"],
+        a: 1
+    },
+    {
+        q: "_____________ is a system-wide management of entire logistics chain as single entity",
+        o: ["green logistics", "integrated", "logistics", "EDI"],
+        a: 1
+    },
+    {
+        q: "Which is not a part of the 3Cs of logistics",
+        o: ["Competitor", "Cost", "Company", "Customer"],
+        a: 2
+    },
+    {
+        q: "which is not a part of logistics performance cycle",
+        o: ["procurement", "inventory management", "manufacturing", "distribution"],
+        a: 0
+    },
+    {
+        q: "What is low on productivity and high on value advantage",
+        o: ["service leader", "commodity leader", "cost leader", "cost and service leader"],
+        a: 0
+    },
+    {
+        q: "Activities associated with storing and physically distributing the products to the buyers are included in which logistics",
+        o: ["inbound", "outbound", "3PL", "4PL"],
+        a: 1
+    },
+    {
+        q: "The following is not a part of logistics functions of any organization",
+        o: ["procurement", "payment follow-up", "storage", "distribution"],
+        a: 1
+    },
+    {
+        q: "Which is the systematic, strategic coordination of the traditional business functions",
+        o: ["SCM", "Logistics", "Transportation", "Dispatching"],
+        a: 0
+    },
+    {
+        q: "Extended SCM Used in how many production ?",
+        o: ["Multiple", "Complex", "Less", "Simple"],
+        a: 0
+    },
+    {
+        q: "Which of the following is the cost involved in holding goods in a warehouse?",
+        o: ["Facility cost", "Processing cost", "Inventory cost", "Transportation cost"],
+        a: 2
+    },
+    {
+        q: "Which of the following are true with respect to traffic assignment?",
+        o: ["Estimating the volume of traffic on a network", "Estimating the turning movements at intersections", "Both a) and b)", "None of the above"],
+        a: 2
+    },
+    {
+        q: "___ modes of transportation best suit time-sensitive and emergency shipments.",
+        o: ["Air", "Truck", "Pipeline", "Water transportation"],
+        a: 0
+    },
+    {
+        q: "___ provides a low-cost service for export production.",
+        o: ["Source facility", "Offshore facility", "Contributor facility", "Outpost facility"],
+        a: 1
+    },
+    {
+        q: "If facilities have lower fixed costs many local facilities can be established because this reduces…",
+        o: ["Fixed costs", "Exchange rates", "Transportation costs", "Taxes"],
+        a: 2
+    },
+    {
+        q: "By combining inventory at a single location, the amount of safety stock that is necessary for a service level ___.",
+        o: ["Decreases", "Increases", "Remains fixed", "Halves"],
+        a: 0
+    },
+    {
+        q: "Proper inventory can save the........",
+        o: ["The cost", "Labours", "Space", "All the above"],
+        a: 3
+    },
+    {
+        q: "SCM includes..........",
+        o: ["Transportation", "Material handling", "Storage", "All the above"],
+        a: 3
+    },
+    {
+        q: "........ Plays important role in supply chain management",
+        o: ["Finance", "Marketing", "Information system", "None of these"],
+        a: 2
+    },
+    {
+        q: "Now a days organisations are paying attention supply chain management for...",
+        o: ["Proper supply", "Value addition", "Transportation", "All the above"],
+        a: 3
+    },
+    {
+        q: "In the today's competition world every organisation want give proper service to the Customers with the help of.......",
+        o: ["Supply chain management", "Retail Management", "Sales management", "None of these"],
+        a: 0
+    },
+    {
+        q: "Moving goods from suppliers to manufacturing company is part of of....",
+        o: ["Marketing", "Production", "Finance", "Supply chain management"],
+        a: 3
+    },
+    {
+        q: "Handling material in the organisation within the production process is part of......",
+        o: ["Production", "Finance", "Supply chain management", "Marketing"],
+        a: 2
+    },
+    {
+        q: "Keeping stock updated in the warehouse is the the function of..........",
+        o: ["Supply chain management", "Retail Management", "Sales management", "None of these"],
+        a: 0
+    },
+    {
+        q: "If a customer return the product if it is not matching with ordered one then picking Up of the product is part of......",
+        o: ["Supply chain management", "Retail Management", "Sales management", "None of these"],
+        a: 0
+    },
+    {
+        q: "Well-designed SCM always go along with the organisations......",
+        o: ["Production", "Objectives", "Marketing", "Finance"],
+        a: 1
+    },
+    {
+        q: "Global supply chain management means providing the the products and services all Over the.........",
+        o: ["Village", "City", "Globe", "Metropolitan"],
+        a: 2
+    },
+    {
+        q: "The ultimate goal of SCM is......",
+        o: ["High productivity", "Cost reduction", "Better service", "All the above"],
+        a: 3
+    },
+    {
+        q: "Many time people has confusion between SCM and........",
+        o: ["Finance", "Transportation", "Marketing", "Human resource"],
+        a: 1
+    },
+    {
+        q: "..... Is part of supply chain management",
+        o: ["Material handling", "Retail Management", "Sales management", "None of these"],
+        a: 0
+    },
+    {
+        q: "When suppliers, distributors, and customers partner with each other to improve the Performance of the entire system, they are participating in a ________",
+        o: ["Channel Of Distribution", "Value Delivery Network", "Supply Chain", "Supply And Demand chain"],
+        a: 1
+    },
+    {
+        q: "Which of the following is not an area of responsibility for a logistics manager?",
+        o: ["Inventory", "Purchasing", "Warehousing", "Marketing"],
+        a: 3
+    },
+    {
+        q: "A Supply Chain which includes the Distribution of finished products and services",
+        o: ["Outbound Logistics", "Inbound Logistics", "Supply of Goods", "Transportation"],
+        a: 0
+    },
+    {
+        q: "In a SC, Material flows in one direction while _________from in both direction",
+        o: ["Process", "Information", "Product", "Semi-finished Goods"],
+        a: 1
+    },
+    {
+        q: "Today, a growing number of firms now outsource some or all of their logistics to ________ intermediaries",
+        o: ["Competitors", "Third Party Logistics (3PL) Providers", "Channel Members", "Cross-functional Teams"],
+        a: 1
+    },
+    {
+        q: "The sequence of a typical manufacturing supply chain is",
+        o: ["Storage–Supplier–manufacturing–storage–distributor–retailer–customer", "Supplier–Storage-manufacturing–storage–distributor–retailer–customer", "Supplier–Storage-manufacturing– distributor–storage–retailer–customer", "Supplier–Storage-manufacturing–storage– retailer–distributor–customer"],
+        a: 1
+    },
+    {
+        q: "The goal of logistics is",
+        o: ["To achieve a target level of customer service at lowest possible cost", "To achieve targeted level of customer service.", "Increase in the market share.", "All of the above"],
+        a: 0
+    },
+    {
+        q: "EDI stands for",
+        o: ["Electronic Data Interface.", "Electronic Data Interchange.", "Electronic Distribution Intermediary.", "Electronic Documentation Interchange."],
+        a: 1
+    },
+    {
+        q: "Customer order processing level is that",
+        o: ["Determines the direction of business.", "Creates the capacity.", "Involves the functional planning.", "Provides specification for manufacturing"],
+        a: 3
+    },
+    {
+        q: "The logistical objective that ensures a proper balance between total logistics cost And a desired level of customer service performance is",
+        o: ["Right response.", "Right quality.", "Right cost trade off.", "Right information."],
+        a: 2
+    },
+    {
+        q: "Just in time is a practice followed in",
+        o: ["Japan.", "America.", "Britain.", "China"],
+        a: 0
+    },
+    {
+        q: "The correct sequence of an organizations supply chain from a systems perspective is:",
+        o: ["Transformation process, delivery to customers, acquisition of resources.", "Transformation process, acquisition of resources, delivery to customers.", "Acquisition of resources, transformation process, delivery to customers.", "Delivery to customers, acquisition of resources, transformation process."],
+        a: 2
+    },
+    {
+        q: "DRP stands for",
+        o: ["Distribution requirement planning", "Dividend requirement planning", "Distribution resource planning", "Distribution reverse planning"],
+        a: 0
+    },
+    {
+        q: "….includes design and administration of systems to control the flow of materials, WIP and finished inventory to support business unit strategy.",
+        o: ["Logistics Management", "Materials Management", "Bill of Materials", "Distribution Management"],
+        a: 0
+    },
+    {
+        q: "A Supply chain process is viewed as",
+        o: ["Birds eye view", "Technical view", "Strategic view", "cyclic and push/pull view"],
+        a: 3
+    }
+   ];
+
+    let currentIdx = 0;
+    let score = 0;
+    const totalQuestions = quizData.length;
+
+    const qText = document.getElementById('question-text');
+    const optionsCont = document.getElementById('options-container');
+    const qNum = document.getElementById('q-num');
+    const totalQuestionsEl = document.getElementById('total-questions');
+    const nextBtn = document.getElementById('next-btn');
+    const currentScore = document.getElementById('current-score');
+    const totalScore = document.getElementById('total-score');
+    const finalTotal = document.getElementById('final-total');
+    const progressBar = document.getElementById('progress-bar');
+    const startSelector = document.getElementById('start-selector');
+
+    // Populate the dropdown with question numbers
+    function populateStartSelector() {
+        startSelector.innerHTML = '';
+        for (let i = 1; i <= totalQuestions; i++) {
+            const option = document.createElement('option');
+            option.value = i - 1; // zero-based index
+            option.textContent = i;
+            startSelector.appendChild(option);
+        }
+        startSelector.value = 0; // Default to first question
+    }
+
+    // Change starting question
+    function changeStartQuestion() {
+        const newStart = parseInt(startSelector.value);
+        if (newStart >= 0 && newStart < totalQuestions) {
+            currentIdx = newStart;
+            score = 0;
+            currentScore.textContent = score;
+            loadQuestion();
+        }
+    }
+
+    function updateProgressBar() {
+        const progress = ((currentIdx + 1) / totalQuestions) * 100;
+        progressBar.style.width = `${progress}%`;
+    }
+
+    function loadQuestion() {
+        const data = quizData[currentIdx];
+        qText.innerText = data.q;
+        qNum.innerText = currentIdx + 1;
+        optionsCont.innerHTML = '';
+        nextBtn.style.display = 'none';
+        updateProgressBar();
+
+        // Update selector to current question
+        startSelector.value = currentIdx;
+
+        data.o.forEach((opt, i) => {
+            const btn = document.createElement('button');
+            btn.innerText = `${String.fromCharCode(97 + i)}. ${opt}`;
+            btn.classList.add('option-btn');
+            btn.onclick = () => revealAnswer(i);
+            optionsCont.appendChild(btn);
+        });
+    }
+
+    function revealAnswer(selectedIdx) {
+        const correctIdx = quizData[currentIdx].a;
+        const buttons = optionsCont.getElementsByClassName('option-btn');
+
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].disabled = true;
+            if (i === correctIdx) {
+                buttons[i].classList.add('correct');
+            }
+            if (i === selectedIdx && selectedIdx !== correctIdx) {
+                buttons[i].classList.add('wrong');
+            }
+        }
+
+        if (selectedIdx === correctIdx) {
+            score++;
+            currentScore.textContent = score;
+        }
+        nextBtn.style.display = 'inline-block';
+    }
+
+    function nextQuestion() {
+        currentIdx++;
+        if (currentIdx < totalQuestions) {
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        document.getElementById('question-text').style.display = 'none';
+        optionsCont.style.display = 'none';
+        document.querySelector('.header').style.display = 'none';
+        document.querySelector('.score-display').style.display = 'none';
+        nextBtn.style.display = 'none';
+        progressBar.style.display = 'none';
+        
+        const res = document.getElementById('results');
+        res.style.display = 'block';
+        document.getElementById('score').innerText = score;
+        document.getElementById('final-total').innerText = totalQuestions;
+        
+        const performanceMsg = document.getElementById('performance-message');
+        const percentage = (score / totalQuestions) * 100;
+        
+        if (percentage >= 90) {
+            performanceMsg.textContent = "Outstanding! You have mastered Organizational Behavior concepts.";
+            performanceMsg.style.color = "var(--success)";
+        } else if (percentage >= 75) {
+            performanceMsg.textContent = "Excellent! You have a comprehensive understanding of OB concepts.";
+            performanceMsg.style.color = "#4a90e2";
+        } else if (percentage >= 60) {
+            performanceMsg.textContent = "Good job! You have a solid foundation in Organizational Behavior.";
+            performanceMsg.style.color = "#f39c12";
+        } else if (percentage >= 50) {
+            performanceMsg.textContent = "Fair. Review the topics you missed to strengthen your knowledge.";
+            performanceMsg.style.color = "#e67e22";
+        } else {
+            performanceMsg.textContent = "Keep studying! Review all OB concepts and try again.";
+            performanceMsg.style.color = "var(--danger)";
+        }
+    }
+
+    // Initialize
+    totalQuestionsEl.textContent = totalQuestions;
+    totalScore.textContent = totalQuestions;
+    finalTotal.textContent = totalQuestions;
+    populateStartSelector();
+    loadQuestion();
+</script>
+</body>
+</html>
